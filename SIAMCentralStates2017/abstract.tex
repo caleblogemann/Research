@@ -1,0 +1,29 @@
+\documentclass[12pt]{amsart}
+\usepackage[margin=1in]{geometry}
+\usepackage{pslatex}
+\usepackage{amsmath,amsthm}
+\usepackage{amssymb}            % even more symbols
+\usepackage{amsfonts}           % AMS-latex fonts
+
+\begin{document}
+\title[]{Discontinuous Galerkin Method for solving a Thin-Film Equation}
+\maketitle
+\begin{abstract}
+  Aircraft icing is a critical operational, safety, and certification
+  concern for the aircraft industry.
+  Aircraft icing occurs in regimes that involve residual surface water that is
+  transported along the surface, also known as runback.
+  The water mass transport or runback can be modeled using thin-film equations.
+  The thin-film equation results from an asymptotic limit of the Navier-Stokes
+  equations.
+  The thin-film equation contains both a nonlinear hyperbolic transport and
+  nonlinear parabolic diffusion terms.
+  Generally, these terms are handled separately using operator splitting.
+  We describe how to use an explicit Runge-Kutta DG method for solving the
+  nonlinear hyperbolic equation and an implicit DG method for solving the
+  nonlinear parabolic diffusion equation.
+  To ensure fast convergence of the implicit method a multi-grid approach is
+  used.
+
+\end{abstract}
+\end{document}

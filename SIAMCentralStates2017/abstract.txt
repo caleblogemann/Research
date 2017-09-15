@@ -1,0 +1,11 @@
+
+Discontinuous Galerkin Methods for solving a Thin-Film Equation
+
+The thin-film equation results from an asymptotic limit of the Navier-Stokes
+equations and describes how a thin-film of fluid flows over a surface.
+The thin-film equation contains both a convection and diffusion term and thus
+is most often handled with operator splitting.
+We describe how to use a an explicit Runge-Kutta DG method for solving the
+convection equation and an implicit DG method for solving the diffusion equation.
+To ensure fast convergence of the implicit method a multi-grid approach is used.
+
