@@ -1,7 +1,6 @@
 \documentclass[10pt]{beamer}
 
-\mode<presentation> {
-    % Settings
+\mode<presentation>{% Settings
     % link to view http://www.hartwork.org/beamer-theme-matrix/
     % ------------------------------------------------------------------------------
     % Slide Themes
@@ -70,17 +69,16 @@
 % appears at the bottom of every slide, the full title is only on the title page
 
 \author{Caleb Logemann} % Your name
-\institute[Iowa State University] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
-{
+\institute[Iowa State University]{% Your institution as it will appear on the bottom of every slide, may be shorthand to save space
 Mathematics Department, Iowa State University \\ % Your institution for the title page
 \medskip
-\textit{logemann@iastate.edu} % Your email address
-}
+\textit{logemann@iastate.edu}} % Your email address
+
 \date{September 30, 2017} % Date, can be changed to a custom date
 
 \begin{document}
   \begin{frame}
-    \titlepage
+    \titlepage{}
   \end{frame}
 
   \begin{frame}
@@ -111,12 +109,13 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
       \begin{itemize}
         \item Navier-Stokes Equation
           \begin{align*}
-            u_t + \p{u v}_x &= 0 \\
-            \p{u v}_t + &= \\
+            \rho_t + \p{\rho u}_x &= 0 \\
+            \p{\rho u}_t + \p{\rho u^2 + p}_x &=  \\
+            E_t + \p{u (E + p)}_x &= \\
           \end{align*}
 
-        \item Asymptotic Limit, $u << L$
-        \item Thin-Film Equation - 1D
+        \item Asymptotic Limit, $\rho << L$
+        \item Thin-Film Equation - 1D with $u$ as fluid height.
           \[
             u_t + \p{f(x, t) u^2 - g(x, t) u^3}_x = \p{h(x, t) u^3 u_{xxx}}_x
           \]
@@ -186,6 +185,9 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
           \]
 
         \item Weak Form
+          \[
+            \dintt{-1}{1}{u_t \phi(\xi) + \frac{2}{\Delta x}\p{u^2 - u^3}_\xi \phi}{\xi}
+          \]
 
         \item Runge-Kutta Discontinuous Galerkin
 
@@ -194,10 +196,40 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
     \end{frame}
 
     \begin{frame}
-      \frametitle{Numerical Results}
-      \begin{itemize}
-        \item
-      \end{itemize}
+      \frametitle{Numerical Example - Square Wave}
+      \begin{center}
+        \includegraphics[scale=0.6]{Figures/squarewave00.png}
+      \end{center}
+    \end{frame}
+    \begin{frame}
+      \frametitle{Numerical Example - Square Wave}
+      \begin{center}
+        \includegraphics[scale=0.5]{Figures/squarewave04.png}
+      \end{center}
+    \end{frame}
+    \begin{frame}
+      \frametitle{Numerical Example - Square Wave}
+      \begin{center}
+        \includegraphics[scale=0.6]{Figures/squarewave08.png}
+      \end{center}
+    \end{frame}
+    \begin{frame}
+      \frametitle{Numerical Example - Square Wave}
+      \begin{center}
+        \includegraphics[scale=0.6]{Figures/squarewave12.png}
+      \end{center}
+    \end{frame}
+    \begin{frame}
+      \frametitle{Numerical Example - Square Wave}
+      \begin{center}
+        \includegraphics[scale=0.6]{Figures/squarewave16.png}
+      \end{center}
+    \end{frame}
+    \begin{frame}
+      \frametitle{Numerical Example - Square Wave}
+      \begin{center}
+        \includegraphics[scale=0.6]{Figures/squarewave20.png}
+      \end{center}
     \end{frame}
 
   \section{Diffusion}
@@ -246,6 +278,6 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
       \frametitle{Bibliography}
       % TODO: Bibliography
       \nocite{*}
-      \printbibliography
+      \printbibliography{}
     \end{frame}
 \end{document}
