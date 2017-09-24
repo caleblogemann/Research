@@ -111,13 +111,13 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
         \item Navier-Stokes Equation
           \begin{align*}
             \rho_t + \p{\rho u}_x &= 0 \\
-            \p{\rho u}_t + \p{\rho u^2 + p}_x &=  \\
-            E_t + \p{u (E + p)}_x &=
+            \p{\rho u}_t + \p{\rho u^2 + p}_x &=  \frac{4}{3Re} u_{xx} \\
+            E_t + \p{u (E + p)}_x &= \frac{1}{Re} \p{\frac{2}{3} \p{u^2}_{xx} + \frac{\gamma}{(\gamma - 1)Pr} \p{\frac{p}{\rho}}_{xx}}
           \end{align*}
         \item Asymptotic Limit, $\rho << L$
         \item Thin-Film Equation - 1D with $u$ as fluid height.
           \[
-            u_t + \p{f(x, t) u^2 - g(x, t) u^3}_x = \p{h(x, t) u^3 u_{xxx}}_x
+            u_t + \p{f(x, t) u^2 - g(x, t) u^3}_x = -\p{h(x, t) u^3 u_{xxx}}_x
           \]
       \end{itemize}
     \end{frame}
@@ -192,10 +192,10 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
 
         \item Rusanov Numerical Flux
           \[
-            \mcF_{j+1/2} = \frac{f(U_{i+1}(-1)) + f(U_{i}(1)}{2} \phi^{\ell}(1)
+            \mcF_{j+1/2} = \frac{f\p{U_{i+1}(-1)} + f\p{U_{i}(1)}}{2} \phi^{\ell}(1)
           \]
 
-        \item Solve this system of ODEs with any Total Variation Diminishing (TVD) Runge-Kutta Method.
+        \item Solve this system of ODEs with any Explicit Strong Stability Preserving (SSP) Runge-Kutta Method.
       \end{itemize}
     \end{frame}
 
@@ -248,22 +248,21 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
         \item Local Discontinuous Galerkin
           \begin{align*}
             q &= \frac{2}{\Delta x} u_{\xi} \\
-            r &= \frac{2}{\Delta x} s_{\xi} \\
+            r &= \frac{2}{\Delta x} q_{\xi} \\
             s &= \frac{2}{\Delta x} u^3 r_{\xi} \\
-            u &= -\frac{2}{\Delta x} s_{\xi}
+            u_t &= -\frac{2}{\Delta x} s_{\xi}
           \end{align*}
-
       \end{itemize}
     \end{frame}
 
     \begin{frame}
       \frametitle{Local Discontinuous Galerkin}
       \begin{align*}
+        \eta(\xi) &= \p{U_i^{n}}^3 \\
         Q_i^{\ell} &= -\frac{1}{\Delta x} \p{\dintt{-1}{1}{U_i \phi_{\xi}^{\ell}}{\xi}
         - \mcF(U)_{i+1/2}^{\ell} + \mcF(U)_{i - 1/2}^{\ell}} \\
         R_i^{\ell} &= -\frac{1}{\Delta x} \p{\dintt{-1}{1}{Q_i \phi_{\xi}^{\ell}}{\xi}
         - \mcF(Q)_{i+1/2}^{\ell} + \mcF(Q)_{i - 1/2}^{\ell}} \\
-        \eta(\xi) &= \p{U_i^{n}}^3 \\
         S_i^{\ell} &= \frac{1}{\Delta x} \p{\dintt{-1}{1}{(R_i)_{\xi} \eta(\xi) \phi^{\ell}}{\xi}} \\
         &+ \frac{1}{\Delta x}\p{\mcF(\eta)_{i + 1/2} \mcF(S)_{i+1/2}^{\ell} - \mcF(\eta)_{i-1/2} \mcF(S)_{i-1/2}^{\ell}}\\
         \dot{U}_i^{\ell} &= \frac{1}{\Delta x} \p{\dintt{-1}{1}{S_i \phi_{\xi}^{\ell}}{\xi}
@@ -286,7 +285,7 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
     \begin{frame}
       \frametitle{Local Discontinuous Galerkin}
       \begin{itemize}
-        \item Explicit TVD Runge Kutta
+        \item Explicit SSP Runge Kutta
           \begin{itemize}
             \item Severe time step restriction
             \item $\Delta t \sim \Delta x^4$
@@ -294,7 +293,7 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
             \item $\Delta x = .01 \to \Delta t \approx 10^{-8}$
           \end{itemize}
 
-        \item Implicit TVD Runge Kutta
+        \item Implicit SSP Runge Kutta
           \begin{itemize}
             \item Linear System Solver
             \item Stabilized BiConjugate Gradient
@@ -407,8 +406,11 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
     \begin{frame}
       \frametitle{Conclusion}
       \begin{itemize}
-        \item James Rossmanith
-        \item Alric Rothmayer
+        \item Thanks
+          \begin{itemize}
+            \item James Rossmanith
+            \item Alric Rothmayer
+          \end{itemize}
         \item Questions?
       \end{itemize}
     \end{frame}
