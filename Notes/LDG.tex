@@ -1,0 +1,45 @@
+\documentclass[11pt, oneside]{article}
+\usepackage[letterpaper, margin=2cm]{geometry}
+\usepackage{MATH667}
+
+\begin{document}
+\begin{center}
+\textbf{\Large{Local Discontinuous Galerkin Method for the Diffusion
+Equation
+}}
+\end{center}
+
+We would like to solve the 1D diffusion equation with a Discontinuous Galerkin
+Method.
+The 1D diffusion equation is given as
+\[
+  u_t = \kappa u_{xx}.
+\]
+
+If we were to naively apply DG methods, we could discretize the domain and
+consider piecewise polynomial approximation.
+We would then multiply by a test function and integrate by parts.
+\begin{gather*}
+  \dintt{I_j}{}{u_t v}{x} = \kappa \dintt{I_j}{}{u_{xx} v}{x} \\
+  \dintt{I_j}{}{u_t v}{x} = \kappa \p{u^+_x v^+ - u^-_x v^-} - \kappa \dintt{I_j}{}{u_x v_x}{x} \\
+  \dintt{I_j}{}{u_t v}{x} = \kappa \p{u^+_x v^+ - u^-_x v^-} - \kappa \p{u^+ v^+_x - u^- v^-_x}
+    + \kappa \dintt{I_j}{}{u v_{xx}}{x}
+\end{gather*}
+This turns out to converge to the wrong solution.
+
+The Local Discontinuous Galerkin method proposes a different approach.
+First rewrite the diffusion equation as a system of first order equations.
+\begin{align*}
+  u_t &= \kappa q_x \\
+  q &= u_x
+\end{align*}
+Now expand both $u$ and $q$ in the DG solution space, that is
+\begin{align*}
+  u_h &= \sum
+  q_h &= 
+\end{align*}
+
+
+
+
+\end{document}

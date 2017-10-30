@@ -1,0 +1,9 @@
+Multigrid
+    Multiple iterations of vcycle, multiple vcycles till convergence
+    Forming matrix for relaxation
+
+    smax?
+
+Next Steps
+    Finish GMRES
+    Matlab function to form matrix

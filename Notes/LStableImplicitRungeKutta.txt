@@ -1,0 +1,11 @@
+Backward Euler
+    q^(n+1) = q^n + deltaT*A(q^(n+1))
+    (I - deltaT A) q^(n+1) = q^n
+
+2nd order LStable Runge Kutta
+    q^* = q^n + deltaT/4(A q^n + A q^*)
+    3q^(n+1) = 4q^* - q^n + deltaT A q^(n+1)
+
+    (I - deltaT/4 A) q^* = deltaT/4*A(q^n) + q^n
+    (3I - deltaT A) q^(n+1) = 4q^* - q^n
+
