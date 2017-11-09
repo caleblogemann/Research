@@ -268,17 +268,25 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
   \end{frame}
 
   \begin{frame}
-    \frametitle{Introduction to Discontinuous Galerkin}
+    \frametitle{Solving the ODE}
+    
     \begin{itemize}
-      \item Partition the domain, $\br{a, b}$ as
+      \item General ODE
         \[
-          a = x_{1/2} < \cdots < x_{i-1/2} < x_{i+1/2} < \cdots < x_{N + 1/2} = b
+          U_t = L(U)
         \]
 
-      \item $V_i = \br{x_{i-1/2}, x_{i+1/2}}$
-      \item $\Delta x_i = x_{i + 1/2} - x_{i - 1/2}$
-      \item $x_i = \frac{x_{i+1/2} + x_{i-1/2}}{2}$.
-        \includegraphics[scale=0.35]{Figures/Cells.pdf}
+      \item Forward Euler
+        \[
+          U^{n+1} = U^n + L(U^n)
+        \]
+
+      \item Backward Euler
+        \[
+          U^{n+1} = U^n + L(U^{n+1})
+        \]
+
+      \item Higher Order Explicit or Implicit Runge-Kutta Schemes
     \end{itemize}
   \end{frame}
 
@@ -286,10 +294,10 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
     \frametitle{Ongoing Research}
     \begin{itemize}
       \item Create DG methods for certain types of equations
+      \item Slope/Oscillation Limiting
       \item Strong Stability Preserving (SSP)
       \item Entropy Solutions
       \item Positivity Preserving
-      \item Slope/Oscillation Limiting
     \end{itemize}
   \end{frame}
 
