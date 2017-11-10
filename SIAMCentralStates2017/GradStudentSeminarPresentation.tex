@@ -69,7 +69,7 @@
 \title[]{Introduction to Discontinuous Galerkin Methods} % The short title
 % appears at the bottom of every slide, the full title is only on the title page
 
-\author{Caleb Logemann} % Your name
+\author{} % Your name
 \institute[Iowa State University]{% Your institution as it will appear on the bottom of every slide, may be shorthand to save space
 Mathematics Department, Iowa State University \\ % Your institution for the title page
 \medskip
@@ -86,10 +86,10 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
     \frametitle{Goal}
     \begin{itemize}
       \item Numerically Solve
-        \begin{align*}
+        \begin{gather*}
           u_t + f(u)_x = 0 \\
           x \in \Omega \subset \RR^d \qquad t \in \RR^+
-        \end{align*}
+        \end{gather*}
 
       \item Weak Solution
         Find $u$ such that for any test function $v$
@@ -99,22 +99,22 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
     \end{itemize}
   \end{frame}
 
-  \begin{frame}
-    \frametitle{Goal}
-    \begin{itemize}
-      \item Numerically Solve
-        \begin{align*}
-          u_t + f(u)_x = 0 \\
-          x \in \br{a, b} \quad t \in \RR^+
-        \end{align*}
+  %\begin{frame}
+    %\frametitle{Goal}
+    %\begin{itemize}
+      %\item Numerically Solve
+        %\begin{align*}
+          %u_t + f(u)_x = 0 \\
+          %x \in \br{a, b} \quad t \in \RR^+
+        %\end{align*}
 
-      \item Weak Solution
-        Find $u$ such that for any test function $v$
-        \[
-          \dintt{0}{\infty}{\dintt{a}{b}{u_t v + f(u)_x v}{x}}{t} = 0
-        \]
-    \end{itemize}
-  \end{frame}
+      %\item Weak Solution
+        %Find $u$ such that for any test function $v$
+        %\[
+          %\dintt{0}{\infty}{\dintt{a}{b}{u_t v + f(u)_x v}{x}}{t} = 0
+        %\]
+    %\end{itemize}
+  %\end{frame}
 
   \begin{frame}
     \frametitle{Generate Mesh}
@@ -145,7 +145,7 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
   \begin{frame}
     \frametitle{Generate Mesh}
     \begin{itemize}
-      \item 3D Unstructured Triangulation
+      \item 3D Unstructured Finite Element Space
           \includegraphics[scale=0.6]{Figures/3Dmesh}
     \end{itemize}
   \end{frame}
@@ -153,7 +153,7 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
   \begin{frame}
     \frametitle{Generate Mesh}
     \begin{itemize}
-      \item 3D Unstructured Triangulation
+      \item 3D Unstructured Finite Element Space
           \includegraphics[scale=0.6]{Figures/3Dmesh2}
     \end{itemize}
   \end{frame}
@@ -185,9 +185,9 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
         \]
 
       \item $\hat{f}$ is called the numerical flux
-        \begin{itemize}
-          \item Consistent: $\hat{f}{u, u}$
-        \end{itemize}
+        %\begin{itemize}
+          %\item Consistent: $\hat{f}(u, u)$
+        %\end{itemize}
     \end{itemize}
   \end{frame}
 
@@ -269,7 +269,7 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
 
   \begin{frame}
     \frametitle{Solving the ODE}
-    
+
     \begin{itemize}
       \item General ODE
         \[
@@ -278,12 +278,12 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
 
       \item Forward Euler
         \[
-          U^{n+1} = U^n + L(U^n)
+          U^{n+1} = U^n + \Delta t L(U^n)
         \]
 
       \item Backward Euler
         \[
-          U^{n+1} = U^n + L(U^{n+1})
+          U^{n+1} = U^n + \Delta t L(U^{n+1})
         \]
 
       \item Higher Order Explicit or Implicit Runge-Kutta Schemes
@@ -301,7 +301,7 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
     \end{itemize}
   \end{frame}
 
-  \section{Introduction}
+  %\section{Introduction}
     \begin{frame}
       \frametitle{Motivation}
       \begin{itemize}
@@ -367,7 +367,7 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
       \end{itemize}
     \end{frame}
 
-  \section{Convection}
+  %\section{Convection}
     \begin{frame}
       \frametitle{Convection}
       \begin{itemize}
@@ -436,7 +436,7 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
       \end{center}
     \end{frame}
 
-  \section{Hyper-Diffusion}
+  %\section{Hyper-Diffusion}
     \begin{frame}
       \frametitle{Hyper-Diffusion}
       \begin{itemize}
@@ -537,7 +537,7 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
       \end{center}
     \end{frame}
 
-  \section{Operator Splitting}
+  %\section{Operator Splitting}
     \begin{frame}
       \frametitle{Operator Splitting}
       \begin{itemize}
@@ -591,7 +591,7 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
       \end{center}
     \end{frame}
 
-  \section{Conclusion}
+  %\section{Conclusion}
     \begin{frame}
       \frametitle{Future Work}
       \begin{itemize}
@@ -615,10 +615,10 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
       \end{itemize}
     \end{frame}
 
-    \begin{frame}
-      \frametitle{Bibliography}
-      % TODO: Bibliography
-      \nocite{*}
-      \printbibliography{}
-    \end{frame}
+    %\begin{frame}
+      %\frametitle{Bibliography}
+      %% TODO: Bibliography
+      %\nocite{*}
+      %\printbibliography{}
+    %\end{frame}
 \end{document}
