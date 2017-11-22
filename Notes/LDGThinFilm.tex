@@ -1,0 +1,60 @@
+\documentclass[11pt, oneside]{article}
+\usepackage[letterpaper, margin=2cm]{geometry}
+\usepackage{Notes}
+
+\begin{document}
+\begin{center}
+\textbf{\Large{Local Discontinuous Galerkin Method for the Thin Film Diffusion
+Equation
+}}
+\end{center}
+
+We would like to solve the 1D thin film diffusion equation with a Discontinuous Galerkin
+Method.
+The 1D diffusion equation is given as
+\[
+  q_t = -\p{q^3 q_{xxx}}_x.
+\]
+
+If we consider a single cell $I_j$, do a linear transformation from
+$x \in \br{x_{j-1/2}, x_{j+1/2}}$ to $\xi \in \br{-1, 1}$, and consider
+specifically the Legendre polynomial basis $\set{\phi^k(\xi)}$ with the
+following orthogonality property
+\[
+  \frac{1}{2}\dintt{-1}{1}{\phi^j(\xi) \phi^k(\xi)}{\xi} = \delta_{jk}
+\]
+we can form a more concrete LDG method for implementing.
+The linear transformation can be expressed as
+\[
+  x = \frac{\Delta x}{2} \xi + \frac{x_{j-1/2} + x_{j+1/2}}{2}
+\]
+or
+\[
+  \xi = \frac{2}{\Delta x} \p{x - \frac{x_{j-1/2} + x_{j+1/2}}{2}}
+\]
+After this tranformation the diffusion equation become
+\[
+  q_t = -\frac{16}{\Delta x^4} \p{q^3 q_{\xi\xi\xi}}_{\xi}
+\]
+on the cell $I_j$.
+
+We can then write this as the following system of first order equations.
+\begin{align*}
+  r &= \frac{2}{\Delta x} q_{\xi} \\
+  s &= \frac{2}{\Delta x} r_{\xi} \\
+  u &= \frac{2}{\Delta x} q^3 s_{\xi} \\
+  q_t &= -\frac{2}{\Delta x} u_{xi}
+\end{align*}
+Now approximate $r$, $s$, $u$, and $q$ on $I_j$ as
+\begin{align*}
+  r &\approx r_h = \sum{k = 1}{M}{R_k \phi^k(\xi)} \\
+  s &\approx s_h = \sum{k = 1}{M}{S_k \phi^k(\xi)} \\
+  u &\approx u_h = \sum{k = 1}{M}{U_k \phi^k(\xi)} \\
+  q &\approx q_h = \sum{k = 1}{M}{Q_k \phi^k(\xi)}
+\end{align*}
+
+Plug into the equations and multiply by Legendre polynomials and integrate.
+
+
+
+\end{document}
