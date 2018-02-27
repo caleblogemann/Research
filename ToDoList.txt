@@ -1,0 +1,7 @@
+Get multigrid working on diffusion in test directory
+find way to test solvers on ThinFilmLDG in test directory
+write matlab function to do thin film ldg
+test condition number in matlab
+
+operator splitting solver
+
