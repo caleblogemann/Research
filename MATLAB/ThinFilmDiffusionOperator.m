@@ -1,5 +1,7 @@
-function [Au] = ThinFilmDiffusionOperator(u, odx)
-    [num_elems, num_basis_cpts] = size(u);
+function [Aq] = ThinFilmDiffusionOperator(q, dx, original_q, bc)
+    [num_elems, num_basis_cpts] = size(q);
+    
+    
 
 
 end
