@@ -92,74 +92,159 @@
     u &= \frac{2}{\Delta x} q^3 s_{\xi} = \frac{8}{\Delta x^3} q^3 q_{\xi\xi\xi} \\
     q_t &= -\frac{2}{\Delta x} u_{\xi} = - \frac{16}{\Delta x^4} \p{q^3 q_{\xi\xi\xi}}_{\xi}
   \end{align*}
-  With the Legendre basis, the numerical solution on $I_j$ can be written as
+  With the Legendre basis, the numerical solution on $I_i$ can be written as
   \begin{align*}
-    q &\approx q_h = \sum{k = 1}{M}{Q_k \phi^k(\xi)} \\
-    r &\approx r_h = \sum{k = 1}{M}{R_k \phi^k(\xi)} \\
-    s &\approx s_h = \sum{k = 1}{M}{S_k \phi^k(\xi)} \\
-    u &\approx u_h = \sum{k = 1}{M}{U_k \phi^k(\xi)}
+    \eval{q}{I_i}{} &\approx \eval{q_h}{I_i}{} = \sum{l = 1}{M}{Q_i^l \phi^l(\xi)} \\
+    \eval{r}{I_i}{} &\approx \eval{r_h}{I_i}{} = \sum{l = 1}{M}{R_i^l \phi^l(\xi)} \\
+    \eval{s}{I_i}{} &\approx \eval{s_h}{I_i}{} = \sum{l = 1}{M}{S_i^l \phi^l(\xi)} \\
+    \eval{u}{I_i}{} &\approx \eval{u_h}{I_i}{} = \sum{l = 1}{M}{U_i^l \phi^l(\xi)}
   \end{align*}
-  Now plugging these into the system and multiplying by a Legendre basis and integrating gives.
+  Now plugging these into the system and multiplying by a Legendre basis and integrating over cell $I_i$ gives.
+  I will use the following shorthand for numerical fluxes using one of the alternating flux options.
   \begin{align*}
-    q_h &= \frac{2}{\Delta x} (u_h)_{\xi} \\
-    \frac{1}{2} \dintt{-1}{1}{q_h \phi^l}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{(u_h)_{\xi} \phi^l}{\xi} \\
-    Q_l &= -\frac{1}{\Delta x} \dintt{-1}{1}{u_h \phi^l_{\xi}}{\xi} + \frac{1}{\Delta x}\p{u^-_{j+1/2} \phi^l(1) - u^-_{j-1/2} \phi^l(-1)} \\
-    (u_h)_t &= \frac{2}{\Delta x} (q_h)_{\xi} \\
-    \frac{1}{2}\dintt{-1}{1}{(u_h)_t \phi^l}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{(q_h)_{\xi} \phi^l}{\xi} \\
-    \dot{U}_l &= -\frac{1}{\Delta x} \dintt{-1}{1}{q_h \phi^l_{\xi}}{\xi} + \frac{1}{\Delta x}\p{q^+_{j+1/2} \phi^l(1) - q^+_{j-1/2} \phi^l(-1)}
+    \hat{Q}_{i+1/2} &= \sum{l = 1}{M}{Q_{i+1}^l \phi^l(-1)} \\
+    \hat{R}_{i+1/2} &= \sum{l = 1}{M}{R_{i}^l \phi^l(1)} \\
+    \hat{S}_{i+1/2} &= \sum{l = 1}{M}{S_{i+1}^l \phi^l(-1)} \\
+    \hat{U}_{i+1/2} &= \sum{l = 1}{M}{U_{i}^l \phi^l(1)}
   \end{align*}
+  \begin{align*}
+    r &= \frac{2}{\Delta x} q_{\xi} \\
+    \sum{l = 1}{M}{R_i^l \phi^l(\xi)} &= \frac{2}{\Delta x} \sum{l = 1}{M}{Q_i^l \phi_{\xi}^l(\xi)} \\
+    \frac{1}{2}\dintt{-1}{1}{\sum{l = 1}{M}{R_i^l \phi^l(\xi)} \phi^k(\xi)}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{Q_i^l \phi_{\xi}^l(\xi)} \phi^k(\xi)}{\xi} \\
+    R_i^k &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{Q_i^l \phi_{\xi}^l(\xi)} \phi^k(\xi)}{\xi} \\
+    R_i^k &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{Q_i^l \phi^l(\xi)} \phi_{\xi}^k(\xi)}{\xi} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{Q}_{i+1/2} - \phi^k(-1)\hat{Q}_{i-1/2}} \\
+  \end{align*}
+  \begin{align*}
+    s &= \frac{2}{\Delta x} r_{\xi} \\
+    \sum{l = 1}{M}{S_i^l \phi^l(\xi)} &= \frac{2}{\Delta x} \sum{l = 1}{M}{R_i^l \phi_{\xi}^l(\xi)} \\
+    \frac{1}{2}\dintt{-1}{1}{\sum{l = 1}{M}{S_i^l \phi^l(\xi)} \phi^k(\xi)}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{R_i^l \phi_{\xi}^l(\xi)} \phi^k(\xi)}{\xi} \\
+    S_i^k &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{R_i^l \phi^l(\xi)} \phi_{\xi}^k(\xi)}{\xi} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{R}_{i+1/2} - \phi^k(-1)\hat{R}_{i-1/2}} \\
+  \end{align*}
+  This is the computation that requires integrating by parts twice.
+  On the first integrating by parts I will treat the numerical fluxes normally,
+  that is I will use the alternating fluxes for the flux of $S$ and an average
+  flux for the flux of $q^3$.
+  This allows for the propogation of information over cell interfaces.
+  For the second integration by parts I will treat the integrand as existsing
+  solely within the cell and thus I will use interior fluxes for everything.
+  For shorthand I will use
+  \[
+    \hat{q}^3_{i+1/2} = \p{\frac{\p{q^+_{i+1/2}}^3 + \p{q^-_{i+1/2}}^3}{2}}
+  \]
+  and I will explicitly write the interior fluxes as
+  \[
+    \p{q^-_{i+1/2}}^3 \qquad \p{q^+_{i-1/2}}^3
+  \]
+  \begin{align*}
+    u &= \frac{2}{\Delta x} q^3 s_{\xi} \\
+    \sum{l = 1}{M}{U_i^l \phi^l(\xi)} &= \frac{2}{\Delta x} q^3 \sum{l = 1}{M}{S_i^l \phi_{\xi}^l(\xi)} \\
+    \frac{1}{2}\dintt{-1}{1}{\sum{l = 1}{M}{U_i^l \phi^l(\xi)}\phi^k(\xi)}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{q^3 \sum{l = 1}{M}{S_i^l \phi_{\xi}^l(\xi)} \phi^k(\xi)}{\xi} \\
+    U_i^k &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{S_i^l \phi^l(\xi)} \p{q^3\phi^k(\xi)}_{\xi}}{\xi} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{q}^3_{i+1/2}\hat{S}_{i+1/2} - \phi^k(-1)\hat{q}^3_{i-1/2}\hat{S}_{i-1/2}} \\
+    U_i^k &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{S_i^l \phi_{\xi}^l(\xi)} q^3\phi^k(\xi)}{\xi} \\
+    &- \frac{1}{\Delta x}\p{\phi^k(1)\p{q^-_{i+1/2}}^3S^-_{i+1/2} - \phi^k(-1)\p{q^+_{i-1/2}}^3 S^+_{i-1/2}}\\
+    &+ \frac{1}{\Delta x}\p{\phi^k(1)\hat{q}^3_{i+1/2}\hat{S}_{i+1/2} - \phi^k(-1)\hat{q}^3_{i-1/2}\hat{S}_{i-1/2}}
+  \end{align*}
+  \begin{align*}
+    q_t &= -\frac{2}{\Delta x} u_{\xi} \\
+    \sum{l = 1}{M}{\dot{Q}_i^l \phi^l(\xi)}  &= -\frac{2}{\Delta x} \sum{l = 1}{M}{U_i^l \phi_{\xi}^l(\xi)} \\
+    \frac{1}{2}\dintt{-1}{1}{\sum{l = 1}{M}{\dot{Q}_i^l \phi^l(\xi)} \phi^k(\xi)}{\xi}  &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{U_i^l \phi_{\xi}^l(\xi)}\phi^k(\xi)}{\xi} \\
+    \dot{Q}_i^k &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{U_i^l \phi_{\xi}^l(\xi)}\phi^k(\xi)}{\xi} - \frac{1}{\Delta x}\p{\phi^k(1)\hat{U}_{i+1/2} - \phi^k(-1)\hat{U}_{i-1/2}} \\
+  \end{align*}
+  
+  %\begin{align*}
+    %q_h &= \frac{2}{\Delta x} (u_h)_{\xi} \\
+    %\frac{1}{2} \dintt{-1}{1}{q_h \phi^l}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{(u_h)_{\xi} \phi^l}{\xi} \\
+    %Q_l &= -\frac{1}{\Delta x} \dintt{-1}{1}{u_h \phi^l_{\xi}}{\xi} + \frac{1}{\Delta x}\p{u^-_{j+1/2} \phi^l(1) - u^-_{j-1/2} \phi^l(-1)} \\
+    %(u_h)_t &= \frac{2}{\Delta x} (q_h)_{\xi} \\
+    %\frac{1}{2}\dintt{-1}{1}{(u_h)_t \phi^l}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{(q_h)_{\xi} \phi^l}{\xi} \\
+    %\dot{U}_l &= -\frac{1}{\Delta x} \dintt{-1}{1}{q_h \phi^l_{\xi}}{\xi} + \frac{1}{\Delta x}\p{q^+_{j+1/2} \phi^l(1) - q^+_{j-1/2} \phi^l(-1)}
+  %\end{align*}
   Now this is a system of ODEs, there are $M \times N$ ODEs if $M$ is the spacial
   order and $N$ is the number of cells.
 
-%\textbf{\large{Proving Stability}}
-  %In order to prove that this method is $L^2$ stable consider we sum both of the integral equations from before.
-  %\begin{gather*}
-    %\dintt{I_j}{}{(u_h)_t v_h}{x} + \dintt{I_j}{}{q_h w_h}{x} = \p{\p{q^+_h v^-_h}_{j+1/2} - \p{q^+_h v^+_h}_{j-1/2}} \\
-    %+ \p{\p{u^-_h w^-_h}_{j+1/2} - \p{u^-_j w^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (v_h)_x}{x} - \dintt{I_j}{}{u_h (w_h)_x}{x}
-  %\end{gather*}
-  %Consider using $v_h = u_h$ and $w_h = q_h$.
-  %\begin{gather*}
-    %\dintt{I_j}{}{(u_h)_t u_h}{x} + \dintt{I_j}{}{q_h q_h}{x} = \p{\p{q^+_h u^-_h}_{j+1/2} - \p{q^+_h u^+_h}_{j-1/2}} \\
-    %+ \p{\p{u^-_h q^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (u_h)_x}{x} - \dintt{I_j}{}{u_h (q_h)_x}{x}
-  %\end{gather*}
-  %Consider the following shorthand notation
-  %\begin{gather*}
-    %B_j = \dintt{I_j}{}{(u_h)_t u_h}{x} + \dintt{I_j}{}{q_h q_h}{x} \\
-    %B_j = \p{\p{q^+_h u^-_h}_{j+1/2} - \p{q^+_h u^+_h}_{j-1/2}} + \p{\p{u^-_h q^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (u_h)_x}{x} - \dintt{I_j}{}{u_h (q_h)_x}{x}
-  %\end{gather*}
-  %%\begin{gather*}
-    %%B_j(u_h, q_h, u_h, q_h) = \dintt{I_j}{}{(u_h)_t u_h}{x} - \p{\p{\hat{q}_h u^-_h}_{j+1/2} - \p{\hat{q}_h u^+_h}_{j-1/2}} + \dintt{I_j}{}{q_h (u_h)_x}{x} \\
-    %%+ \dintt{I_j}{}{q_h q_h}{x} - \p{\p{\hat{u}_h q^-_h}_{j+1/2} - \p{\hat{u}_j q^+_h}_{j-1/2}} + \dintt{I_j}{}{u_h (q_h)_x}{x} = 0
-  %%\end{gather*}
-  %This can be simplified in several ways.
-  %First simplify the left hand side.
-  %\begin{align*}
-    %B_j &= \dintt{I_j}{}{(u_h)_t u_h}{x} + \dintt{I_j}{}{q_h q_h}{x} \\
-    %B_j &= \frac{1}{2} \dintt{I_j}{}{\d*{u_h^2}{t}}{x} + \dintt{I_j}{}{q_h^2}{x} \\
-    %B_j &= \frac{1}{2} \d{}{t} \dintt{I_j}{}{u_h^2}{x} + \dintt{I_j}{}{q_h^2}{x} \\
-    %B_j &= \frac{1}{2} \d{}{t} \norm[L^2(I_j)]{u_h}^2 + \norm[L^2(I_j)]{q_h}^2 \\
-  %\end{align*}
-  %Second the right hand side can be simplified.
-  %\begin{align*}
-    %\dintt{I_j}{}{q_h (u_h)_x}{x} + \dintt{I_j}{}{u_h (q_h)_x}{x} &= \dintt{I_j}{}{q_h (u_h)_x + u_h (q_h)_x}{x} \\
-    %&= \dintt{I_j}{}{(q_h u_h)_x}{x} \\
-    %&= (q^-_h u^-_h)_{j+1/2} - (q^+_h u^+_h)_{j-1/2}
-  %\end{align*}
-  %Now 
-  %\begin{gather*}
-    %B_j = \p{\p{q^+_h u^-_h}_{j+1/2} - \p{q^+_h u^+_h}_{j-1/2}} + \p{\p{u^-_h q^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} - \p{(q^-_h u^-_h)_{j+1/2} - (q^+_h u^+_h)_{j-1/2}} \\
-    %B_j = \p{q^+_h u^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2} \\
-  %\end{gather*}
-  %Assuming periodic boundary conditions, and summing $B_j$ over all cells
-  %\begin{align*}
-    %\sum{j = 1}{N}{B_j} &= \sum{j=1}{N}{\p{q^+_h u^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} \\
-    %&= -\p{u^-_h q^+_h}_{1/2} + \sum{k=1}{N}{\p{q^+_h u^-_h}_{k+1/2} - \p{u^-_h q^+_h}_{k+1/2}} + \p{q^+_h u^-_h}_{N+1/2} \\
-    %&= 0
-  %\end{align*}
-  %This shows that
-  %\begin{gather*}
-    %\sum{j = 1}{N}{B_j} = \sum{j = 1}{N}{\frac{1}{2} \d{}{t} \norm[L^2(I_j)]{u_h}^2 + \norm[L^2(I_j)]{q_h}^2} \\
-    %\frac{1}{2} \d{}{t} \norm[L^2]{u_h}^2 + \norm[L^2]{q_h}^2 = 0 \\
-    %\d{}{t} \norm[L^2]{u_h}^2 \le 0
-  %\end{gather*}
+\textbf{\large{Matrix Representation}}
+Some common matrices and vectors that appear in these equations are
+\begin{align*}
+  \v{Q}_{i} &= \br{Q_i^l}_{l=1}^M \\
+  \v{\phi}(\xi) &= \br{\phi^k(\xi)}_{k = 1}^{M} \\
+  \Phi(\xi_1,\xi_2) &= \v{\phi}(\xi_1) \v{\phi}^T(\xi_2) \\
+  A &= \br{a_{kl}}_{k,l=1}^M \\
+  a_{kl} &= \dintt{-1}{1}{\phi_{\xi}^k(\xi) \phi^l(\xi)}{\xi} \\
+  B_i &= \br{b_{kl}}_{k,l=1}^M \\
+  b_{kl} &= \dintt{-1}{1}{q_i^3(\xi) \phi^k(\xi) \phi_{\xi}^l(\xi)}{\xi}
+\end{align*}
+For example if $M = 5$, then
+\[
+  \v{\phi}(\xi) =
+  \begin{bmatrix}
+    \phi^1(\xi) \\
+    \phi^2(\xi) \\
+    \phi^3(\xi) \\
+    \phi^4(\xi) \\
+    \phi^5(\xi)
+  \end{bmatrix}
+\]
+and
+\[
+  A =
+  \begin{bmatrix}
+    0 & 0 & 0 & 0 & 0 \\
+    2 \sqrt{3} & 0 & 0 & 0 & 0 \\
+    0 & 2 \sqrt{3}\sqrt{5} & 0 & 0 & 0 \\
+    2 \sqrt{7} & 0 & 2 \sqrt{5}\sqrt{7} & 0 & 0 \\
+    0 & 6 \sqrt{3} & 0 & 6 \sqrt{7} & 0 \\
+  \end{bmatrix}
+\]
+Also the numerical fluxes can be written as the following dot products
+\begin{align*}
+  \hat{Q}_{i+1/2} &= \sum{l = 1}{M}{Q_{i+1}^l \phi^l(-1)} \\
+  &= \v{\phi}^T(-1)\v{Q}_{i+1} \\
+  \hat{R}_{i+1/2} &= \sum{l = 1}{M}{R_{i}^l \phi^l(1)} \\
+  &= \v{\phi}^T(1)\v{R}_{i} \\
+  \hat{S}_{i+1/2} &= \sum{l = 1}{M}{S_{i+1}^l \phi^l(-1)} \\
+  &= \v{\phi}^T(-1)\v{S}_{i+1} \\
+  \hat{U}_{i+1/2} &= \sum{l = 1}{M}{U_{i}^l \phi^l(1)} \\
+  &= \v{\phi}^T(1)\v{U}_{i}
+\end{align*}
+
+\begin{align*}
+  R_i^k &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{Q_i^l \phi^l(\xi)} \phi_{\xi}^k(\xi)}{\xi} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{Q}_{i+1/2} - \phi^k(-1)\hat{Q}_{i-1/2}} \\
+  R_i^k &= -\frac{1}{\Delta x} \sum{l=1}{M}{Q_i^l\dintt{-1}{1}{\phi^l(\xi) \phi_{\xi}^k(\xi)}{\xi}} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{Q}_{i+1/2} - \phi^k(-1)\hat{Q}_{i-1/2}} \\
+  R_i^k &= -\frac{1}{\Delta x} \p{A \v{Q}_i}_k + \frac{1}{\Delta x}\p{\phi^k(1)\v{\phi}^T(-1)\v{Q}_{i+1} - \phi^k(-1)\v{\phi}^T(-1)\v{Q}_{i}} \\
+  \v{R}_i &= -\frac{1}{\Delta x} A \v{Q}_i + \frac{1}{\Delta x}\p{\v{\phi}(1)\v{\phi}^T(-1)\v{Q}_{i+1} - \v{\phi}(-1)\v{\phi}^T(-1)\v{Q}_{i}} \\
+  \v{R}_i &= -\frac{1}{\Delta x} A \v{Q}_i + \frac{1}{\Delta x}\p{\Phi(1, -1)\v{Q}_{i+1} - \Phi(-1, -1)\v{Q}_{i}} \\
+  \v{R}_i &= -\frac{1}{\Delta x} \p{A + \Phi(-1,-1)} \v{Q}_i + \frac{1}{\Delta x}\Phi(1, -1)\v{Q}_{i+1}
+\end{align*}
+
+\begin{align*}
+  S_i^k &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{R_i^l \phi^l(\xi)} \phi_{\xi}^k(\xi)}{\xi} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{R}_{i+1/2} - \phi^k(-1)\hat{R}_{i-1/2}}\\
+  S_i^k &= -\frac{1}{\Delta x} \p{A \v{R}_i}_k + \frac{1}{\Delta x}\p{\phi^k(1)\v{\phi}^T(1)\v{R}_{i} - \phi^k(-1)\v{\phi}^T(1)\v{R}_{i-1}} \\
+  \v{S}_i &= -\frac{1}{\Delta x} \p{A - \Phi(1, 1)} \v{R}_i - \frac{1}{\Delta x}\Phi(-1, 1)\v{R}_{i-1}
+\end{align*}
+
+Note that I am treating the $q^3$ fluxes as constants, they don't depend on
+the unknowns $Q_i^l$
+\begin{align*}
+  U_i^k &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{S_i^l \phi_{\xi}^l(\xi)} q_i^3\phi^k(\xi)}{\xi} \\
+  &- \frac{1}{\Delta x}\p{\phi^k(1)\p{q^-_{i+1/2}}^3S^-_{i+1/2} - \phi^k(-1)\p{q^+_{i-1/2}}^3 S^+_{i-1/2}}\\
+  &+ \frac{1}{\Delta x}\p{\phi^k(1)\hat{q}^3_{i+1/2}\hat{S}_{i+1/2} - \phi^k(-1)\hat{q}^3_{i-1/2}\hat{S}_{i-1/2}} \\
+  U_i^k &= \frac{1}{\Delta x} \sum{l = 1}{M}{S_i^l\dintt{-1}{1}{q_i^3 \phi^k(\xi) \phi_{\xi}^l(\xi)}{\xi}} \\
+  &- \frac{1}{\Delta x}\p{\phi^k(1)\p{q^-_{i+1/2}}^3\v{\phi}^T(1)\v{S}_{i} - \phi^k(-1)\p{q^+_{i-1/2}}^3 \v{\phi}^T(-1)\v{S}_{i}}\\
+  &+ \frac{1}{\Delta x}\p{\phi^k(1)\hat{q}^3_{i+1/2}\v{\phi}^T(-1)\v{S}_{i+1} - \phi^k(-1)\hat{q}^3_{i-1/2}\v{\phi}^T(-1)\v{S}_{i}} \\
+  U_i^k &= \frac{1}{\Delta x} \p{B_i\v{S}_i}_k - \frac{1}{\Delta x}\p{\phi^k(1)\p{q^-_{i+1/2}}^3\v{\phi}^T(1)\v{S}_{i} - \phi^k(-1)\p{q^+_{i-1/2}}^3 \v{\phi}^T(-1)\v{S}_{i}}\\
+  &+ \frac{1}{\Delta x}\p{\phi^k(1)\hat{q}^3_{i+1/2}\v{\phi}^T(-1)\v{S}_{i+1} - \phi^k(-1)\hat{q}^3_{i-1/2}\v{\phi}^T(-1)\v{S}_{i}} \\
+  \v{U}_i &= \frac{1}{\Delta x} B_i\v{S}_i - \frac{1}{\Delta x}\p{\v{\phi}(1)\p{q^-_{i+1/2}}^3\v{\phi}^T(1)\v{S}_{i} - \v{\phi}(-1)\p{q^+_{i-1/2}}^3 \v{\phi}^T(-1)\v{S}_{i}}\\
+  &+ \frac{1}{\Delta x}\p{\v{\phi}(1)\hat{q}^3_{i+1/2}\v{\phi}^T(-1)\v{S}_{i+1} - \v{\phi}(-1)\hat{q}^3_{i-1/2}\v{\phi}^T(-1)\v{S}_{i}} \\
+  \v{U}_i &= \frac{1}{\Delta x} B_i\v{S}_i - \frac{1}{\Delta x}\p{\p{q^-_{i+1/2}}^3\Phi(1, 1)\v{S}_{i} - \p{q^+_{i-1/2}}^3 \Phi(-1, -1)\v{S}_{i}}\\
+  &+ \frac{1}{\Delta x}\p{\hat{q}^3_{i+1/2}\Phi(1, -1)\v{S}_{i+1} - \hat{q}^3_{i-1/2}\Phi(-1, -1)\v{S}_{i}} \\
+  \v{U}_i &= \frac{1}{\Delta x} \p{B_i - \p{q^-_{i+1/2}}^3\Phi(1, 1) + \p{\p{q^+_{i-1/2}}^3 - \hat{q}^3_{i-1/2}} \Phi(-1, -1)} \v{S}_i \\
+  &+ \frac{1}{\Delta x}\p{\hat{q}^3_{i+1/2}\Phi(1, -1)\v{S}_{i+1}} \\
+\end{align*}
+
+\begin{align*}
+  \dot{Q}_i^k &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{U_i^l \phi_{\xi}^l(\xi)}\phi^k(\xi)}{\xi} - \frac{1}{\Delta x}\p{\phi^k(1)\hat{U}_{i+1/2} - \phi^k(-1)\hat{U}_{i-1/2}} \\
+  \dot{Q}_i^k &= \frac{1}{\Delta x} \p{A\v{U}_i}_k - \frac{1}{\Delta x}\p{\phi^k(1)\v{\phi}^T(1)\v{U}_{i} - \phi^k(-1)\v{\phi}^T(1)\v{U}_{i-1}} \\
+  \dot{\v{Q}}_i^k &= \frac{1}{\Delta x} \p{A - \Phi(1, 1)}\v{U}_i + \frac{1}{\Delta x}\Phi(-1, 1)\v{U}_{i-1} \\
+\end{align*}
+
 \end{document}
