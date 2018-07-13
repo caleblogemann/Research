@@ -5,7 +5,7 @@ function [B] = getBMatrix(nBasisCpts, q, i)
     for k = 1:nBasisCpts
         for l = 2:nBasisCpts
             integrandFunction = @(xi) qCubedFunction(xi)*legendrePolynomial(k, xi)*legendrePolynomialDerivative(l, xi);
-            B(k, l) = gaussQuadrature(nBasisCpts+1, integrandFunction);
+            B(k, l) = gaussQuadrature(nBasisCpts, integrandFunction);
         end
     end
 end
