@@ -1,5 +1,6 @@
 function [U] = getUMatrix(q, nCells, nBasisCpts, deltaX)
     % U_i = 1/deltaX*(B_i - q^-_{i+1/2}^3*Phi(1, 1) + (q^+_{i-1/2}^3 - \hat{q}^3_{i-1/2})*Phi(-1,-1))S_i + 1/deltaX*\hat{q}^3_{i+1/2}*Phi(1, -1)S_{i+1}
+    % -1/deltaX*(A + Phi(-1, -1))Q_i + 1/deltaX*Phi(1, -1)Q_{i+1}
     Phi0 = getPhiMatrix(1, 1, nBasisCpts);
     Phi1 = getPhiMatrix(-1, -1, nBasisCpts);
     Phi2 = getPhiMatrix(1, -1, nBasisCpts);

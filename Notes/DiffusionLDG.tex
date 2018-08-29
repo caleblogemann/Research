@@ -8,148 +8,190 @@
 Equation
 }}
 \end{center}
+  We would like to solve the 1D diffusion equation with a Discontinuous Galerkin
+  Method.
+  The 1D diffusion equation is given as
+  \[
+    q_t = q_{xx}.
+  \]
 
-We would like to solve the 1D diffusion equation with a Discontinuous Galerkin
-Method.
-The 1D diffusion equation is given as
-\[
-  u_t = u_{xx}.
-\]
-
-If we were to naively apply DG methods, we could discretize the domain and
-consider piecewise polynomial approximation.
-We would then multiply by a test function and integrate by parts.
-\begin{gather*}
-  \dintt{I_j}{}{u_t v}{x} = \dintt{I_j}{}{u_{xx} v}{x} \\
-  \dintt{I_j}{}{u_t v}{x} = \p{\p{\hat{u}_x v^-}_{j+1/2} - \p{\hat{u}_x v^+}_{j-1/2}} - \dintt{I_j}{}{u_x v_x}{x}
-  %\dintt{I_j}{}{u_t v}{x} = \p{\p{\hat{u}_x v^-}_{j+1/2} - \p{\hat{u}_x v^+}_{j-1/2}} 
-    %- \p{\p{\hat{u} v^-_x}_{j+1/2} - \p{\hat{u} v^+_x}_{j-1/2}}
-    %+ \dintt{I_j}{}{u v_{xx}}{x}
-\end{gather*}
-and we use the average numerical flux
-\begin{gather*}
-  \p{\hat{u}_x}_{j+1/2} = \frac{\p{u^-_x}_{j+1/2} + \p{u^+_x}_{j+1/2}}{2}
-\end{gather*}
-This method is convergent and stable but it converges to the wrong solution.
+  If we were to naively apply DG methods, we could discretize the domain and
+  consider piecewise polynomial approximation.
+  We would then multiply by a test function and integrate by parts.
+  \begin{gather*}
+    \dintt{I_j}{}{u_t v}{x} = \dintt{I_j}{}{u_{xx} v}{x} \\
+    \dintt{I_j}{}{u_t v}{x} = \p{\p{\hat{u}_x v^-}_{j+1/2} - \p{\hat{u}_x v^+}_{j-1/2}} - \dintt{I_j}{}{u_x v_x}{x}
+    %\dintt{I_j}{}{u_t v}{x} = \p{\p{\hat{u}_x v^-}_{j+1/2} - \p{\hat{u}_x v^+}_{j-1/2}} 
+      %- \p{\p{\hat{u} v^-_x}_{j+1/2} - \p{\hat{u} v^+_x}_{j-1/2}}
+      %+ \dintt{I_j}{}{u v_{xx}}{x}
+  \end{gather*}
+  and we use the average numerical flux
+  \begin{gather*}
+    \p{\hat{u}_x}_{j+1/2} = \frac{\p{u^-_x}_{j+1/2} + \p{u^+_x}_{j+1/2}}{2}
+  \end{gather*}
+  This method is convergent and stable but it converges to the wrong solution.
 
 \textbf{\large{Local Discontinuous Galerkin Method}}
-The Local Discontinuous Galerkin method proposes a different approach.
-First rewrite the diffusion equation as a system of first order equations.
-\begin{align*}
-  u_t &= q_x \\
-  q &= u_x
-\end{align*}
+  The Local Discontinuous Galerkin method proposes a different approach.
+  First rewrite the diffusion equation as a system of first order equations.
+  \begin{align*}
+    r &= q_x \\
+    q_t &= r_x
+  \end{align*}
 
-The LDG method becomes the process of finding $u_h, q_h \in V_h$ in the DG solution space, such that
-for all test functions $v_h, w_h \in V_h$ and for all $j$ the following equations are satisfied
-\begin{align*}
-  \dintt{I_j}{}{(u_h)_t v_h}{x} &= \dintt{I_j}{}{(q_h)_x v_h}{x} \\
-  \dintt{I_j}{}{q_h w_h}{x} &= \dintt{I_j}{}{(u_h)_x w_h}{x}
-\end{align*}
-After integrating by parts, these equations are
-\begin{align*}
-  \dintt{I_j}{}{(u_h)_t v_h}{x} &= \p{\p{\hat{q}_h v^-_h}_{j+1/2} - \p{\hat{q}_h v^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (v_h)_x}{x} \\
-  \dintt{I_j}{}{q_h w_h}{x} &= \p{\p{\hat{u}_h w^-_h}_{j+1/2} - \p{\hat{u}_j w^+_h}_{j-1/2}}- \dintt{I_j}{}{u_h (w_h)_x}{x}
-\end{align*}
-A common choice of numerical fluxes are the so-called alternating fluxes.
-\begin{align*}
-  \hat{q}_h &= q^+_h \\
-  \hat{u}_h &= u^-_h
-\end{align*}
+  The LDG method becomes the process of finding $q_h, r_h \in V_h$ in the DG solution space, such that
+  for all test functions $v_h, w_h \in V_h$ and for all $j$ the following equations are satisfied
+  \begin{align*}
+    \dintt{I_j}{}{r_h w_h}{x} &= \dintt{I_j}{}{(q_h)_x w_h}{x} \\
+    \dintt{I_j}{}{(q_h)_t v_h}{x} &= \dintt{I_j}{}{(r_h)_x v_h}{x}
+  \end{align*}
+  After integrating by parts, these equations are
+  \begin{align*}
+    \dintt{I_j}{}{r_h w_h}{x} &= \p{\p{\hat{q}_h w^-_h}_{j+1/2} - \p{\hat{q}_j w^+_h}_{j-1/2}}- \dintt{I_j}{}{q_h (w_h)_x}{x} \\
+    \dintt{I_j}{}{(q_h)_t v_h}{x} &= \p{\p{\hat{r}_h v^-_h}_{j+1/2} - \p{\hat{r}_h v^+_h}_{j-1/2}} - \dintt{I_j}{}{r_h (v_h)_x}{x}
+  \end{align*}
+  A common choice of numerical fluxes are the so-called alternating fluxes.
+  \begin{align*}
+    \hat{r}_h &= r^-_h \\
+    \hat{q}_h &= q^+_h
+  \end{align*}
 
 \textbf{\large{Implementation}}
-If we consider a single cell $I_j$, do a linear transformation from
-$x \in \br{x_{j-1/2}, x_{j+1/2}}$ to $\xi \in \br{-1, 1}$, and consider
-specifically the Legendre polynomial basis $\set{\phi^k(\xi)}$ with the
-following orthogonality property
-\[
-  \frac{1}{2}\dintt{-1}{1}{\phi^j(\xi) \phi^k(\xi)}{\xi} = \delta_{jk}
-\]
-we can form a more concrete LDG method for implementing.
-The linear transformation can be expressed as
-\[
-  x = \frac{\Delta x}{2} \xi + \frac{x_{j-1/2} + x_{j+1/2}}{2}
-\]
-or
-\[
-  \xi = \frac{2}{\Delta x} \p{x - \frac{x_{j-1/2} + x_{j+1/2}}{2}}
-\]
-After this tranformation the diffusion equation become
-\[
-  u_t = \frac{4}{\Delta x^2} u_{\xi\xi}
-\]
-on the cell $I_j$.
-We can then write this as the following system of first order equations.
-\begin{align*}
-  u_t &= \frac{2}{\Delta x} q_{\xi} \\
-  q &= \frac{2}{\Delta x} u_{\xi}
-\end{align*}
-With the Legendre basis, the numerical solution on $I_j$ can be written as
-\begin{align*}
-  u &\approx u_h = \sum{k = 1}{M}{U_k \phi^k(\xi)} \\
-  q &\approx q_h = \sum{k = 1}{M}{Q_k \phi^k(\xi)}
-\end{align*}
-Now plugging these into the system and multiplying by a Legendre basis and integrating gives.
-\begin{align*}
-  q_h &= \frac{2}{\Delta x} (u_h)_{\xi} \\
-  \frac{1}{2} \dintt{-1}{1}{q_h \phi^l}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{(u_h)_{\xi} \phi^l}{\xi} \\
-  Q_l &= -\frac{1}{\Delta x} \dintt{-1}{1}{u_h \phi^l_{\xi}}{\xi} + \frac{1}{\Delta x}\p{u^-_{j+1/2} \phi^l(1) - u^-_{j-1/2} \phi^l(-1)} \\
-  (u_h)_t &= \frac{2}{\Delta x} (q_h)_{\xi} \\
-  \frac{1}{2}\dintt{-1}{1}{(u_h)_t \phi^l}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{(q_h)_{\xi} \phi^l}{\xi} \\
-  \dot{U}_l &= -\frac{1}{\Delta x} \dintt{-1}{1}{q_h \phi^l_{\xi}}{\xi} + \frac{1}{\Delta x}\p{q^+_{j+1/2} \phi^l(1) - q^+_{j-1/2} \phi^l(-1)}
-\end{align*}
-Now this is a system of ODEs, there are $M \times N$ ODEs if $M$ is the spacial
-order and $N$ is the number of cells.
+  If we consider a single cell $I_j$, do a linear transformation from
+  $x \in \br{x_{j-1/2}, x_{j+1/2}}$ to $\xi \in \br{-1, 1}$, and consider
+  specifically the Legendre polynomial basis $\set{\phi^k(\xi)}$ with the
+  following orthogonality property
+  \[
+    \frac{1}{2}\dintt{-1}{1}{\phi^j(\xi) \phi^k(\xi)}{\xi} = \delta_{jk}
+  \]
+  we can form a more concrete LDG method for implementing.
+  The linear transformation can be expressed as
+  \[
+    x = \frac{\Delta x}{2} \xi + \frac{x_{j-1/2} + x_{j+1/2}}{2}
+  \]
+  or
+  \[
+    \xi = \frac{2}{\Delta x} \p{x - \frac{x_{j-1/2} + x_{j+1/2}}{2}}
+  \]
+  After this tranformation the diffusion equation become
+  \[
+    q_t = \frac{4}{\Delta x^2} q_{\xi\xi}
+  \]
+  on the cell $I_j$.
+  We can then write this as the following system of first order equations.
+  \begin{align*}
+    r &= \frac{2}{\Delta x} q_{\xi}
+    q_t &= \frac{2}{\Delta x} r_{\xi} \\
+  \end{align*}
+  With the Legendre basis, the numerical solution on $I_j$ can be written as
+  \begin{align*}
+    \eval{q}{I_i}{} &\approx \eval{q_h}{I_i}{} = \sum{l = 1}{M}{Q_i^l \phi^l(\xi)} \\
+    \eval{r}{I_i}{} &\approx \eval{r_h}{I_i}{} = \sum{l = 1}{M}{R_i^l \phi^l(\xi)} \\
+  \end{align*}
+  Now plugging these into the system and multiplying by a Legendre basis and integrating gives.
+  I will use the following shorthand for numerical fluxes using one of the alternating flux options.
+  \begin{align*}
+    \hat{Q}_{i+1/2} &= \sum{l = 1}{M}{Q_{i+1}^l \phi^l(-1)} \\
+    \hat{R}_{i+1/2} &= \sum{l = 1}{M}{R_{i}^l \phi^l(1)}
+  \end{align*}
+  \begin{align*}
+    r &= \frac{2}{\Delta x} q_{\xi} \\
+    \sum{l = 1}{M}{R_i^l \phi^l(\xi)} &= \frac{2}{\Delta x} \sum{l = 1}{M}{Q_i^l \phi_{\xi}^l(\xi)} \\
+    \frac{1}{2}\dintt{-1}{1}{\sum{l = 1}{M}{R_i^l \phi^l(\xi)} \phi^k(\xi)}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{Q_i^l \phi_{\xi}^l(\xi)} \phi^k(\xi)}{\xi} \\
+    R_i^k &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{Q_i^l \phi_{\xi}^l(\xi)} \phi^k(\xi)}{\xi} \\
+    R_i^k &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{Q_i^l \phi^l(\xi)} \phi_{\xi}^k(\xi)}{\xi} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{Q}_{i+1/2} - \phi^k(-1)\hat{Q}_{i-1/2}} \\
+  \end{align*}
+  \begin{align*}
+    q_t &= \frac{2}{\Delta x} r_{\xi} \\
+    \sum{l = 1}{M}{\dot{Q}_i^l \phi^l(\xi)}  &= \frac{2}{\Delta x} \sum{l = 1}{M}{R_i^l \phi_{\xi}^l(\xi)} \\
+    \frac{1}{2}\dintt{-1}{1}{\sum{l = 1}{M}{\dot{Q}_i^l \phi^l(\xi)} \phi^k(\xi)}{\xi}  &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{R_i^l \phi_{\xi}^l(\xi)}\phi^k(\xi)}{\xi} \\
+    \dot{Q}_i^k &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{R_i^l \phi_{\xi}^l(\xi)}\phi^k(\xi)}{\xi} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{R}_{i+1/2} - \phi^k(-1)\hat{R}_{i-1/2}} \\
+  \end{align*}
+  Now this is a system of ODEs, there are $M \times N$ ODEs if $M$ is the spacial
+  order and $N$ is the number of cells.
+
+\textbf{\large{Matrix Representation}}
+  Some common matrices and vectors that appear in these equations are
+  \begin{align*}
+    \v{Q}_{i} &= \br{Q_i^l}_{l=1}^M \\
+    \v{\phi}(\xi) &= \br{\phi^k(\xi)}_{k = 1}^{M} \\
+    \Phi(\xi_1,\xi_2) &= \v{\phi}(\xi_1) \v{\phi}^T(\xi_2) \\
+    A &= \br{a_{kl}}_{k,l=1}^M \\
+    a_{kl} &= \dintt{-1}{1}{\phi_{\xi}^k(\xi) \phi^l(\xi)}{\xi} \\
+  \end{align*}
+
+  Also the numerical fluxes can be written as the following dot products
+  \begin{align*}
+    \hat{Q}_{i+1/2} &= \sum{l = 1}{M}{Q_{i+1}^l \phi^l(-1)} \\
+    &= \v{\phi}^T(-1)\v{Q}_{i+1} \\
+    \hat{R}_{i+1/2} &= \sum{l = 1}{M}{R_{i}^l \phi^l(1)} \\
+    &= \v{\phi}^T(1)\v{R}_{i} \\
+  \end{align*}
+
+  \begin{align*}
+    R_i^k &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{Q_i^l \phi^l(\xi)} \phi_{\xi}^k(\xi)}{\xi} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{Q}_{i+1/2} - \phi^k(-1)\hat{Q}_{i-1/2}} \\
+    R_i^k &= -\frac{1}{\Delta x} \sum{l=1}{M}{Q_i^l\dintt{-1}{1}{\phi^l(\xi) \phi_{\xi}^k(\xi)}{\xi}} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{Q}_{i+1/2} - \phi^k(-1)\hat{Q}_{i-1/2}} \\
+    R_i^k &= -\frac{1}{\Delta x} \p{A \v{Q}_i}_k + \frac{1}{\Delta x}\p{\phi^k(1)\v{\phi}^T(-1)\v{Q}_{i+1} - \phi^k(-1)\v{\phi}^T(-1)\v{Q}_{i}} \\
+    \v{R}_i &= -\frac{1}{\Delta x} A \v{Q}_i + \frac{1}{\Delta x}\p{\v{\phi}(1)\v{\phi}^T(-1)\v{Q}_{i+1} - \v{\phi}(-1)\v{\phi}^T(-1)\v{Q}_{i}} \\
+    \v{R}_i &= -\frac{1}{\Delta x} A \v{Q}_i + \frac{1}{\Delta x}\p{\Phi(1, -1)\v{Q}_{i+1} - \Phi(-1, -1)\v{Q}_{i}} \\
+    \v{R}_i &= -\frac{1}{\Delta x} \p{A + \Phi(-1,-1)} \v{Q}_i + \frac{1}{\Delta x}\Phi(1, -1)\v{Q}_{i+1}
+  \end{align*}
+
+  \begin{align*}
+    Q_i^k &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{R_i^l \phi^l(\xi)} \phi_{\xi}^k(\xi)}{\xi} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{R}_{i+1/2} - \phi^k(-1)\hat{R}_{i-1/2}}\\
+    Q_i^k &= -\frac{1}{\Delta x} \p{A \v{R}_i}_k + \frac{1}{\Delta x}\p{\phi^k(1)\v{\phi}^T(1)\v{R}_{i} - \phi^k(-1)\v{\phi}^T(1)\v{R}_{i-1}} \\
+    \v{Q}_i &= -\frac{1}{\Delta x} \p{A - \Phi(1, 1)} \v{R}_i - \frac{1}{\Delta x}\Phi(-1, 1)\v{R}_{i-1}
+  \end{align*}
 
 \textbf{\large{Proving Stability}}
-In order to prove that this method is $L^2$ stable consider we sum both of the integral equations from before.
-\begin{gather*}
-  \dintt{I_j}{}{(u_h)_t v_h}{x} + \dintt{I_j}{}{q_h w_h}{x} = \p{\p{q^+_h v^-_h}_{j+1/2} - \p{q^+_h v^+_h}_{j-1/2}} \\
-  + \p{\p{u^-_h w^-_h}_{j+1/2} - \p{u^-_j w^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (v_h)_x}{x} - \dintt{I_j}{}{u_h (w_h)_x}{x}
-\end{gather*}
-Consider using $v_h = u_h$ and $w_h = q_h$.
-\begin{gather*}
-  \dintt{I_j}{}{(u_h)_t u_h}{x} + \dintt{I_j}{}{q_h q_h}{x} = \p{\p{q^+_h u^-_h}_{j+1/2} - \p{q^+_h u^+_h}_{j-1/2}} \\
-  + \p{\p{u^-_h q^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (u_h)_x}{x} - \dintt{I_j}{}{u_h (q_h)_x}{x}
-\end{gather*}
-Consider the following shorthand notation
-\begin{gather*}
-  B_j = \dintt{I_j}{}{(u_h)_t u_h}{x} + \dintt{I_j}{}{q_h q_h}{x} \\
-  B_j = \p{\p{q^+_h u^-_h}_{j+1/2} - \p{q^+_h u^+_h}_{j-1/2}} + \p{\p{u^-_h q^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (u_h)_x}{x} - \dintt{I_j}{}{u_h (q_h)_x}{x}
-\end{gather*}
-%\begin{gather*}
-  %B_j(u_h, q_h, u_h, q_h) = \dintt{I_j}{}{(u_h)_t u_h}{x} - \p{\p{\hat{q}_h u^-_h}_{j+1/2} - \p{\hat{q}_h u^+_h}_{j-1/2}} + \dintt{I_j}{}{q_h (u_h)_x}{x} \\
-  %+ \dintt{I_j}{}{q_h q_h}{x} - \p{\p{\hat{u}_h q^-_h}_{j+1/2} - \p{\hat{u}_j q^+_h}_{j-1/2}} + \dintt{I_j}{}{u_h (q_h)_x}{x} = 0
-%\end{gather*}
-This can be simplified in several ways.
-First simplify the left hand side.
-\begin{align*}
-  B_j &= \dintt{I_j}{}{(u_h)_t u_h}{x} + \dintt{I_j}{}{q_h q_h}{x} \\
-  B_j &= \frac{1}{2} \dintt{I_j}{}{\d*{u_h^2}{t}}{x} + \dintt{I_j}{}{q_h^2}{x} \\
-  B_j &= \frac{1}{2} \d{}{t} \dintt{I_j}{}{u_h^2}{x} + \dintt{I_j}{}{q_h^2}{x} \\
-  B_j &= \frac{1}{2} \d{}{t} \norm[L^2(I_j)]{u_h}^2 + \norm[L^2(I_j)]{q_h}^2 \\
-\end{align*}
-Second the right hand side can be simplified.
-\begin{align*}
-  \dintt{I_j}{}{q_h (u_h)_x}{x} + \dintt{I_j}{}{u_h (q_h)_x}{x} &= \dintt{I_j}{}{q_h (u_h)_x + u_h (q_h)_x}{x} \\
-  &= \dintt{I_j}{}{(q_h u_h)_x}{x} \\
-  &= (q^-_h u^-_h)_{j+1/2} - (q^+_h u^+_h)_{j-1/2}
-\end{align*}
-Now 
-\begin{gather*}
-  B_j = \p{\p{q^+_h u^-_h}_{j+1/2} - \p{q^+_h u^+_h}_{j-1/2}} + \p{\p{u^-_h q^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} - \p{(q^-_h u^-_h)_{j+1/2} - (q^+_h u^+_h)_{j-1/2}} \\
-  B_j = \p{q^+_h u^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2} \\
-\end{gather*}
-Assuming periodic boundary conditions, and summing $B_j$ over all cells
-\begin{align*}
-  \sum{j = 1}{N}{B_j} &= \sum{j=1}{N}{\p{q^+_h u^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} \\
-  &= -\p{u^-_h q^+_h}_{1/2} + \sum{k=1}{N}{\p{q^+_h u^-_h}_{k+1/2} - \p{u^-_h q^+_h}_{k+1/2}} + \p{q^+_h u^-_h}_{N+1/2} \\
-  &= 0
-\end{align*}
-This shows that
-\begin{gather*}
-  \sum{j = 1}{N}{B_j} = \sum{j = 1}{N}{\frac{1}{2} \d{}{t} \norm[L^2(I_j)]{u_h}^2 + \norm[L^2(I_j)]{q_h}^2} \\
-  \frac{1}{2} \d{}{t} \norm[L^2]{u_h}^2 + \norm[L^2]{q_h}^2 = 0 \\
-  \d{}{t} \norm[L^2]{u_h}^2 \le 0
-\end{gather*}
+  In order to prove that this method is $L^2$ stable consider we sum both of the integral equations from before.
+  \begin{gather*}
+    \dintt{I_j}{}{(u_h)_t v_h}{x} + \dintt{I_j}{}{q_h w_h}{x} = \p{\p{q^+_h v^-_h}_{j+1/2} - \p{q^+_h v^+_h}_{j-1/2}} \\
+    + \p{\p{u^-_h w^-_h}_{j+1/2} - \p{u^-_j w^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (v_h)_x}{x} - \dintt{I_j}{}{u_h (w_h)_x}{x}
+  \end{gather*}
+  Consider using $v_h = u_h$ and $w_h = q_h$.
+  \begin{gather*}
+    \dintt{I_j}{}{(u_h)_t u_h}{x} + \dintt{I_j}{}{q_h q_h}{x} = \p{\p{q^+_h u^-_h}_{j+1/2} - \p{q^+_h u^+_h}_{j-1/2}} \\
+    + \p{\p{u^-_h q^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (u_h)_x}{x} - \dintt{I_j}{}{u_h (q_h)_x}{x}
+  \end{gather*}
+  Consider the following shorthand notation
+  \begin{gather*}
+    B_j = \dintt{I_j}{}{(u_h)_t u_h}{x} + \dintt{I_j}{}{q_h q_h}{x} \\
+    B_j = \p{\p{q^+_h u^-_h}_{j+1/2} - \p{q^+_h u^+_h}_{j-1/2}} + \p{\p{u^-_h q^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (u_h)_x}{x} - \dintt{I_j}{}{u_h (q_h)_x}{x}
+  \end{gather*}
+  %\begin{gather*}
+    %B_j(u_h, q_h, u_h, q_h) = \dintt{I_j}{}{(u_h)_t u_h}{x} - \p{\p{\hat{q}_h u^-_h}_{j+1/2} - \p{\hat{q}_h u^+_h}_{j-1/2}} + \dintt{I_j}{}{q_h (u_h)_x}{x} \\
+    %+ \dintt{I_j}{}{q_h q_h}{x} - \p{\p{\hat{u}_h q^-_h}_{j+1/2} - \p{\hat{u}_j q^+_h}_{j-1/2}} + \dintt{I_j}{}{u_h (q_h)_x}{x} = 0
+  %\end{gather*}
+  This can be simplified in several ways.
+  First simplify the left hand side.
+  \begin{align*}
+    B_j &= \dintt{I_j}{}{(u_h)_t u_h}{x} + \dintt{I_j}{}{q_h q_h}{x} \\
+    B_j &= \frac{1}{2} \dintt{I_j}{}{\d*{u_h^2}{t}}{x} + \dintt{I_j}{}{q_h^2}{x} \\
+    B_j &= \frac{1}{2} \d{}{t} \dintt{I_j}{}{u_h^2}{x} + \dintt{I_j}{}{q_h^2}{x} \\
+    B_j &= \frac{1}{2} \d{}{t} \norm[L^2(I_j)]{u_h}^2 + \norm[L^2(I_j)]{q_h}^2 \\
+  \end{align*}
+  Second the right hand side can be simplified.
+  \begin{align*}
+    \dintt{I_j}{}{q_h (u_h)_x}{x} + \dintt{I_j}{}{u_h (q_h)_x}{x} &= \dintt{I_j}{}{q_h (u_h)_x + u_h (q_h)_x}{x} \\
+    &= \dintt{I_j}{}{(q_h u_h)_x}{x} \\
+    &= (q^-_h u^-_h)_{j+1/2} - (q^+_h u^+_h)_{j-1/2}
+  \end{align*}
+  Now 
+  \begin{gather*}
+    B_j = \p{\p{q^+_h u^-_h}_{j+1/2} - \p{q^+_h u^+_h}_{j-1/2}} + \p{\p{u^-_h q^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} - \p{(q^-_h u^-_h)_{j+1/2} - (q^+_h u^+_h)_{j-1/2}} \\
+    B_j = \p{q^+_h u^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2} \\
+  \end{gather*}
+  Assuming periodic boundary conditions, and summing $B_j$ over all cells
+  \begin{align*}
+    \sum{j = 1}{N}{B_j} &= \sum{j=1}{N}{\p{q^+_h u^-_h}_{j+1/2} - \p{u^-_h q^+_h}_{j-1/2}} \\
+    &= -\p{u^-_h q^+_h}_{1/2} + \sum{k=1}{N}{\p{q^+_h u^-_h}_{k+1/2} - \p{u^-_h q^+_h}_{k+1/2}} + \p{q^+_h u^-_h}_{N+1/2} \\
+    &= 0
+  \end{align*}
+  This shows that
+  \begin{gather*}
+    \sum{j = 1}{N}{B_j} = \sum{j = 1}{N}{\frac{1}{2} \d{}{t} \norm[L^2(I_j)]{u_h}^2 + \norm[L^2(I_j)]{q_h}^2} \\
+    \frac{1}{2} \d{}{t} \norm[L^2]{u_h}^2 + \norm[L^2]{q_h}^2 = 0 \\
+    \d{}{t} \norm[L^2]{u_h}^2 \le 0
+  \end{gather*}
 \end{document}

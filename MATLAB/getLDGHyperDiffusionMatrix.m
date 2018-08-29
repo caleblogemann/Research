@@ -1,4 +1,4 @@
-function [LDG] = getLDGMatrix(q, nCells, nBasisCpts, deltaX)
+function [LDG] = getLDGHyperDiffusionMatrix(nCells, nBasisCpts, deltaX)
     %qVector = getQVector(q);
     R = getRMatrix(nCells, nBasisCpts, deltaX);
     %rVector = R*qVector;
@@ -6,7 +6,7 @@ function [LDG] = getLDGMatrix(q, nCells, nBasisCpts, deltaX)
     S = getSMatrix(nCells, nBasisCpts, deltaX);
     %sVector = S*rVector;
     %disp(sVector);
-    U = getUMatrix(q, nCells, nBasisCpts, deltaX);
+    U = getUMatrixHyper(nCells, nBasisCpts, deltaX);
     %uVector = U*sVector;
     %disp(uVector);
     Q = getQMatrix(nCells, nBasisCpts, deltaX);
