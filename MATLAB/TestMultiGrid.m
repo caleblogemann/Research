@@ -6,15 +6,16 @@ tolerance = 1e-10;
 max_iterations = 1000;
 
 nBasisCpts = 1;
-nCells = 1024;
-vcycle_depth = 8;
+nCells = 512;
+vcycle_depth = 7;
 a = 0;
 b = 10;
 deltaX = (b - a)/nCells;
+bc = 'periodic';
 
 qleft = 0.3323;
 qright = 0.1;
-discontinuity = 5.0;
+discontinuity = 0.5;
 qRiemann = @(x) qleft*double(x < discontinuity) + qright*double(x >= discontinuity);
 
 amplitude = 0.5;
@@ -28,17 +29,18 @@ offset = 0.2;
 wavenumber = 2;
 qSin = @(x) amplitude*sin(2*pi*wavenumber*x/(b -a)) + offset;
 
-qFun = qRiemann;
+qFun = qGaussian;
 q = projectQ(qFun, nBasisCpts, nCells, a, b);
 rhs = q;
-deltaT = 0.4;
+deltaT = 0.1;
 
-diffusivity = 1.0;
-matrixFunctionDiffusionFD = @(num_elems) FDDiffusionBE(num_elems, deltaT, a, b, diffusivity);
-matrixFunctionDiffusion = @(num_elems) LDGDiffusionBE(num_elems, nBasisCpts, deltaT, a, b);
-matrixFunctionHyperDiffusion = @(num_elems) LDGHyperDiffusionBE(num_elems, nBasisCpts, deltaT, a, b);
-matrixFunctionThinFilm = @(num_elems) LDGThinFilmBE(num_elems, nBasisCpts, q, deltaT, a, b);
-matrixFunction = matrixFunctionDiffusionFD;
+diffusivity = .3^3;
+matrixFunctionDiffusionFD = @(num_elems) FDDiffusionBE(num_elems, deltaT, a, b, diffusivity, bc);
+matrixFunctionDiffusion = @(num_elems) LDGDiffusionBE(num_elems, nBasisCpts, deltaT, a, b, diffusivity, bc);
+matrixFunctionHyperDiffusionFD = @(num_elems) FDHyperDiffusionBE(num_elems, deltaT, a, b, diffusivity, bc);
+matrixFunctionHyperDiffusion = @(num_elems) LDGHyperDiffusionBE(num_elems, nBasisCpts, deltaT, a, b, diffusivity, bc);
+matrixFunctionThinFilm = @(num_elems) LDGThinFilmBE(num_elems, nBasisCpts, q, deltaT, a, b, diffusivity, bc);
+matrixFunction = matrixFunctionHyperDiffusion;
 
 [soln, num_iterations] = multigrid(q, rhs, matrixFunction);
 exact_soln = getMatrix(matrixFunction(nCells)\getVector(rhs), nCells, nBasisCpts);

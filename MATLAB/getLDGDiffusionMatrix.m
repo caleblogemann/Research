@@ -1,6 +1,6 @@
-function [LDG] = getLDGDiffusionMatrix(nCells, nBasisCpts, deltaX)
-    R = getRMatrix(nCells, nBasisCpts, deltaX);
-    Q = getQMatrixDiffusion(nCells, nBasisCpts, deltaX);
+function [LDG] = getLDGDiffusionMatrix(nCells, nBasisCpts, deltaX, diffusivity, bc)
+    R = getRMatrixDiffusion(nCells, nBasisCpts, deltaX, bc);
+    Q = getQMatrixDiffusion(nCells, nBasisCpts, deltaX, diffusivity);
 
     LDG = Q*R;
 end
