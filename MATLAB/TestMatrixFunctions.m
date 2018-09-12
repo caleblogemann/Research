@@ -25,13 +25,13 @@ diffusivity = 1.0;
                 disp('nBasisCpts = 1');
                 num_basis_cpts = 1;
                 q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
-                A = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+                A = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 disp(norm(A*q) <= tolerance);
             % 2 basis cpts
                 disp('nBasisCpts = 2');
                 num_basis_cpts = 2;
                 q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
-                A = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+                A = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 disp(norm(A*getVector(q)) <= tolerance);
         % periodic
             bc = 'periodic';
@@ -40,13 +40,13 @@ diffusivity = 1.0;
                 disp('nBasisCpts = 1');
                 num_basis_cpts = 1;
                 q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
-                A = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+                A = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 disp(norm(A*q) <= tolerance)
             % 2 basis cpts
                 disp('nBasisCpts = 2');
                 num_basis_cpts = 2;
                 q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
-                A = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+                A = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 disp(norm(A*getVector(q)) <= tolerance)
 
     % Should match FD version for extrapolation num_basis_cpts = 1, diffusivity = 1.0,
@@ -54,14 +54,14 @@ diffusivity = 1.0;
         num_basis_cpts = 1;
         bc = 'extrapolation';
         disp(bc);
-        ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+        ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
         AFD = getFDDiffusionMatrix(num_elems, diffusivity, deltaX, bc);
         disp(norm(ALDG - AFD) <= tolerance)
 
     % and for periodic
         bc = 'periodic';
         disp(bc);
-        ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+        ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
         AFD = getFDDiffusionMatrix(num_elems, diffusivity, deltaX, bc);
         disp(norm(ALDG - AFD) <= tolerance)
 
@@ -72,27 +72,27 @@ diffusivity = 1.0;
         % at num_basis_cpts = 1
             num_basis_cpts = 1;
             disp('nBasisCpts = 1');
-            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
-            Aq = DiffusionOperator(q, deltaX, bc);
+            Aq = DiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - Aq) <= tolerance)
 
         % at num_basis_cpts = 2
             disp('nBasisCpts = 2');
             num_basis_cpts = 2;
-            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
-            Aq = DiffusionOperator(q, deltaX, bc);
+            Aq = DiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
         % at num_basis_cpts = 3
             disp('nBasisCpts = 3');
             num_basis_cpts = 3;
-            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
-            Aq = DiffusionOperator(q, deltaX, bc);
+            Aq = DiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
@@ -102,26 +102,26 @@ diffusivity = 1.0;
         % at num_basis_cpts = 1
             disp('nBasisCpts = 1');
             num_basis_cpts = 1;
-            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
-            Aq = DiffusionOperator(q, deltaX, bc);
+            Aq = DiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
         % at num_basis_cpts = 2
             disp('nBasisCpts = 2');
             num_basis_cpts = 2;
-            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
-            Aq = DiffusionOperator(q, deltaX, bc);
+            Aq = DiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
         % at num_basis_cpts = 3
             disp('nBasisCpts = 3');
-            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
-            Aq = DiffusionOperator(q, deltaX, bc);
+            Aq = DiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
@@ -138,13 +138,13 @@ diffusivity = 1.0;
                 disp('nBasisCpts = 1');
                 num_basis_cpts = 1;
                 q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
-                A = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+                A = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 disp(norm(A*q) <= tolerance);
             % 2 basis cpts
                 disp('nBasisCpts = 2');
                 num_basis_cpts = 2;
                 q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
-                A = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+                A = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 disp(norm(A*getVector(q)) <= tolerance);
         % periodic
             bc = 'periodic';
@@ -153,13 +153,13 @@ diffusivity = 1.0;
                 disp('nBasisCpts = 1');
                 num_basis_cpts = 1;
                 q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
-                A = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+                A = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 disp(norm(A*q) <= tolerance)
             % 2 basis cpts
                 disp('nBasisCpts = 2');
                 num_basis_cpts = 2;
                 q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
-                A = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+                A = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 disp(norm(A*getVector(q)) <= tolerance)
 
     % Should match FD version for extrapolation num_basis_cpts = 1, diffusivity = 1.0,
@@ -167,14 +167,14 @@ diffusivity = 1.0;
         num_basis_cpts = 1;
         bc = 'extrapolation';
         disp(bc);
-        ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+        ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
         AFD = getFDHyperDiffusionMatrix(num_elems, diffusivity, deltaX, bc);
         disp(norm(ALDG - AFD) <= tolerance)
 
     % and for periodic
         bc = 'periodic';
         disp(bc);
-        ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+        ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
         AFD = getFDHyperDiffusionMatrix(num_elems, diffusivity, deltaX, bc);
         disp(norm(ALDG - AFD) <= tolerance)
 
@@ -185,27 +185,27 @@ diffusivity = 1.0;
         % at num_basis_cpts = 1
             num_basis_cpts = 1;
             disp('nBasisCpts = 1');
-            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
-            Aq = HyperDiffusionOperator(q, deltaX, bc);
+            Aq = HyperDiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - Aq) <= tolerance)
 
         % at num_basis_cpts = 2
             disp('nBasisCpts = 2');
             num_basis_cpts = 2;
-            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
-            Aq = HyperDiffusionOperator(q, deltaX, bc);
+            Aq = HyperDiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
         % at num_basis_cpts = 3
             disp('nBasisCpts = 3');
             num_basis_cpts = 3;
-            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
-            Aq = HyperDiffusionOperator(q, deltaX, bc);
+            Aq = HyperDiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
@@ -215,28 +215,182 @@ diffusivity = 1.0;
         % at num_basis_cpts = 1
             disp('nBasisCpts = 1');
             num_basis_cpts = 1;
-            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
-            Aq = HyperDiffusionOperator(q, deltaX, bc);
+            Aq = HyperDiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
         % at num_basis_cpts = 2
             disp('nBasisCpts = 2');
             num_basis_cpts = 2;
-            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
-            Aq = HyperDiffusionOperator(q, deltaX, bc);
+            Aq = HyperDiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
         % at num_basis_cpts = 3
             disp('nBasisCpts = 3');
-            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, bc);
+            ALDG = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
             q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
-            Aq = HyperDiffusionOperator(q, deltaX, bc);
+            Aq = HyperDiffusionOperator(q, deltaX, diffusivity, bc);
             qVector = getVector(q);
             disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
+
+%% Thin Film Diffusion
+    disp('Thin Film Diffusion LDG');
+    num_elems = 6;
+    deltaX = (b - a)/num_elems;
+    % Should be zero for constant function
+        disp('Constant Function');
+        % extrapolation
+            bc = 'extrapolation';
+            disp(bc);
+            % 1 basis cpts
+                disp('nBasisCpts = 1');
+                num_basis_cpts = 1;
+                q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
+                A = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
+                disp(norm(A*q) <= tolerance);
+                disp(norm(Aq) <= tolerance);
+            % 2 basis cpts
+                disp('nBasisCpts = 2');
+                num_basis_cpts = 2;
+                q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
+                A = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
+                disp(norm(A*getVector(q)) <= tolerance);
+                disp(norm(Aq) <= tolerance);
+
+        % periodic
+            bc = 'periodic';
+            disp(bc);
+            % 1 basis cpts
+                disp('nBasisCpts = 1');
+                num_basis_cpts = 1;
+                q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
+                A = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
+                disp(norm(A*q) <= tolerance);
+                disp(norm(Aq) <= tolerance);
+            % 2 basis cpts
+                disp('nBasisCpts = 2');
+                num_basis_cpts = 2;
+                q = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
+                A = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
+                disp(norm(A*getVector(q)) <= tolerance);
+                disp(norm(Aq) <= tolerance);
+
+    % Should Match hyper diffusion when original_q is one
+        disp('Matching HyperDiffusion');
+        % extrapolation
+            bc = 'extrapolation';
+            disp(bc);
+            % 1 basis cpts
+                disp('nBasisCpts = 1');
+                num_basis_cpts = 1;
+                one = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
+                q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
+                A = getLDGThinFilmMatrix(one, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Hyper = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, one, diffusivity, bc);
+                disp(norm(A - Hyper) <= tolerance);
+                disp(norm(Aq - Hyper*q) <= tolerance);
+            % 2 basis cpts
+                disp('nBasisCpts = 2');
+                num_basis_cpts = 2;
+                one = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
+                q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
+                A = getLDGThinFilmMatrix(one, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Hyper = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, one, diffusivity, bc);
+                disp(norm(A - Hyper) <= tolerance);
+                disp(norm(getVector(Aq) - Hyper*getVector(q)) <= tolerance);
+
+        % periodic
+            bc = 'periodic';
+            disp(bc);
+            % 1 basis cpts
+                disp('nBasisCpts = 1');
+                num_basis_cpts = 1;
+                one = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
+                q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
+                A = getLDGThinFilmMatrix(one, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Hyper = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, one, diffusivity, bc);
+                disp(norm(A - Hyper) <= tolerance);
+                disp(norm(Aq - Hyper*q) <= tolerance);
+            % 2 basis cpts
+                disp('nBasisCpts = 2');
+                num_basis_cpts = 2;
+                one = projectQ(constantFunction, num_basis_cpts, num_elems, a, b);
+                q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
+                A = getLDGThinFilmMatrix(one, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Hyper = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, one, diffusivity, bc);
+                disp(norm(A - Hyper) <= tolerance);
+                disp(norm(getVector(Aq) - Hyper*getVector(q)) <= tolerance);
+
+    % Should match operator version
+        disp('Matching Operator version');
+        % with extrapolation
+            bc = 'extrapolation';
+            disp(bc);
+            % at num_basis_cpts = 1
+                num_basis_cpts = 1;
+                disp('nBasisCpts = 1');
+                q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
+                ALDG = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
+                qVector = getVector(q);
+                disp(norm(ALDG*qVector - Aq) <= tolerance)
+            % at num_basis_cpts = 2
+                disp('nBasisCpts = 2');
+                num_basis_cpts = 2;
+                q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
+                ALDG = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
+                qVector = getVector(q);
+                disp(norm(ALDG*qVector - Aq) <= tolerance)
+            % at num_basis_cpts = 3
+                disp('nBasisCpts = 3');
+                num_basis_cpts = 3;
+                q = projectQ(riemannFunction, num_basis_cpts, num_elems, a, b);
+                ALDG = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
+                qVector = getVector(q);
+                disp(norm(ALDG*qVector - Aq) <= tolerance)
+
+        % And with periodic boundary conditions
+            bc = 'periodic';
+            disp(bc);
+            % at num_basis_cpts = 1
+                disp('nBasisCpts = 1');
+                num_basis_cpts = 1;
+                q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
+                ALDG = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
+                qVector = getVector(q);
+                disp(norm(ALDG*qVector - Aq) <= tolerance)
+            % at num_basis_cpts = 2
+                disp('nBasisCpts = 2');
+                num_basis_cpts = 2;
+                q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
+                ALDG = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
+                qVector = getVector(q);
+                disp(norm(ALDG*qVector - Aq) <= tolerance)
+            % at num_basis_cpts = 3
+                disp('nBasisCpts = 3');
+                num_basis_cpts = 3;
+                q = projectQ(gaussianFunction, num_basis_cpts, num_elems, a, b);
+                ALDG = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
+                Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
+                qVector = getVector(q);
+                disp(norm(ALDG*qVector - Aq) <= tolerance)
 
 %% Thin Film Diffusion
 % [LDG] = getLDGThinFilmMatrix(qRiemann, num_elems, num_basis_cpts, deltaX);
