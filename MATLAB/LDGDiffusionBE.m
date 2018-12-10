@@ -3,5 +3,5 @@ function [A] = LDGDiffusionBE(num_elems, num_basis_cpts, deltaT, a, b, diffusivi
 
     LDGMatrix = getLDGDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
 
-    A = eye(num_elems) - deltaT*LDGMatrix;
+    A = eye(num_elems*num_basis_cpts) - deltaT*LDGMatrix;
 end

@@ -22,26 +22,23 @@ function [U] = getUMatrix(q, nCells, nBasisCpts, deltaX, bc)
     phiVectorPlus  = arrayfun(@(l) legendrePolynomial(l, -1), 1:nBasisCpts);
     switch bc
         case 'extrapolation'
-            qExtended = [
+            qExtended = [q(1,:); q(1,:); q; q(end,:)];
         case 'periodic'
+            qExtended = [q(end-1,:); q(end,:); q; q(1,:)];
     end
-    % qminus(i) = q^-_{i-1/2}^3
-    qminus = ([q(1,:); q]*phiVectorMinus').^3;
-    % qplus(i) = q^+_{i-1/2}^3
-    qplus  = ([q; q(end,:)]*phiVectorPlus').^3;
+    % qminus(i) = q^-_{i-3/2}^3
+    qminus = (qExtended(1:end-1,:)*phiVectorMinus').^3;
+    % qplus(i) = q^+_{i-3/2}^3
+    qplus  = (qExtended(2:end,:)*phiVectorPlus').^3;
     % qhat(i) = (q^-_{i-1/2}^3 + q^+_{i-1/2}^3)/2
     qhat   = (qminus+qplus)/2;
-    C = @(i) 1/deltaX*(getBMatrix(nBasisCpts, q, i) - qminus(i+1)*Phi0 + (qplus(i) - qhat(i))*Phi1);
-    D = @(i) 1/deltaX*qhat(i+1)*Phi2;
 
-    U = sparse(nCells*nBasisCpts, nCells*nBasisCpts);
-    for i = 1:nCells
-        if(i < nCells)
-            U((nBasisCpts*(i-1)+1):nBasisCpts*i,(nBasisCpts*(i-1)+1):nBasisCpts*i) = C(i);
-            U((nBasisCpts*(i-1)+1):nBasisCpts*i,(nBasisCpts*(i)+1):nBasisCpts*(i+1)) = D(i);
-        else
-            % ghost cell at right endpoint
-            U((nBasisCpts*(i-1)+1):nBasisCpts*i,(nBasisCpts*(i-1)+1):nBasisCpts*i) = C(i) + D(i);
-        end
+    E = @(i) 1/deltaX*(getBMatrix(nBasisCpts, q, (i>1)*(i-1) + (i==1)*(strcmp(bc, 'extrapolation') + strcmp(bc, 'periodic')*nCells)) - qminus(i+1)*Phi0 + (qplus(i) - qhat(i))*Phi1);
+    F = @(i) 1/deltaX*qhat(i+1)*Phi2;
+
+    U = sparse((nCells+1)*nBasisCpts, (nCells+2)*nBasisCpts);
+    for i = 1:nCells+1
+        U((nBasisCpts*(i-1)+1):nBasisCpts*i,(nBasisCpts*(i-1)+1):nBasisCpts*i) = E(i);
+        U((nBasisCpts*(i-1)+1):nBasisCpts*i,(nBasisCpts*(i)+1):nBasisCpts*(i+1)) = F(i);
     end
 end

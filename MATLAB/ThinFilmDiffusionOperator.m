@@ -27,7 +27,7 @@ function [Aq] = ThinFilmDiffusionOperator(q, dx, original_q, diffusivity, bc)
     % Q flux always evaluated at right side of boundary
     % FQ[i] = Sum_{l = 1}^{num_basis_cpts}{Q_i^l *phi^l(-1)}
     % FQ[i] = Q at boundary (i - 1/2)
-    FQ(1:num_elems) = (sgn.*phi)*q';
+    FQ(3:num_elems+2) = (sgn.*phi)*q';
     switch bc
         case 'periodic'
             % cell M - 1 = index num_elems+1
@@ -73,7 +73,7 @@ function [Aq] = ThinFilmDiffusionOperator(q, dx, original_q, diffusivity, bc)
     % etaRight[i] = eta evaluate on right side of (i-1/2) boundary
     % etaRight[i] = eta_i(-1)
     FSRight(:) = (sgn.*phi)*S';
-    FSLeft(:)    = phi*S(1:end-1)';
+    FSLeft(:)    = phi*S(1:end-1,:)';
     etaRight(2:end-1) = ((sgn.*phi)*original_q').^3;
     etaLeft(3:end)    = (phi*original_q').^3;
     switch bc
@@ -109,13 +109,13 @@ function [Aq] = ThinFilmDiffusionOperator(q, dx, original_q, diffusivity, bc)
             Stmp(i,k) = sum(arrayfun(@(l) S(i, l)*gaussQuadrature(num_basis_cpts, @(xi) integrandFunction(xi, l)), 2:num_basis_cpts));
         end
     end
-    U = odx*(Stmp + etaAverage(2:end)*phi.*SRight(2:end) - etaLeft(2:end)*phi.*SLeft(1:end) + ...
-        (etaRight(1:end-1) + etaAverage(1:end-1))*(sgn.*phi).*SRight(1:end-1));
+    U = odx*(Stmp + etaAverage(2:end)*phi.*FSRight(2:end) - etaLeft(2:end)*phi.*FSLeft(1:end) + ...
+        (etaRight(1:end-1) - etaAverage(1:end-1))*(sgn.*phi).*FSRight(1:end-1));
 
     % fluxes to evaluate solution
     % FU[i] is flux of U at i - 1/2 interface = U_{i-1}(x_{i-1/2}) = flux evaluated on left hand side
     % FU[i] = Sum_{l = 1}^{num_basis_cpts}{U_{i-1}^l *phi^l(1)}
     FU(:) = phi*U';
 
-    Aq = diffusivity*odx*((Smat*U')' - FU(2:end)*phi + FU(1:end-1)*(sgn.*phi));
+    Aq = diffusivity*odx*((Smat*U(2:end,:)')' - FU(2:end)*phi + FU(1:end-1)*(sgn.*phi));
 end

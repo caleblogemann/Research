@@ -297,7 +297,7 @@ diffusivity = 1.0;
                 A = getLDGThinFilmMatrix(one, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Hyper = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Aq = ThinFilmDiffusionOperator(q, deltaX, one, diffusivity, bc);
-                disp(norm(A - Hyper) <= tolerance);
+                disp(norm(full(A - Hyper)) <= tolerance);
                 disp(norm(Aq - Hyper*q) <= tolerance);
             % 2 basis cpts
                 disp('nBasisCpts = 2');
@@ -307,7 +307,7 @@ diffusivity = 1.0;
                 A = getLDGThinFilmMatrix(one, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Hyper = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Aq = ThinFilmDiffusionOperator(q, deltaX, one, diffusivity, bc);
-                disp(norm(A - Hyper) <= tolerance);
+                disp(norm(full(A - Hyper)) <= tolerance);
                 disp(norm(getVector(Aq) - Hyper*getVector(q)) <= tolerance);
 
         % periodic
@@ -321,7 +321,7 @@ diffusivity = 1.0;
                 A = getLDGThinFilmMatrix(one, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Hyper = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Aq = ThinFilmDiffusionOperator(q, deltaX, one, diffusivity, bc);
-                disp(norm(A - Hyper) <= tolerance);
+                disp(norm(full(A - Hyper)) <= tolerance);
                 disp(norm(Aq - Hyper*q) <= tolerance);
             % 2 basis cpts
                 disp('nBasisCpts = 2');
@@ -331,7 +331,7 @@ diffusivity = 1.0;
                 A = getLDGThinFilmMatrix(one, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Hyper = getLDGHyperDiffusionMatrix(num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Aq = ThinFilmDiffusionOperator(q, deltaX, one, diffusivity, bc);
-                disp(norm(A - Hyper) <= tolerance);
+                disp(norm(full(A - Hyper)) <= tolerance);
                 disp(norm(getVector(Aq) - Hyper*getVector(q)) <= tolerance);
 
     % Should match operator version
@@ -347,6 +347,7 @@ diffusivity = 1.0;
                 Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
                 qVector = getVector(q);
                 disp(norm(ALDG*qVector - Aq) <= tolerance)
+                disp(Aq)
             % at num_basis_cpts = 2
                 disp('nBasisCpts = 2');
                 num_basis_cpts = 2;
@@ -354,7 +355,8 @@ diffusivity = 1.0;
                 ALDG = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
                 qVector = getVector(q);
-                disp(norm(ALDG*qVector - Aq) <= tolerance)
+                disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
+                disp(Aq)
             % at num_basis_cpts = 3
                 disp('nBasisCpts = 3');
                 num_basis_cpts = 3;
@@ -362,7 +364,7 @@ diffusivity = 1.0;
                 ALDG = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
                 qVector = getVector(q);
-                disp(norm(ALDG*qVector - Aq) <= tolerance)
+                disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
         % And with periodic boundary conditions
             bc = 'periodic';
@@ -382,7 +384,7 @@ diffusivity = 1.0;
                 ALDG = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
                 qVector = getVector(q);
-                disp(norm(ALDG*qVector - Aq) <= tolerance)
+                disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
             % at num_basis_cpts = 3
                 disp('nBasisCpts = 3');
                 num_basis_cpts = 3;
@@ -390,7 +392,7 @@ diffusivity = 1.0;
                 ALDG = getLDGThinFilmMatrix(q, num_elems, num_basis_cpts, deltaX, diffusivity, bc);
                 Aq = ThinFilmDiffusionOperator(q, deltaX, q, diffusivity, bc);
                 qVector = getVector(q);
-                disp(norm(ALDG*qVector - Aq) <= tolerance)
+                disp(norm(ALDG*qVector - getVector(Aq)) <= tolerance)
 
 %% Thin Film Diffusion
 % [LDG] = getLDGThinFilmMatrix(qRiemann, num_elems, num_basis_cpts, deltaX);
