@@ -13,7 +13,7 @@ for N = [20, 40, 80, 160, 320]
     x = @(i) a + i*h-h/2;
     leftbc = 0.0;
     rightbc = 0.0;
-    tau = 1.0;
+    tau = 6.0;
     
     e = ones(N,1);
     cl = tau/2.0 + 1.0/h;
@@ -27,13 +27,24 @@ for N = [20, 40, 80, 160, 320]
     uhat = A\rhs;
     uhat = [leftbc; uhat; rightbc];
     
-    Qf = zeros(N,1);
-    Quhat = (-1.0/h)*(uhat(2:end) - uhat(1:end-1));
-    Uf = (h/(2*tau))*f(x(1:N))';
-    Uuhat = (1.0/2.0)*(uhat(2:end) + uhat(1:end-1));
+    Q_f = zeros(N,1);
+    Q_uhat = (-1.0/h)*(uhat(2:N+1) - uhat(1:N));
+    U_f = (h/(2*tau))*f(x(1:N))';
+    U_uhat = (1.0/2.0)*(uhat(2:N+1) + uhat(1:N));
     
-    qh = Qf + Quhat;
-    uh = Uf + Uuhat;
+    qh = Q_f + Q_uhat;
+    uh = U_f + U_uhat;
+    
+    % post processing
+    % qhat = qh + tau*(uh - uhat)
+    qhat_plus = qh + tau*(uh - uhat(1:N));
+    qhat_minus = qh + tau*(uh - uhat(2:N+1));
+    
+    % on each element qTstar = qTstar_1 + xi*qTstar_2
+    qTstar_1 = (qhat_plus + qhat_minus)/2;
+    qTstar_2 = (qhat_minus - qhat_plus)/2;
+    
+    
     
     %plot(x(1:N), qh, x(1:N), exactSolD(x(1:N)))
     error = [error, norm(uh - exactSol(x(1:N))')];
