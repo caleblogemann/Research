@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     92835,       2383]
-NotebookOptionsPosition[     89577,       2295]
-NotebookOutlinePosition[     89961,       2312]
-CellTagsIndexPosition[     89918,       2309]
+NotebookDataLength[     92990,       2379]
+NotebookOptionsPosition[     89733,       2291]
+NotebookOutlinePosition[     90117,       2308]
+CellTagsIndexPosition[     90074,       2305]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -1730,23 +1730,23 @@ Cell[BoxData[
         RowBox[{"{", 
          RowBox[{
           RowBox[{"{", 
-           RowBox[{"1", ",", "0"}], "}"}], ",", 
+           RowBox[{"1", ",", ".5"}], "}"}], ",", 
           RowBox[{"{", 
-           RowBox[{"3", ",", "0"}], "}"}]}], "}"}], ",", 
+           RowBox[{"3", ",", ".5"}], "}"}]}], "}"}], ",", 
         RowBox[{"{", 
          RowBox[{
           RowBox[{"{", 
-           RowBox[{"2", ",", "0"}], "}"}], ",", 
+           RowBox[{"2", ",", "0.5"}], "}"}], ",", 
           RowBox[{"{", 
            RowBox[{"2", ",", "2"}], "}"}]}], "}"}]}], "}"}], "]"}], ",", 
      "\[IndentingNewLine]", 
      RowBox[{"Text", "[", 
       RowBox[{
        RowBox[{"Style", "[", 
-        RowBox[{"\"\<\[ScriptCapitalF](u)\>\"", ",", 
+        RowBox[{"\"\<\!\(\*OverscriptBox[\(Q\), \(^\)]\)\>\"", ",", 
          RowBox[{"FontSize", "\[Rule]", "24"}]}], "]"}], ",", 
        RowBox[{"{", 
-        RowBox[{"2.6", ",", "1.5"}], "}"}]}], "]"}], ",", 
+        RowBox[{"2.4", ",", "1.5"}], "}"}]}], "]"}], ",", 
      "\[IndentingNewLine]", 
      RowBox[{"Arrow", "[", 
       RowBox[{"{", 
@@ -1759,12 +1759,10 @@ Cell[BoxData[
      RowBox[{"Text", "[", 
       RowBox[{
        RowBox[{"Style", "[", 
-        RowBox[{
-        "\"\<\[ScriptCapitalF](\!\(\*SubscriptBox[\(u\), \(\[Xi]\)]\))\>\"", 
-         ",", 
+        RowBox[{"\"\<\!\(\*OverscriptBox[\(R\), \(^\)]\)\>\"", ",", 
          RowBox[{"FontSize", "\[Rule]", "24"}]}], "]"}], ",", 
        RowBox[{"{", 
-        RowBox[{"1.4", ",", "1.5"}], "}"}]}], "]"}], ",", 
+        RowBox[{"1.6", ",", "1.5"}], "}"}]}], "]"}], ",", 
      "\[IndentingNewLine]", 
      RowBox[{"Arrow", "[", 
       RowBox[{"{", 
@@ -1777,70 +1775,68 @@ Cell[BoxData[
      RowBox[{"Text", "[", 
       RowBox[{
        RowBox[{"Style", "[", 
-        RowBox[{
-        "\"\<\[ScriptCapitalF](\!\(\*SubscriptBox[\(u\), \(\[Xi]\[Xi]\)]\))\>\
-\"", ",", 
+        RowBox[{"\"\<\!\(\*OverscriptBox[\(S\), \(^\)]\)\>\"", ",", 
          RowBox[{"FontSize", "\[Rule]", "24"}]}], "]"}], ",", 
        RowBox[{"{", 
-        RowBox[{"2.5", ",", "1"}], "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"2.4", ",", "1"}], "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
      RowBox[{"Arrow", "[", 
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"2.25", ",", ".8"}], "}"}], ",", 
+         RowBox[{"2.25", ",", "1"}], "}"}], ",", 
         RowBox[{"{", 
-         RowBox[{"2", ",", ".7"}], "}"}]}], "}"}], "]"}], ",", 
+         RowBox[{"2", ",", "1.2"}], "}"}]}], "}"}], "]"}], ",", 
      "\[IndentingNewLine]", 
      RowBox[{"Text", "[", 
       RowBox[{
        RowBox[{"Style", "[", 
-        RowBox[{
-        "\"\<\[ScriptCapitalF](\!\(\*SubscriptBox[\(u\), \(\[Xi]\[Xi]\[Xi]\)]\
-\))\>\"", ",", 
+        RowBox[{"\"\<\!\(\*OverscriptBox[\(U\), \(^\)]\)\>\"", ",", 
          RowBox[{"FontSize", "\[Rule]", "24"}]}], "]"}], ",", 
        RowBox[{"{", 
-        RowBox[{"1.4", ",", "1"}], "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"1.6", ",", "1"}], "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
      RowBox[{"Arrow", "[", 
       RowBox[{"{", 
        RowBox[{
         RowBox[{"{", 
-         RowBox[{"1.5", ",", ".8"}], "}"}], ",", 
+         RowBox[{"1.75", ",", "1"}], "}"}], ",", 
         RowBox[{"{", 
-         RowBox[{"2", ",", ".7"}], "}"}]}], "}"}], "]"}]}], 
+         RowBox[{"2", ",", "1.2"}], "}"}]}], "}"}], "]"}]}], 
     "\[IndentingNewLine]", "}"}], ",", 
    RowBox[{"ImageSize", "\[Rule]", "Small"}]}], "]"}]], "Input",
  CellChangeTimes->{{3.715080105693945*^9, 3.715080387529565*^9}, {
   3.715080431768277*^9, 3.715080482337729*^9}, {3.7150805278145037`*^9, 
   3.715080599585842*^9}, {3.715081914350172*^9, 3.715081927025963*^9}, {
-  3.7150819651012077`*^9, 
-  3.715082019385795*^9}},ExpressionUUID->"47160666-9c37-4023-bd9c-\
+  3.7150819651012077`*^9, 3.715082019385795*^9}, {3.753555521382558*^9, 
+  3.753555607603919*^9}, {3.753555649770214*^9, 3.753555668918393*^9}, {
+  3.753555703757275*^9, 
+  3.753555822305107*^9}},ExpressionUUID->"47160666-9c37-4023-bd9c-\
 79980b11ddd8"],
 
 Cell[BoxData[
  GraphicsBox[
-  {Thickness[Large], LineBox[{{{1, 0}, {3, 0}}, {{2, 0}, {2, 2}}}], InsetBox[
-    StyleBox["\<\"\[ScriptCapitalF](u)\"\>",
-     StripOnInput->False,
-     FontSize->24], {2.6, 1.5}], ArrowBox[{{2.25, 1.45}, {2, 1.3}}], 
+  {Thickness[Large], LineBox[{{{1, 0.5}, {3, 0.5}}, {{2, 0.5}, {2, 2}}}], 
    InsetBox[
-    StyleBox["\<\"\[ScriptCapitalF](\\!\\(\\*SubscriptBox[\\(u\\), \
-\\(\[Xi]\\)]\\))\"\>",
+    StyleBox["\<\"\\!\\(\\*OverscriptBox[\\(Q\\), \\(^\\)]\\)\"\>",
      StripOnInput->False,
-     FontSize->24], {1.4, 1.5}], ArrowBox[{{1.75, 1.45}, {2, 1.3}}], 
+     FontSize->24], {2.4, 1.5}], ArrowBox[{{2.25, 1.45}, {2, 1.3}}], 
    InsetBox[
-    StyleBox["\<\"\[ScriptCapitalF](\\!\\(\\*SubscriptBox[\\(u\\), \\(\[Xi]\
-\[Xi]\\)]\\))\"\>",
+    StyleBox["\<\"\\!\\(\\*OverscriptBox[\\(R\\), \\(^\\)]\\)\"\>",
      StripOnInput->False,
-     FontSize->24], {2.5, 1}], ArrowBox[{{2.25, 0.8}, {2, 0.7}}], InsetBox[
-    StyleBox["\<\"\[ScriptCapitalF](\\!\\(\\*SubscriptBox[\\(u\\), \\(\[Xi]\
-\[Xi]\[Xi]\\)]\\))\"\>",
+     FontSize->24], {1.6, 1.5}], ArrowBox[{{1.75, 1.45}, {2, 1.3}}], 
+   InsetBox[
+    StyleBox["\<\"\\!\\(\\*OverscriptBox[\\(S\\), \\(^\\)]\\)\"\>",
      StripOnInput->False,
-     FontSize->24], {1.4, 1}], ArrowBox[{{1.5, 0.8}, {2, 0.7}}]},
+     FontSize->24], {2.4, 1}], ArrowBox[{{2.25, 1}, {2, 1.2}}], InsetBox[
+    StyleBox["\<\"\\!\\(\\*OverscriptBox[\\(U\\), \\(^\\)]\\)\"\>",
+     StripOnInput->False,
+     FontSize->24], {1.6, 1}], ArrowBox[{{1.75, 1}, {2, 1.2}}]},
   ImageSize->Small]], "Output",
  CellChangeTimes->{{3.715080575953273*^9, 3.715080600474286*^9}, {
-  3.715081984077548*^9, 
-  3.7150820197173443`*^9}},ExpressionUUID->"2b925d72-4a8a-43a3-803b-\
-3a8f366c32f3"]
+   3.715081984077548*^9, 3.7150820197173443`*^9}, 3.753555542955505*^9, {
+   3.753555583992229*^9, 3.753555608266563*^9}, {3.7535556504276648`*^9, 
+   3.753555669207982*^9}, {3.753555704676208*^9, 
+   3.75355582279851*^9}},ExpressionUUID->"9784682a-91ca-4efc-9b50-\
+2e02939a12de"]
 }, Open  ]],
 
 Cell[CellGroupData[{
@@ -2320,25 +2316,25 @@ Cell[6973, 202, 2172, 47, 315, "Output", "ExpressionUUID" -> \
 Cell[CellGroupData[{
 Cell[9182, 254, 4661, 129, 299, "Input", "ExpressionUUID" -> \
 "e31d87f1-255e-4461-a175-9522996447b3"],
-Cell[13846, 385, 1606, 35, 310, "Output", "ExpressionUUID" -> \
+Cell[13846, 385, 1606, 35, 288, "Output", "ExpressionUUID" -> \
 "8578052d-634b-4a89-8ea0-e288bd687560"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[15489, 425, 5140, 152, 513, "Input", "ExpressionUUID" -> \
 "88fd9932-af72-4d97-ac62-96d223f1ccab"],
-Cell[20632, 579, 1818, 40, 310, "Output", "ExpressionUUID" -> \
+Cell[20632, 579, 1818, 40, 288, "Output", "ExpressionUUID" -> \
 "466d132b-3e80-4b3f-926e-91a8beadc5ca"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[22487, 624, 2821, 83, 228, "Input", "ExpressionUUID" -> \
 "f18155f3-3755-47fc-91b7-681f07c74e60"],
-Cell[25311, 709, 749, 14, 289, "Output", "ExpressionUUID" -> \
+Cell[25311, 709, 749, 14, 233, "Output", "ExpressionUUID" -> \
 "9e448f92-7d95-4391-8242-827d9bdabfc9"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[26097, 728, 2633, 81, 228, "Input", "ExpressionUUID" -> \
 "7c6e8b55-cd6e-44f0-8f78-d866257c0848"],
-Cell[28733, 811, 562, 11, 255, "Output", "ExpressionUUID" -> \
+Cell[28733, 811, 562, 11, 233, "Output", "ExpressionUUID" -> \
 "b1d33c3a-b664-4d34-bc8c-7e055e6352a4"]
 }, Open  ]],
 Cell[CellGroupData[{
@@ -2366,23 +2362,23 @@ Cell[60108, 1654, 2825, 62, 321, "Output", "ExpressionUUID" -> \
 "6007c751-ba91-492b-b3ee-f6253f46814a"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[62970, 1721, 3345, 95, 436, "Input", "ExpressionUUID" -> \
+Cell[62970, 1721, 3387, 91, 492, "Input", "ExpressionUUID" -> \
 "47160666-9c37-4023-bd9c-79980b11ddd8"],
-Cell[66318, 1818, 1062, 24, 386, "Output", "ExpressionUUID" -> \
-"2b925d72-4a8a-43a3-803b-3a8f366c32f3"]
+Cell[66360, 1814, 1176, 24, 359, "Output", "ExpressionUUID" -> \
+"9784682a-91ca-4efc-9b50-2e02939a12de"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[67417, 1847, 1468, 41, 243, "Input", "ExpressionUUID" -> \
+Cell[67573, 1843, 1468, 41, 243, "Input", "ExpressionUUID" -> \
 "25fdbe5e-6613-43f3-bb89-cac9c40b34ab"],
-Cell[68888, 1890, 19774, 369, 779, "Output", "ExpressionUUID" -> \
+Cell[69044, 1886, 19774, 369, 757, "Output", "ExpressionUUID" -> \
 "f838aa5c-4619-470c-9912-9b3213814d66"]
 }, Open  ]],
-Cell[88677, 2262, 186, 4, 63, "Input", "ExpressionUUID" -> \
+Cell[88833, 2258, 186, 4, 63, "Input", "ExpressionUUID" -> \
 "22f6acde-64bb-43d9-869c-957e1c21dfb7"],
 Cell[CellGroupData[{
-Cell[88888, 2270, 514, 17, 114, "Input", "ExpressionUUID" -> \
+Cell[89044, 2266, 514, 17, 114, "Input", "ExpressionUUID" -> \
 "b7e113a0-9b39-4cc4-bd31-9964685d8441"],
-Cell[89405, 2289, 156, 3, 119, "Output", "ExpressionUUID" -> \
+Cell[89561, 2285, 156, 3, 63, "Output", "ExpressionUUID" -> \
 "11eed3d6-0aed-4d44-8507-0bac8007d584"]
 }, Open  ]]
 }

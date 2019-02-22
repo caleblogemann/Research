@@ -1,0 +1,187 @@
+\documentclass[oneside]{article}
+\usepackage[letterpaper, margin=2cm]{geometry}
+\usepackage{Notes}
+
+\newcommand{\dOmega}{\partial\Omega}
+\newcommand{\eh}{\varepsilon_h}
+\newcommand{\eho}{\varepsilon_h^0}
+\newcommand{\ehd}{\varepsilon_h^{\partial}}
+
+\begin{document}
+\begin{center}
+\textbf{\Large{Hybridized Discontinuous Galerkin Method \\}}
+\end{center}
+
+These notes are intended to give background on Hyridized Discontinuous Galerkin
+methods and then explore how to apply this method to Thin Film Equations
+
+\section{Introduction/Main Idea}
+  To start we will consider Poisson's equation with Dirichlet boundary conditions
+  \begin{align*}
+    -\Delta u &= f \qquad \text{in } \Omega \\
+    u &= g \qquad \text{on } \dOmega 
+  \end{align*}
+  We will consider this in mixed form by introducing the auxilliary variable
+  $\v{q} = -\nabla u$,  then the equation becomes
+  \begin{align*}
+    \v{q} + \nabla u &= 0 \qquad \text{in } \Omega \\
+    \Div \v{q} &= f \qquad \text{in } \Omega \\
+    u &= g \qquad \text{on } \dOmega
+  \end{align*}
+  This problem has an exact solution that can be found analytically assuming
+  some nice properties.
+
+  I will introduce a triangulation of $\Omega$, $\mcT_h$, and reformulate the
+  problem on this triangulation that will give the same exact solution.
+
+  \subsection{Notation}
+    First some notation,
+    \begin{align*}
+      \partial\mcT_h &= \set{\partial K: K \in \mcT_h} \\
+      F &= \partial K \cap \dOmega \text{ for } K \in \mcT_h \\
+      F &= \partial K^+ \cap \partial K^- \text{ for } K^+, K^- \in \mcT_h \\
+    \end{align*}
+    Let $\eh$ be the set of all faces, $F$, and $\eho$ be interior faces, and
+    $\ehd$ be boundary faces.
+
+    Let $\v{n}^+$ and $\v{n}^-$ be the outward unit normals of $\partial K^+$ and
+    $\partial K^-$ respectively, and $\p{\v{q}^{\pm}, u^{\pm}}$ be the interior
+    values of $\p{\v{q}, u}$ on $F$ for $K^{\pm}$.
+    Define
+    \begin{align*}
+      \bbr{\v{q} \cdot n} = \v{q}^+ \cdot \v{n}^+ + \v{q}^- \cdot \v{n}^- \\
+      \bbr{u\v{n}} = u^+\v{n}^+ + u^-\v{n}^- \\
+      \set{\v{q}} = \frac{\v{q}^+ + \v{q}^-}{2} \\
+      \set{u} = \frac{u^+ + u^-}{2}
+    \end{align*}
+
+  \subsection{Reformulation}
+    Now we can reformulate the original Poisson's problem on $\mcT_h$ as
+    a local problem for each $K$
+    \begin{align*}
+      \v{q} + \nabla u &= 0 \\
+      \Div \v{q} &= f
+    \end{align*}
+    a transmission condition on each interior face, $F \in \eho$
+    \begin{align*}
+      \bbr{u\v{n}} &= \v{0} \\
+      \bbr{\v{q} \cdot \v{n}} &= 0
+    \end{align*}
+    and the boundary condition on each boundary face, $F \in \ehd$
+    \begin{align*}
+      u = g
+    \end{align*}
+    This problem is equivalent to the original problem on $\Omega$.
+    The $(\v{q}, u)$ that satisfies this problem also solve the original problem.
+
+    We would like to be able to solve the local problem locally, but this requires
+    boundary conditions on each element $K$ for the local problem to be solved.
+    Therefore consider the local problem
+    \begin{align*}
+      \v{q} + \nabla u &= 0 \quad \text{in } K \\
+      \Div \v{q} &= f \quad \text{in } K \\
+      u &= \hat{u} \quad \text{on } \partial K
+    \end{align*}
+    We have introduced another unknown $\hat{u}$ on each interior face
+    $F \in \eho$.
+    This unknown automatically makes us satisfy $\bbr{u\v{n}} = \v{0}$, so the
+    transmission condition becomes 
+    \begin{align*}
+      \bbr{\v{q}\cdot\v{n}} = 0 \quad \text{ on } F \in \eho
+    \end{align*}
+    and we still have the boundary condition
+    \begin{align*}
+      u = g \quad \text{ on } F \in \ehd
+    \end{align*}
+
+    Now solving for $\p{\v{q}, u, \hat{u}}$ will give the same solution as the
+    original problem, however $\v{q}$ and $u$ can be solved locally and only
+    $\hat{u}$ needs to be solved globally.
+
+  \subsection{General Algorithm}
+    Here is the outline for solving for $\v{q}$, $u$, and $\hat{u}$.
+    First split the local problem in two, so that one part depends on $f$ and the
+    other part depends on $\hat{u}$, that is let
+    $\v{q} = \v{Q}_f + \v{Q}_{\hat{u}}$ and $u = U_f + U_{\hat{u}}$, where
+    \begin{align*}
+      \v{Q}_f + \nabla U_f &= 0 \quad \text{in } K \\
+      \Div \v{Q}_f &= f \quad \text{in } K \\
+      U_f &= 0 \quad \text{on } \partial K
+    \end{align*}
+    and
+    \begin{align*}
+      \v{Q}_{\hat{u}}+ \nabla U_{\hat{u}} &= 0 \quad \text{in } K \\
+      \Div \v{Q}_{\hat{u}} &= 0 \quad \text{in } K \\
+      U_{\hat{u}} &= \hat{u} \quad \text{on } \partial K
+    \end{align*}
+    Now the transmission condition becomes
+    \begin{align*}
+      \bbr{\v{Q}_{\hat{u}}} = -\bbr{\v{Q}_f}
+    \end{align*}
+
+    First solve for $\v{Q}_f$ exactly, then solve for $\v{Q}_{\hat{u}}$ in terms
+    of $\hat{u}$.
+    Now the transmission condition gives a global linear algebra problem
+    \begin{align*}
+      \bbr{\v{Q}_{\hat{u}}} = -\bbr{\v{Q}_f}
+    \end{align*}
+    since $\bbr{\v{Q}_{\hat{u}}}$ is a linear system in $\hat{u}$ and
+    $-\bbr{\v{Q}_f}$ is known.
+
+    After this linear algebra problem is solved, the values of $U_{\hat{u}}$ and
+    $\v{Q}_{\hat{u}}$ can be found/reconstructed locally.
+    The full solution is then $\v{q} = \v{Q}_f + \v{Q}_{\hat{u}}$ and
+    $u = U_f + U_{\hat{u}}$.
+
+  \subsection{1D example}
+    In 1D, the problem becomes
+    \begin{align*}
+      Q_f + U_f' &= 0 \quad \text{in } K \\
+      Q_f' &= f \quad \text{in } K \\
+      U_f &= 0 \quad \text{on } \partial K
+    \end{align*}
+    and
+    \begin{align*}
+      Q_{\hat{u}} + U_{\hat{u}}' &= 0 \quad \text{in } K \\
+      Q_{\hat{u}}' &= 0 \quad \text{in } K \\
+      U_{\hat{u}} &= \hat{u} \quad \text{on } \partial K
+    \end{align*}
+    and
+    \begin{align*}
+      Q_{\hat{u}}(x^-_{j+1/2}) - Q_{\hat{u}}(x^+_{j+1/2})  = -Q_f(x^-_{j+1/2}) + Q_f(x^+_{j+1/2}
+    \end{align*}
+    where the uniform mesh is given by $x_i$ at cell centers, $x_{i+1/2}$ at
+    cell interfaces, and spacing $h$.
+
+    Solving the $\hat{u}$ system we see that
+    \begin{align*}
+      Q_{\hat{u}}' &= 0 \\
+      Q_{\hat{u}} &= c
+    \end{align*}
+    and
+    \begin{align*}
+      Q_{\hat{u}} + U_{\hat{u}}' &= 0 \\
+      U_{\hat{u}}' &= -c \\
+      U_{\hat{u}} &= -cx + b \\
+    \end{align*}
+    with the boundary conditions, we know $U_{\hat{u}}$ is a line from
+    $\hat{u}_{j-1/2}$ to $\hat{u}_{j+1/2}$, and $Q_{\hat{u}}$ is the opposite of
+    the slope of this line.
+    \begin{align*}
+      U_{\hat{u}} &= \frac{\hat{u}_{j+1/2} - \hat{u}_{j-1/2}}{h}\p{x - x_{j-1/2}} - \hat{u}_{j-1/2} \\
+      Q_{\hat{u}} &= -\frac{\hat{u}_{j+1/2} - \hat{u}_{j-1/2}}{h}
+    \end{align*}
+
+    Now we can form the linear system given by the transmission condition
+    \begin{align*}
+      Q_{\hat{u}}(x^-_{j+1/2}) - Q_{\hat{u}}(x^+_{j+1/2}) &= -Q_f(x^-_{j+1/2}) + Q_f(x^+_{j+1/2} \\
+      -\frac{\hat{u}_{j+1/2} - \hat{u}_{j-1/2}}{h} + \frac{\hat{u}_{j+3/2} - \hat{u}_{j+1/2}}{h} &= -Q_f(x^-_{j+1/2}) + Q_f(x^+_{j+1/2} \\
+      \frac{\hat{u}_{j-1/2} - 2\hat{u}_{j+1/2} + \hat{u}_{j+3/2}}{h} &= -Q_f(x^-_{j+1/2}) + Q_f(x^+_{j+1/2}
+    \end{align*}
+    After solving this linear system we already have expressions for $Q_{\hat{u}}$
+    and $U_{\hat{u}}$ in terms of $\hat{u}$.
+
+\section{Hybridizable Discontinuous Galerkin Method}
+  \subsection{General Form}
+  \subsection{1D example}
+\end{document}

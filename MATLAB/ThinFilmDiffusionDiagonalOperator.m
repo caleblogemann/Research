@@ -1,4 +1,4 @@
-function [Aq] = ThinFilmDiffusionDiagonalOperator(q, dx, original_q, bc)
+function [Aq] = ThinFilmDiffusionDiagonalOperator(q, dx, original_q, diffusivity, bc)
     [num_elems, num_basis_cpts] = size(q);
 
     % number of elements between cells that don't interact
@@ -13,7 +13,7 @@ function [Aq] = ThinFilmDiffusionDiagonalOperator(q, dx, original_q, bc)
         for k = 1:num_basis_cpts
             qTemp(i:num_elem_spread:num_elems, k) = q(i:num_elem_spread:num_elems, k);
 
-            AqTemp = ThinFilmDiffusionOperator(qTemp, dx, original_q, bc);
+            AqTemp = ThinFilmDiffusionOperator(qTemp, dx, original_q, diffusivity, bc);
             Aq(i:num_elem_spread:num_elems, k) = AqTemp(i:num_elem_spread:num_elems, k);
 
             qTemp(i:num_elem_spread:num_elems, k) = 0.0;

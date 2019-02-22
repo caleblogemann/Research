@@ -15,6 +15,13 @@
     q_t = - \p{q^3 q_{xxx}}_x.
   \]
 
+\textbf{\large{Non Dimensional Form}}
+  Let $q = Hq$, $x = Lx$, and $t = Tt$, then
+  \begin{gather}
+    \frac{H}{T} q_t = - \frac{1}{L} \p{H^3 q^3 \frac{H}{L^3}q_{xxx}}_x \\
+    q_t = - \frac{TH^3}{L^4} \p{q^3 q_{xxx}}_x \\
+  \end{gather}
+
 \textbf{\large{Local Discontinuous Galerkin Method}}
   First rewrite the diffusion equation as a system of first order equations.
   \begin{align*}
@@ -50,17 +57,17 @@
 
   A common choice of numerical fluxes are the so-called alternating fluxes.
   \begin{align*}
+    \hat{u}_h &= u^-_h \\
     \hat{q}_h &= q^+_h \\
     \hat{r}_h &= r^-_h \\
-    \hat{s}_h &= s^+_h \\
-    \hat{u}_h &= u^-_h
+    \hat{s}_h &= s^+_h
   \end{align*}
   or
   \begin{align*}
+    \hat{u}_h &= u^+_h \\
     \hat{q}_h &= q^-_h \\
     \hat{r}_h &= r^+_h \\
-    \hat{s}_h &= s^-_h \\
-    \hat{u}_h &= u^+_h
+    \hat{s}_h &= s^-_h
   \end{align*}
 
 \textbf{\large{Implementation}}
@@ -82,7 +89,7 @@
   \]
   After this tranformation the thin film diffusion equation become
   \[
-    q_t = -\frac{16}{\Delta x^4} \p{q^3 q_{\xi\xi\xi}}_{\xi}
+    u_t = -\frac{16}{\Delta x^4} \p{u^3 u_{\xi\xi\xi}}_{\xi}
   \]
   on the cell $I_j$.
   We can then write this as the following system of first order equations.
@@ -102,10 +109,10 @@
   Now plugging these into the system and multiplying by a Legendre basis and integrating over cell $I_i$ gives.
   I will use the following shorthand for numerical fluxes using one of the alternating flux options.
   \begin{align*}
-    \hat{Q}_{i+1/2} &= \sum{l = 1}{M}{Q_{i+1}^l \phi^l(-1)} \\
-    \hat{R}_{i+1/2} &= \sum{l = 1}{M}{R_{i}^l \phi^l(1)} \\
-    \hat{S}_{i+1/2} &= \sum{l = 1}{M}{S_{i+1}^l \phi^l(-1)} \\
-    \hat{U}_{i+1/2} &= \sum{l = 1}{M}{U_{i}^l \phi^l(1)}
+    \hat{Q}_{i+1/2} &= Q^+_{i+1/2} = \sum{l = 1}{M}{Q_{i+1}^l \phi^l(-1)} \\
+    \hat{R}_{i+1/2} &= R^-_{i+1/2} = \sum{l = 1}{M}{R_{i}^l \phi^l(1)} \\
+    \hat{S}_{i+1/2} &= S^+_{i+1/2} = \sum{l = 1}{M}{S_{i+1}^l \phi^l(-1)} \\
+    \hat{U}_{i+1/2} &= U^-_{i+1/2} = \sum{l = 1}{M}{U_{i}^l \phi^l(1)}
   \end{align*}
   \begin{align*}
     r &= \frac{2}{\Delta x} q_{\xi} \\
@@ -141,8 +148,12 @@
     \frac{1}{2}\dintt{-1}{1}{\sum{l = 1}{M}{U_i^l \phi^l(\xi)}\phi^k(\xi)}{\xi} &= \frac{1}{\Delta x} \dintt{-1}{1}{q^3 \sum{l = 1}{M}{S_i^l \phi_{\xi}^l(\xi)} \phi^k(\xi)}{\xi} \\
     U_i^k &= -\frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{S_i^l \phi^l(\xi)} \p{q^3\phi^k(\xi)}_{\xi}}{\xi} + \frac{1}{\Delta x}\p{\phi^k(1)\hat{q}^3_{i+1/2}\hat{S}_{i+1/2} - \phi^k(-1)\hat{q}^3_{i-1/2}\hat{S}_{i-1/2}} \\
     U_i^k &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{S_i^l \phi_{\xi}^l(\xi)} q^3\phi^k(\xi)}{\xi} \\
-    &- \frac{1}{\Delta x}\p{\phi^k(1)\p{q^-_{i+1/2}}^3S^-_{i+1/2} - \phi^k(-1)\p{q^+_{i-1/2}}^3 S^+_{i-1/2}}\\
-    &+ \frac{1}{\Delta x}\p{\phi^k(1)\hat{q}^3_{i+1/2}\hat{S}_{i+1/2} - \phi^k(-1)\hat{q}^3_{i-1/2}\hat{S}_{i-1/2}}
+    &- \frac{1}{\Delta x}\p{\phi^k(1)\p{q^-_{i+1/2}}^3 S^-_{i+0/2} - \phi^k(-1)\p{q^+_{i-1/2}}^3 S^+_{i-1/2}} \\
+    &+ \frac{1}{\Delta x}\p{\phi^k(1)\hat{q}^3_{i+1/2}S^+_{i+1/2} - \phi^k(-1)\hat{q}^3_{i-1/2}S^+_{i-1/2}} \\
+    U_i^k &= \frac{1}{\Delta x} \dintt{-1}{1}{\sum{l = 1}{M}{S_i^l \phi_{\xi}^l(\xi)} q^3\phi^k(\xi)}{\xi} \\
+    &- \frac{1}{\Delta x}\phi^k(1)\p{q^-_{i+1/2}}^3 S^-_{i+1/2} \\
+    &+ \frac{1}{\Delta x}\phi^k(-1)\p{\p{q^+_{i-1/2}}^3 - \hat{q}^3_{i-1/2}} S^+_{i-1/2} \\
+    &+ \frac{1}{\Delta x}\phi^k(1)\hat{q}^3_{i+1/2} S^+_{i+1/2}
   \end{align*}
   \begin{align*}
     q_t &= -\frac{2}{\Delta x} u_{\xi} \\

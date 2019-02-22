@@ -1,14 +1,15 @@
-function [Aq] = ThinFilmDiffusionOperator(q, dx, original_q, diffusivity, bc)
+function [Aq] = HyperDiffusionOperator(q, dx, diffusivity, bc)
     [num_elems, num_basis_cpts] = size(q);
 
     odx = 1.0/dx;
 
+    %R = zeros(num_elems,num_basis_cpts);
+    %S = zeros(num_elems, num_basis_cpts);
+    %U = zeros(num_elems, num_basis_cpts);
+
     FQ = zeros(num_elems+4, 1);
     FR = zeros(num_elems+3, 1);
-    FSRight = zeros(num_elems+2, 1);
-    FSLeft  = zeros(num_elems+1, 1);
-    etaLeft = zeros(num_elems+2, 1);
-    etaRight = zeros(num_elems+2, 1);
+    FS = zeros(num_elems+2, 1);
     FU = zeros(num_elems+1, 1);
 
     phi = arrayfun(@(k) legendrePolynomial(k, 1), 1:num_basis_cpts);
@@ -53,7 +54,7 @@ function [Aq] = ThinFilmDiffusionOperator(q, dx, original_q, diffusivity, bc)
     end
     R = odx*(-(Smat*qExtended')' + FQ(2:end)*phi - FQ(1:end-1)*(sgn.*phi));
 
-    % fluxes to evaluate second derivative
+    % flux to evaluate second derivative
     % FR always evaluated on left side
     % FR[i] = Sum_{l = 1}^{num_basis_cpts}{R_{i-1}^l *phi^l(1)}
     % FR[i] = R evaluated at (i - 1/2) boundary
@@ -63,54 +64,10 @@ function [Aq] = ThinFilmDiffusionOperator(q, dx, original_q, diffusivity, bc)
     % S = 2/dx r_{\xi} = 4/dx^2 q_{\xi, \xi}
     S = odx*(-(Smat*R(2:end,:)')' + FR(2:end)*phi - FR(1:end-1)*(sgn.*phi));
 
-    % fluxes to evaluate U
-    % SRight[i] = Sum_{l = 1}^{num_basis_cpts}{S_{i}^l *phi^l(-1)}
-    % SRight[i] = S evaluated on right side of (i - 1/2) boundary
-    % SLeft[i] = Sum_{l = 1}^{num_basis_cpts}{S_{i}^l *phi^l(1)}
-    % SLeft[i] = S evaluated on left side of (i + 1/2) boundary
-    % etaLeft[i] = eta evaluated on left side of (i-1/2) boundary
-    % etaLeft[i] = eta_{i}(1)
-    % etaRight[i] = eta evaluate on right side of (i-1/2) boundary
-    % etaRight[i] = eta_i(-1)
-    FSRight(:) = (sgn.*phi)*S';
-    FSLeft(:)    = phi*S(1:end-1,:)';
-    etaRight(2:end-1) = ((sgn.*phi)*original_q').^3;
-    etaLeft(3:end)    = (phi*original_q').^3;
-    switch bc
-        case 'periodic'
-            etaRight(1) = etaRight(end-1);
-            etaRight(end) = etaRight(2);
-            etaLeft(1) = etaLeft(end-1);
-            etaLeft(2) = etaLeft(end);
-        case 'extrapolation'
-            etaRight(1) = etaRight(2);
-            etaRight(end) = etaRight(end-1);
-            etaLeft(1) = etaLeft(3);
-            etaLeft(2) = etaLeft(3);
-    end
-    etaAverage = (etaRight + etaLeft)/2;
+    % flux to evaluate U
+    FS(:) = (sgn.*phi)*S';
 
-    % Q^3 * Third Derivate - U
-    Stmp = zeros(num_elems+1,num_basis_cpts);
-    eta = @(i, xi) sum(arrayfun(@(l) original_q(i,l)*legendrePolynomial(l,xi), 1:num_basis_cpts)).^3;
-    for i = 1:num_elems+1
-        % bc for eta
-        im1 = i-1;
-        if(i==1)
-            switch bc
-                case 'periodic'
-                    im1 = num_elems;
-                case 'extrapolation'
-                    im1 = 1;
-            end
-        end
-        for k = 1:num_basis_cpts
-            integrandFunction = @(xi, l) legendrePolynomial(k, xi)*legendrePolynomialDerivative(l, xi)*eta(im1, xi);
-            Stmp(i,k) = sum(arrayfun(@(l) S(i, l)*gaussQuadrature(num_basis_cpts, @(xi) integrandFunction(xi, l)), 2:num_basis_cpts));
-        end
-    end
-    U = odx*(Stmp + etaAverage(2:end)*phi.*FSRight(2:end) - etaLeft(2:end)*phi.*FSLeft(1:end) + ...
-        (etaRight(1:end-1) - etaAverage(1:end-1))*(sgn.*phi).*FSRight(1:end-1));
+    U = odx*(-(S(1:end-1,:)*Smat') + FS(2:end)*phi - FS(1:end-1)*(sgn.*phi));
 
     % fluxes to evaluate solution
     % FU[i] is flux of U at i - 1/2 interface = U_{i-1}(x_{i-1/2}) = flux evaluated on left hand side
