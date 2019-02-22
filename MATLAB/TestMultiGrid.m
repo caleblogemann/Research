@@ -1,5 +1,13 @@
 global vcycle_depth weight num_relaxations tolerance max_iterations
 
+weight = 2.0/3.0;
+num_relaxations = 10;
+tolerance = 1e-10;
+max_iterations = 1000;
+
+nBasisCpts = 1;
+nCells = 64;
+vcycle_depth = 4;
 a = 0;
 b = 10;
 
@@ -19,6 +27,9 @@ offset = 0.2;
 wavenumber = 2;
 qSin = @(x) amplitude*sin(2*pi*wavenumber*x/(b -a)) + offset;
 
+qFun = qGaussian;
+q = projectQ(qFun, nBasisCpts, nCells, a, b);
+rhs = q;
 weight = 2.0/3.0;
 num_relaxations = 10;
 tolerance = 1e-6;
@@ -27,7 +38,6 @@ max_iterations = 1000;
 deltaT = 0.4;
 diffusivity = .01;
 bc = 'extrapolation';
-
 
 ndoublings = 4;
 num_iterations_array = zeros(ndoublings,1);

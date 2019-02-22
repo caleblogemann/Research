@@ -66,7 +66,7 @@
 \usepackage[backend=biber]{biblatex}
 \addbibresource{refs.bib}
 
-\title[]{Discontinuous Galerkin Method for solving a Thin-Film Equation} % The short title
+\title[]{Discontinuous Galerkin Method for solving thin film equations} % The short title
 % appears at the bottom of every slide, the full title is only on the title page
 
 \author{Caleb Logemann} % Your name
@@ -101,7 +101,6 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
       \end{center}
       \begin{itemize}
         \item Industrial Coating
-        \item Paint Drying
       \end{itemize}
     \end{frame}
 
@@ -115,9 +114,9 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
             E_t + \p{u (E + p)}_x &= \frac{1}{Re} \p{\frac{2}{3} \p{u^2}_{xx} + \frac{\gamma}{(\gamma - 1)Pr} \p{\frac{p}{\rho}}_{xx}}
           \end{align*}
         \item Asymptotic Limit, $\rho << L$
-        \item Thin-Film Equation - 1D with $u$ as fluid height.
+        \item Thin-Film Equation - 1D with $q$ as fluid height.
           \[
-            u_t + \p{f(x, t) u^2 - g(x, t) u^3}_x = -\p{h(x, t) u^3 u_{xxx}}_x
+            q_t + \p{f(x, t) q^2 - g(x, t) q^3}_x = -\p{h(x, t) q^3 q_{xxx}}_x
           \]
       \end{itemize}
     \end{frame}
@@ -127,13 +126,13 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
       \begin{itemize}
         \item Simplified Expression
           \[
-            u_t + \p{u^2 - u^3}_x = -\p{u^3 u_{xxx}}_x
+            q_t + \p{q^2 - q^3}_x = -\p{q^3 q_{xxx}}_x
           \]
 
         \item Operator Splitting
           \begin{align*}
-            u_t + \p{u^2 - u^3}_x &= 0 \\
-            u_t + \p{u^3 u_{xxx}}_x &= 0
+            q_t + \p{q^2 - q^3}_x &= 0 \\
+            q_t + \p{q^3 q_{xxx}}_x &= 0
           \end{align*}
       \end{itemize}
     \end{frame}
@@ -141,27 +140,37 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
     \begin{frame}
       \frametitle{Introduction to Discontinuous Galerkin}
       \begin{itemize}
-        \item Partition the domain, $\br{a, b}$ as
+        \item Let $\mcT_h$ partition the domain, $\Omega = \br{a, b}$
           \[
             a = x_{1/2} < \cdots < x_{i-1/2} < x_{i+1/2} < \cdots < x_{N + 1/2} = b
           \]
 
-        \item $V_i = \br{x_{i-1/2}, x_{i+1/2}}$
-        \item $\Delta x = x_{i + 1/2} - x_{i - 1/2}$
+        \item $K_i \in \mcT_h = \br{x_{i-1/2}, x_{i+1/2}}$
+        \item $h = x_{i + 1/2} - x_{i - 1/2}$
         \item $x_i = \frac{x_{i+1/2} + x_{i-1/2}}{2}$.
           \includegraphics[scale=0.35]{Figures/Cells.pdf}
       \end{itemize}
     \end{frame}
 
     \begin{frame}
+      \frametitle{Function Spaces}
+      \begin{itemize}
+        \item $P^k(K)$ - polynomials of degree less than or equal to $k$ on $K \in \mcT_h$
+        \item 
+          \[
+            V_h = \set{v \in L^2(\Omega): \eval{v}{K} \in P^k(K), \quad \forall K \in \mcT_h}
+          \]
+      \end{itemize}
+    \end{frame}
+
+    \begin{frame}
       \frametitle{Numerical Solutions}
       \begin{itemize}
-        \item Use canonical variable $\xi \in \br{-1, 1}$
         \item Let $\set{\phi^k(\xi)}$ be the Legendre polynomials.
 
         \item Solution of order $M$ on each cell
           \[
-            \eval{u}{x \in V_i}{} \approx U_i = \sum*{k = 1}{M}{U_i^k \phi^k(\xi)}
+            \eval{q}{x \in V_i}{} \approx Q_i = \sum*{k = 1}{M}{Q_i^k \phi^k(\xi)}
           \]
           \includegraphics[scale=0.35]{Figures/DG.pdf}
       \end{itemize}
@@ -173,26 +182,23 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
       \begin{itemize}
         \item Convection Equation
           \begin{gather*}
-            u_t + \frac{2}{\Delta x} f(u)_\xi = 0 \\
-            f(u) = u^2 - u^3
+            q_t + \frac{2}{\Delta x} f(q)_\xi = 0 \\
+            f(q) = q^2 - q^3
           \end{gather*}
 
         \item Weak Form
           \[
-            \dintt*{-1}{1}{u_t \phi(\xi) + \frac{2}{\Delta x}f(u)_\xi \phi(\xi)}{\xi} = 0
+            \dintt*{-1}{1}{q_t \phi(\xi) + \frac{2}{\Delta x}f(q)_\xi \phi(\xi)}{\xi} = 0
           \]
 
         \item Runge-Kutta Discontinuous Galerkin
-          %\[
-            %\dintt{-1}{1}{\p{U_i}_t \phi^{\ell}(\xi)}{\xi} - \dintt{-1}{1}{\frac{2}{\Delta x}\p{\p{U_i}^2 - \p{U_i}^3} \phi^{\ell}_{\xi}(\xi)}{\xi} + \frac{2}{\Delta x}\p{\mcF_{i + 1/2} \phi^{\ell}(1) - \mcF_{i - 1/2} \phi^{\ell}(-1)} = 0
-          %\]
           \[
-            \dot{U_i^{\ell}} = \frac{1}{\Delta x}\dintt{-1}{1}{f(U_i)\phi_{\xi}^{\ell}}{\xi} - \frac{1}{\Delta x} \p{\mcF_{i + 1/2} - \mcF_{i - 1/2}}
+            \dot{Q_i^{\ell}} = \frac{1}{\Delta x}\dintt{-1}{1}{f(Q_i)\phi_{\xi}^{\ell}}{\xi} - \frac{1}{\Delta x} \p{\mcF_{i + 1/2} - \mcF_{i - 1/2}}
           \]
 
         \item Rusanov Numerical Flux
           \[
-            \mcF_{j+1/2} = \frac{f\p{U_{i+1}(-1)} + f\p{U_{i}(1)}}{2} \phi^{\ell}(1)
+            \mcF_{j+1/2} = \frac{f\p{Q_{i+1}(-1)} + f\p{Q_{i}(1)}}{2} \phi^{\ell}(1)
           \]
 
         \item Solve this system of ODEs with any Explicit Strong Stability Preserving (SSP) Runge-Kutta Method.
@@ -300,41 +306,6 @@ Mathematics Department, Iowa State University \\ % Your institution for the titl
             \item MultiGrid Solver
           \end{itemize}
       \end{itemize}
-    \end{frame}
-
-    %\begin{frame}
-      %\frametitle{Linear Solver}
-      %\begin{itemize}
-        %\item Stabilized BiConjugate Gradient
-        %\item MultiGrid Solver \hfill \\
-
-      %\end{itemize}
-    %\end{frame}
-
-    \begin{frame}
-      \frametitle{Multigrid Solver}
-      \begin{itemize}
-        \item Relaxation e.g. Jacobi Relaxation
-      \end{itemize}
-      \begin{center}
-        \includegraphics[scale=0.25]{Figures/restriction.pdf} \\
-        \includegraphics[scale=0.25]{Figures/interpolation.pdf}
-      \end{center}
-    \end{frame}
-
-    \begin{frame}
-      \frametitle{Multigrid Solver}
-      V-Cycle
-      \begin{center}
-        \includegraphics[scale=0.25]{Figures/vcycle.pdf}
-      \end{center}
-    \end{frame}
-
-    \begin{frame}
-      \frametitle{Multigrid Solver}
-      \begin{center}
-        \includegraphics[scale=0.35]{Figures/mucycle.pdf}
-      \end{center}
     \end{frame}
 
   \section{Operator Splitting}
