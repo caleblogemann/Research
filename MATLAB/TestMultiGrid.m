@@ -6,8 +6,8 @@ tolerance = 1e-10;
 max_iterations = 1000;
 
 nBasisCpts = 1;
-nCells = 1024;
-vcycle_depth = 8;
+nCells = 64;
+vcycle_depth = 4;
 a = 0;
 b = 10;
 deltaX = (b - a)/nCells;
@@ -28,7 +28,7 @@ offset = 0.2;
 wavenumber = 2;
 qSin = @(x) amplitude*sin(2*pi*wavenumber*x/(b -a)) + offset;
 
-qFun = qRiemann;
+qFun = qGaussian;
 q = projectQ(qFun, nBasisCpts, nCells, a, b);
 rhs = q;
 deltaT = 0.4;
@@ -38,7 +38,7 @@ matrixFunctionDiffusionFD = @(num_elems) FDDiffusionBE(num_elems, deltaT, a, b, 
 matrixFunctionDiffusion = @(num_elems) LDGDiffusionBE(num_elems, nBasisCpts, deltaT, a, b);
 matrixFunctionHyperDiffusion = @(num_elems) LDGHyperDiffusionBE(num_elems, nBasisCpts, deltaT, a, b);
 matrixFunctionThinFilm = @(num_elems) LDGThinFilmBE(num_elems, nBasisCpts, q, deltaT, a, b);
-matrixFunction = matrixFunctionDiffusionFD;
+matrixFunction = matrixFunctionHyperDiffusion;
 
 [soln, num_iterations] = multigrid(q, rhs, matrixFunction);
 exact_soln = getMatrix(matrixFunction(nCells)\getVector(rhs), nCells, nBasisCpts);
