@@ -52,8 +52,8 @@ for i = 1:num_doublings
         
         residual = res(q_FD);
         iter = 0;
-        num_newton_iterations = 10;
-        for k = 1:num_newton_iterations
+        max_num_newton_iterations = 100;
+        while(residual > 1e-5 && iter <= max_num_newton_iterations)
             % x_{n+1} = x_n - J(x_n)^{-1} F(x_n)
 
             q_FD = q_FD - J(q_FD)\F(q_FD);
@@ -66,7 +66,9 @@ for i = 1:num_doublings
     err(i) = dog_math.ComputeError(q_FD, exact_solution_function, a, b, final_time);
     plot(x, q_FD, x, exact_solution_function(x, final_time));
     pause();
-    plot(residual_array)
+    plot(residual_array);
+    pause();
+    plot(iteration_array);
     pause();
 end
 deltaXArray = (b-a)./(initial_num_cells*2.^(0:num_doublings-1));
