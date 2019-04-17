@@ -41,18 +41,17 @@ diffusivity = 1.0;
 bc = 'periodic';
 
 time_order = 1;
-final_time = 0.1;
+
 
 num_doublings = 3;
-err = zeros(1, num_doublings);
-initial_num_cells = 100;
+err = zeros(1, n);
 for i = 1:num_doublings
-    num_cells = initial_num_cells*2^(i-1);
+    num_cells = 100*2^(i-1);
     deltaX = (b-a)/num_cells;
     
     deltaT = 0.1*deltaX;
-    nTimeSteps = final_time/deltaT;
-    %final_time = nTimeSteps*deltaT;
+    nTimeSteps = 10;
+    final_time = nTimeSteps*deltaT;
     
     x = (a + deltaX/2):deltaX:(b-deltaX/2);
     forcing_function = @(t) forcingFunction(x',t);
@@ -61,8 +60,6 @@ for i = 1:num_doublings
     q_FD = dog_math.L2Project(exact_solution_function, quad_order, num_cells, num_eqns, 1, a, b, 0.0);
     q_FD_exact = @(t) dog_math.L2Project(exact_solution_function, quad_order, num_cells, num_eqns, 1, a, b, t);
     
-    residual_array = zeros(nTimeSteps,1);
-    iteration_array = zeros(nTimeSteps, 1);
     for n = 1:nTimeSteps
         old_time = (n-1)*deltaT;
         
@@ -72,27 +69,23 @@ for i = 1:num_doublings
         
         % initial guess
         q_FD = q_FD_old;
-        residual = res(q_FD);
-        iter = 0;
-        % picard iteration, take time step=
-        while (residual > .1 && iter < 100)
+        % picard iteration, take time step
+        for iter = 1:3
             get_discretization_matrix = @(t) getFDThinFilmMatrix(q_FD, deltaX);
             % take a step with FD solution
             q_FD = time_stepper.ImplicitRungeKutta.TimeStep(q_FD_old, get_discretization_matrix, forcing_function, time_order, deltaT, old_time);
-            residual = res(q_FD);
-            iter = iter+1;
+            % switch back to DG solution
+            
+            disp(res(q_FD))
         end
-        iteration_array(n) = iter;
-        residual_array(n) = residual;
     end
 
-    err(i) = dog_math.ComputeError(q_FD, exact_solution_function, a, b, final_time);
+    err(i) = dog_math.ComputeError(q_DG, exact_solution_function, a, b, final_time);
     plot(x, q_FD, x, exact_solution_function(x, final_time));
-    pause();
-    plot(1:nTimeSteps, residual_array, 1:nTimeSteps, iteration_array);
     disp(i);
     pause()
 end
-deltaXArray = (b-a)./(initial_num_cells*2.^(0:num_doublings-1));
-log(err(1:end-1)./err(2:end))./log(deltaXArray(1:end-1)./deltaXArray(2:end))
+deltaTArray = final_time./timeStepArray;
+deltaXArray = (b-a)./nCellsArray;
+log(err(1:end-1)./err(2:end))./log(deltaTArray(1:end-1)./deltaTArray(2:end))
 %log(error(1:end-1)./error(2:end))./log(deltaXArray(1:end-1)./deltaXArray(2:end))
