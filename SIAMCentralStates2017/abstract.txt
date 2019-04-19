@@ -7,8 +7,4 @@ equations and describes how a thin-film of water flows over a surface.
 The thin-film equation contains both a convection and diffusion term and thus
 is most often handled with operator splitting.
 We describe how to use an explicit Runge-Kutta DG method for solving the
-convection equation and an implicit DG method for solving the diffusion equation.
-This implicit problem is particularly ill-conditioned, therefore we demonstrate
-how a multigrid method can ensure fast convergence that scales well with the size of
-the model.
-
+convection equation and an implicit finite difference method for solving the diffusion equation.

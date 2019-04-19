@@ -1,13 +1,18 @@
 % Test Newton iteration
-exact_solution_function = @(x, t) 0.2*exp(-10*t).*exp(-300.0*(x - 0.5).^2) + 0.1;
-forcingFunction = @(x, t) 2.0*exp(-40.0*(t+30.0*(x-0.5).^2)).*...
-    (648.0*exp(20.0*(t+30.0*(x-0.5).^2)).*...
-    (14551 - 118200*x + 358200*x.^2 - 480000*x.^3 + 240000*x.^4)+...
-    1296*exp(10.0*(t+30.0*(x-0.5).^2)).*...
-    (21901 - 177600*x + 537600*x.^2 - 720000*x.^3 + 360000*x.^4)+...
-    864.0*(29251 - 237000*x + 717000*x.^2 - 960000*x.^3 + 480000*x.^4)+...
-    exp(30.0*(t+30.0*(x-0.5).^2)).*...
-    (777707 - 6350400*x + 19310400*x.^2 - 25920000*x.^3 + 12960000*x.^4));
+% exact_solution_function = @(x, t) 0.2*exp(-10*t).*exp(-300.0*(x - 0.5).^2) + 0.1;
+% forcingFunction = @(x, t) 2.0*exp(-40.0*(t+30.0*(x-0.5).^2)).*...
+%     (648.0*exp(20.0*(t+30.0*(x-0.5).^2)).*...
+%     (14551 - 118200*x + 358200*x.^2 - 480000*x.^3 + 240000*x.^4)+...
+%     1296*exp(10.0*(t+30.0*(x-0.5).^2)).*...
+%     (21901 - 177600*x + 537600*x.^2 - 720000*x.^3 + 360000*x.^4)+...
+%     864.0*(29251 - 237000*x + 717000*x.^2 - 960000*x.^3 + 480000*x.^4)+...
+%     exp(30.0*(t+30.0*(x-0.5).^2)).*...
+%     (777707 - 6350400*x + 19310400*x.^2 - 25920000*x.^3 + 12960000*x.^4));
+
+exact_solution_function = @(x, t) 0.1*sin(2*pi*(x - t)) + 0.15;
+forcingFunction = @(x,t) -0.628319*cos(2*pi*(x-t)) ... 
+    - 46.7564*cos(2*pi*(x-t)).^2.*(0.15 + 0.1*sin(2*pi*(x-t))).^2 ...
+    + 155.855*(0.15 + 0.1*sin(2*pi*(x-t))).^3.*sin(2*pi*(x-t));
 
 a = 0.0;
 b = 1.0;
@@ -40,33 +45,38 @@ for i = 1:num_doublings
     
     residual_array = zeros(num_time_steps,1);
     iteration_array = zeros(num_time_steps, 1);
+    error_array = zeros(num_time_steps, 1);
     for n = 1:num_time_steps
         old_time = initial_time + (n-1)*deltaT;
         q_FD_old = q_FD;
-        F = @(q_FD) q_FD - deltaT*FDThinFilmOperator(q_FD, deltaX) - q_FD_old - deltaT*forcing_function(old_time+deltaT);
-        J = @(q_FD) I - deltaT*getFDThinFilmJacobian(q_FD, deltaX);
-        res = @(q_FD) norm(F(q_FD))/norm(q_FD);
+        F = @(q) q - deltaT*getFDThinFilmMatrix(q, deltaX)*q - q_FD_old - deltaT*forcing_function(old_time+deltaT);
+        J = @(q) I - deltaT*getFDThinFilmJacobian(q, deltaX);
+        res = @(q) norm(F(q))/norm(q);
 
         % initial guess
         q_FD = q_FD_old;
         
         residual = res(q_FD);
         iter = 0;
-        max_num_newton_iterations = 100;
+        max_num_newton_iterations = 10;
         while(residual > 1e-5 && iter <= max_num_newton_iterations)
             % x_{n+1} = x_n - J(x_n)^{-1} F(x_n)
 
-            q_FD = q_FD - J(q_FD)\F(q_FD);
+            delta = J(q_FD)\F(q_FD);
+            q_FD = q_FD - delta;%J(q_FD)\F(q_FD);
             residual = res(q_FD);
             iter = iter + 1;
         end
         residual_array(n) = residual;
+        error_array(n) = dog_math.ComputeError(q_FD, exact_solution_function, a, b, old_time+deltaT);
         iteration_array(n) = iter;
     end
     err(i) = dog_math.ComputeError(q_FD, exact_solution_function, a, b, final_time);
     plot(x, q_FD, x, exact_solution_function(x, final_time));
     pause();
     plot(residual_array);
+    pause();
+    plot(error_array);
     pause();
     plot(iteration_array);
     pause();

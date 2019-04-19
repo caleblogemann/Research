@@ -1,4 +1,4 @@
-% Test picard iteration
+% Test Newton iteration
 % exact_solution_function = @(x, t) 0.2*exp(-10*t).*exp(-300.0*(x - 0.5).^2) + 0.1;
 % forcingFunction = @(x, t) 2.0*exp(-40.0*(t+30.0*(x-0.5).^2)).*...
 %     (648.0*exp(20.0*(t+30.0*(x-0.5).^2)).*...
@@ -21,13 +21,13 @@ num_eqns = 1;
 num_basis_cpts = 2;
 quad_order = 2;
 
-time_order = 2;
+time_order = 1;
 initial_time = 0.0;
 final_time = 0.1;
 
 num_doublings = 3;
 err = zeros(1, num_doublings);
-initial_num_cells = 100;
+initial_num_cells = 200;
 for i = 1:num_doublings
     
     num_cells = initial_num_cells*2^(i-1);
@@ -43,63 +43,40 @@ for i = 1:num_doublings
     q_FD_exact = @(t) dog_math.L2Project(exact_solution_function, quad_order, num_cells, num_eqns, 1, a, b, t);
     I = eye(num_cells);
     
-    residual_array_1 = zeros(num_time_steps,1);
-    residual_array_2 = zeros(num_time_steps,1);
-    iteration_array_1 = zeros(num_time_steps, 1);
-    iteration_array_2 = zeros(num_time_steps, 1);
+    residual_array = zeros(num_time_steps,1);
+    iteration_array = zeros(num_time_steps, 1);
     error_array = zeros(num_time_steps, 1);
     for n = 1:num_time_steps
         old_time = initial_time + (n-1)*deltaT;
         q_FD_old = q_FD;
-        
-        % 1st stage
-        F = @(q) q - 0.25*deltaT*FDThinFilmOperator(q, deltaX) - q_FD_old - 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) - 0.25*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
+        F = @(q) q - deltaT*getFDThinFilmMatrix(q, deltaX)*q - q_FD_old - deltaT*forcing_function(old_time+deltaT);
+        J = @(q) I - deltaT*getFDThinFilmJacobian(q, deltaX);
         res = @(q) norm(F(q))/norm(q);
-  
+
+        % initial guess
+        q_FD = q_FD_old;
+        
         residual = res(q_FD);
         iter = 0;
-        max_num_iterations = 10;
-        
-        rhs = q_FD_old + 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) + 0.25*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
-        % initial guess
-        qstar = q_FD_old;
-        while(residual > 1e-5 && iter < max_num_iterations)
-                A = getFDThinFilmMatrix(qstar, deltaX);
-                qstar = (I - 0.25*deltaT*A)\rhs;
-                
-                residual = res(qstar);
-                iter = iter+1;
-        end
-        residual_array_1(n) = residual;
-        iteration_array_1(n) = iter;
-        
-        % second stage
-        F = @(q) 3*q - deltaT*FDThinFilmOperator(q, deltaX) - 4*qstar + q_FD_old - deltaT*forcing_function(old_time + deltaT);
-        res = @(q) norm(F(q))/norm(q);
-  
-        residual = res(q_FD);
-        iter = 0;
-        max_num_iterations = 10;
-        
-        rhs = 4*qstar - q_FD_old + deltaT*forcing_function(old_time + deltaT);
-        % initial guess
-        q_FD = qstar;
-        while(residual > 1e-5 && iter < max_num_iterations)
-            A = getFDThinFilmMatrix(q_FD, deltaX);
-            q_FD = (3*I - deltaT*A)\rhs;
-            iter = iter + 1;
+        max_num_newton_iterations = 10;
+        while(residual > 1e-5 && iter <= max_num_newton_iterations)
+            % x_{n+1} = x_n - J(x_n)^{-1} F(x_n)
+
+            delta = J(q_FD)\F(q_FD);
+            q_FD = q_FD - delta;%J(q_FD)\F(q_FD);
             residual = res(q_FD);
+            iter = iter + 1;
         end
-        residual_array_2(n) = residual;
+        residual_array(n) = residual;
         error_array(n) = dog_math.ComputeError(q_FD, exact_solution_function, a, b, old_time+deltaT);
-        iteration_array_2(n) = iter;
+        iteration_array(n) = iter;
     end
     err(i) = dog_math.ComputeError(q_FD, exact_solution_function, a, b, final_time);
     plot(x, q_FD, x, exact_solution_function(x, final_time));
     title('Approximate Solution');
     xlabel('x');
     pause();
-    plot(1:num_time_steps, residual_array_1, 1:num_time_steps, residual_array_2);
+    plot(residual_array);
     title('Residuals');
     xlabel('Time Steps');
     pause();
@@ -107,7 +84,7 @@ for i = 1:num_doublings
     title('Errors');
     xlabel('Time Steps');
     pause();
-    plot(1:num_time_steps, iteration_array_1, 1:num_time_steps, iteration_array_2);
+    plot(iteration_array);
     title('Number of Iterations');
     xlabel('Time Steps');
     pause();

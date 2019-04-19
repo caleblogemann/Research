@@ -1,4 +1,4 @@
-% Test picard iteration
+% Test Newton iteration second order
 % exact_solution_function = @(x, t) 0.2*exp(-10*t).*exp(-300.0*(x - 0.5).^2) + 0.1;
 % forcingFunction = @(x, t) 2.0*exp(-40.0*(t+30.0*(x-0.5).^2)).*...
 %     (648.0*exp(20.0*(t+30.0*(x-0.5).^2)).*...
@@ -52,43 +52,48 @@ for i = 1:num_doublings
         old_time = initial_time + (n-1)*deltaT;
         q_FD_old = q_FD;
         
-        % 1st stage
-        F = @(q) q - 0.25*deltaT*FDThinFilmOperator(q, deltaX) - q_FD_old - 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) - 0.25*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
+        % 1st Stage
+        % (I - 1/4 deltaT A) Q^* = (I + 1/4*deltaT*A)*Q^n + 1/4*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
+        F = @(q) q - 0.25*deltaT*FDThinFilmOperator(q, deltaX) - q_FD_old - 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) - 0.25*deltaT*(forcing_function(old_time+0.5*deltaT)+forcing_function(old_time));
+        J = @(q) I - 0.25*deltaT*getFDThinFilmJacobian(q, deltaX);
         res = @(q) norm(F(q))/norm(q);
-  
-        residual = res(q_FD);
-        iter = 0;
-        max_num_iterations = 10;
-        
-        rhs = q_FD_old + 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) + 0.25*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
+
         % initial guess
         qstar = q_FD_old;
-        while(residual > 1e-5 && iter < max_num_iterations)
-                A = getFDThinFilmMatrix(qstar, deltaX);
-                qstar = (I - 0.25*deltaT*A)\rhs;
-                
-                residual = res(qstar);
-                iter = iter+1;
+        
+        residual = res(qstar);
+        iter = 0;
+        max_num_newton_iterations = 10;
+        while(residual > 1e-5 && iter <= max_num_newton_iterations)
+            % x_{n+1} = x_n - J(x_n)^{-1} F(x_n)
+
+            delta = J(qstar)\F(qstar);
+            qstar = qstar - delta;%J(q_FD)\F(q_FD);
+            residual = res(qstar);
+            iter = iter + 1;
         end
         residual_array_1(n) = residual;
         iteration_array_1(n) = iter;
         
-        % second stage
-        F = @(q) 3*q - deltaT*FDThinFilmOperator(q, deltaX) - 4*qstar + q_FD_old - deltaT*forcing_function(old_time + deltaT);
+        % 2nd Stage
+        % (3*I - dt*A)Q^{n+1} = 4*Q^* - Q^n + deltaT*forcing_function(old_time + dt)
+        F = @(q) 3*q - deltaT*FDThinFilmOperator(q, deltaX) - 4*qstar + q_FD_old - deltaT*forcing_function(old_time+deltaT);
+        J = @(q) 3*I - deltaT*getFDThinFilmJacobian(q, deltaX);
         res = @(q) norm(F(q))/norm(q);
-  
-        residual = res(q_FD);
-        iter = 0;
-        max_num_iterations = 10;
-        
-        rhs = 4*qstar - q_FD_old + deltaT*forcing_function(old_time + deltaT);
+
         % initial guess
         q_FD = qstar;
-        while(residual > 1e-5 && iter < max_num_iterations)
-            A = getFDThinFilmMatrix(q_FD, deltaX);
-            q_FD = (3*I - deltaT*A)\rhs;
-            iter = iter + 1;
+        
+        residual = res(q_FD);
+        iter = 0;
+        max_num_newton_iterations = 10;
+        while(residual > 1e-5 && iter <= max_num_newton_iterations)
+            % x_{n+1} = x_n - J(x_n)^{-1} F(x_n)
+
+            delta = J(q_FD)\F(q_FD);
+            q_FD = q_FD - delta;%J(q_FD)\F(q_FD);
             residual = res(q_FD);
+            iter = iter + 1;
         end
         residual_array_2(n) = residual;
         error_array(n) = dog_math.ComputeError(q_FD, exact_solution_function, a, b, old_time+deltaT);
