@@ -9,10 +9,19 @@
 %     exp(30.0*(t+30.0*(x-0.5).^2)).*...
 %     (777707 - 6350400*x + 19310400*x.^2 - 25920000*x.^3 + 12960000*x.^4));
 
-exact_solution_function = @(x, t) 0.1*sin(2*pi*(x - t)) + 0.15;
-forcingFunction = @(x,t) -0.628319*cos(2*pi*(x-t)) ... 
-    - 46.7564*cos(2*pi*(x-t)).^2.*(0.15 + 0.1*sin(2*pi*(x-t))).^2 ...
-    + 155.855*(0.15 + 0.1*sin(2*pi*(x-t))).^3.*sin(2*pi*(x-t));
+exact_solution_function = @(x, t) 0.2.*exp(-300.0*(x - t - 0.5).^2) + 0.1;
+forcingFunction = @(x, t) 60.0*exp(-300.0*(1.0 + 2.0*t - 2.0*x).^2).* ...
+    (3600.0*exp(225.0*(1.0 + 2.0*t - 2.0*x).^2).*...
+    (0.1 + 0.2*exp(-75.0*(1 + 2.0*t - 2.0*x).^2)).^3.*...
+    (1.0 - 300.0*(1.0 + 2.0*t - 2.0*x).^2 + 7500.0*(1.0 + 2.0*t - 2.0*x).^4) ...
+    + exp(225.0*(1.0 + 2.0*t - 2.0*x).^2).*(-1.0 - 2.0*t + 2.0*x) ...
+    +  3240.0*(2.0 + exp(75.0*(1.0 + 2.0*t - 2.0*x).^2)).^2.*(1.0 + 2.0*t - 2.0*x).^2.*...
+    (49.0 + 200.0*t^2 - 200.0*x + 200.0*x.^2 - 200.0*t*(-1.0 + 2.0*x)));
+
+% exact_solution_function = @(x, t) 0.1*sin(2*pi*(x - t)) + 0.15;
+% forcingFunction = @(x,t) -0.628319*cos(2*pi*(x-t)) ... 
+%     - 46.7564*cos(2*pi*(x-t)).^2.*(0.15 + 0.1*sin(2*pi*(x-t))).^2 ...
+%     + 155.855*(0.15 + 0.1*sin(2*pi*(x-t))).^3.*sin(2*pi*(x-t));
 
 a = 0.0;
 b = 1.0;
@@ -21,11 +30,11 @@ num_eqns = 1;
 num_basis_cpts = 2;
 quad_order = 2;
 
-time_order = 2;
+time_order = 1;
 initial_time = 0.0;
 final_time = 0.1;
 
-num_doublings = 3;
+num_doublings = 4;
 err = zeros(1, num_doublings);
 initial_num_cells = 100;
 for i = 1:num_doublings
@@ -36,70 +45,50 @@ for i = 1:num_doublings
     x = (a + 0.5*deltaX):deltaX:(b-0.5*deltaX);
     forcing_function = @(t) forcingFunction (x', t);
  
-    deltaT = deltaX;
-    num_time_steps = final_time/deltaT;
+    deltaT = 0.75*deltaX;
+    num_time_steps = round(final_time/deltaT);
+    deltaT = final_time/num_time_steps;
     
     q_FD = dog_math.L2Project(exact_solution_function, quad_order, num_cells, num_eqns, 1, a, b, initial_time);
     q_FD_exact = @(t) dog_math.L2Project(exact_solution_function, quad_order, num_cells, num_eqns, 1, a, b, t);
     I = eye(num_cells);
     
     residual_array_1 = zeros(num_time_steps,1);
-    residual_array_2 = zeros(num_time_steps,1);
     iteration_array_1 = zeros(num_time_steps, 1);
-    iteration_array_2 = zeros(num_time_steps, 1);
     error_array = zeros(num_time_steps, 1);
     for n = 1:num_time_steps
         old_time = initial_time + (n-1)*deltaT;
         q_FD_old = q_FD;
         
         % 1st stage
-        F = @(q) q - 0.25*deltaT*FDThinFilmOperator(q, deltaX) - q_FD_old - 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) - 0.25*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
+        F = @(q) q - deltaT*FDThinFilmOperator(q, deltaX) - q_FD_old - deltaT*forcing_function(old_time+deltaT);
         res = @(q) norm(F(q))/norm(q);
   
         residual = res(q_FD);
         iter = 0;
-        max_num_iterations = 10;
+        max_num_iterations = 5;
+        tolerance = 1e-10;
         
-        rhs = q_FD_old + 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) + 0.25*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
+        rhs = q_FD_old + deltaT*forcing_function(old_time+deltaT);
         % initial guess
-        qstar = q_FD_old;
-        while(residual > 1e-5 && iter < max_num_iterations)
-                A = getFDThinFilmMatrix(qstar, deltaX);
-                qstar = (I - 0.25*deltaT*A)\rhs;
-                
-                residual = res(qstar);
+        q_FD = q_FD_old;
+        while(residual > tolerance && iter < max_num_iterations)
+                A = getFDThinFilmMatrix(q_FD, deltaX);
+                q_FD = (I - deltaT*A)\rhs;
+                q_FD(q_FD <= 0) = 1e-5;
+                residual = res(q_FD);
                 iter = iter+1;
         end
         residual_array_1(n) = residual;
         iteration_array_1(n) = iter;
-        
-        % second stage
-        F = @(q) 3*q - deltaT*FDThinFilmOperator(q, deltaX) - 4*qstar + q_FD_old - deltaT*forcing_function(old_time + deltaT);
-        res = @(q) norm(F(q))/norm(q);
-  
-        residual = res(q_FD);
-        iter = 0;
-        max_num_iterations = 10;
-        
-        rhs = 4*qstar - q_FD_old + deltaT*forcing_function(old_time + deltaT);
-        % initial guess
-        q_FD = qstar;
-        while(residual > 1e-5 && iter < max_num_iterations)
-            A = getFDThinFilmMatrix(q_FD, deltaX);
-            q_FD = (3*I - deltaT*A)\rhs;
-            iter = iter + 1;
-            residual = res(q_FD);
-        end
-        residual_array_2(n) = residual;
-        error_array(n) = dog_math.ComputeError(q_FD, exact_solution_function, a, b, old_time+deltaT);
-        iteration_array_2(n) = iter;
+        error_array(n) = dog_math.ComputeError(dog_math.getQDG(q_FD), exact_solution_function, a, b, old_time+deltaT);
     end
-    err(i) = dog_math.ComputeError(q_FD, exact_solution_function, a, b, final_time);
+    err(i) = dog_math.ComputeError(dog_math.getQDG(q_FD), exact_solution_function, a, b, final_time);
     plot(x, q_FD, x, exact_solution_function(x, final_time));
     title('Approximate Solution');
     xlabel('x');
     pause();
-    plot(1:num_time_steps, residual_array_1, 1:num_time_steps, residual_array_2);
+    plot(1:num_time_steps, residual_array_1);
     title('Residuals');
     xlabel('Time Steps');
     pause();
@@ -107,7 +96,7 @@ for i = 1:num_doublings
     title('Errors');
     xlabel('Time Steps');
     pause();
-    plot(1:num_time_steps, iteration_array_1, 1:num_time_steps, iteration_array_2);
+    plot(1:num_time_steps, iteration_array_1);
     title('Number of Iterations');
     xlabel('Time Steps');
     pause();

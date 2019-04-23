@@ -1,2 +1,2 @@
-Fix Boundary Conditions in Thin Film LDG in Matlab and in Dogpack
-Compute nondimensional form of Thin Film Diffusion
+ForcingFunction/manufactured solution
+
