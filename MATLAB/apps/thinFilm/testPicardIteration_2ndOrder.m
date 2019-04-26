@@ -8,11 +8,22 @@
 %     864.0*(29251 - 237000*x + 717000*x.^2 - 960000*x.^3 + 480000*x.^4)+...
 %     exp(30.0*(t+30.0*(x-0.5).^2)).*...
 %     (777707 - 6350400*x + 19310400*x.^2 - 25920000*x.^3 + 12960000*x.^4));
-% 
-exact_solution_function = @(x, t) 0.1*sin(2*pi*(x - t)) + 0.15;
-forcingFunction = @(x,t) -0.628319*cos(2*pi*(x-t)) ... 
-    - 46.7564*cos(2*pi*(x-t)).^2.*(0.15 + 0.1*sin(2*pi*(x-t))).^2 ...
-    + 155.855*(0.15 + 0.1*sin(2*pi*(x-t))).^3.*sin(2*pi*(x-t));
+
+exact_solution_function = @(x, t) 0.2.*exp(-300.0*(x - t - 0.5).^2) + 0.1;
+forcingFunction = @(x, t) 60.0*exp(-300.0*(1.0 + 2.0*t - 2.0*x).^2).* ...
+    (3600.0*exp(225.0*(1.0 + 2.0*t - 2.0*x).^2).*...
+    (0.1 + 0.2*exp(-75.0*(1 + 2.0*t - 2.0*x).^2)).^3.*...
+    (1.0 - 300.0*(1.0 + 2.0*t - 2.0*x).^2 + 7500.0*(1.0 + 2.0*t - 2.0*x).^4) ...
+    + exp(225.0*(1.0 + 2.0*t - 2.0*x).^2).*(-1.0 - 2.0*t + 2.0*x) ...
+    +  3240.0*(2.0 + exp(75.0*(1.0 + 2.0*t - 2.0*x).^2)).^2.*(1.0 + 2.0*t - 2.0*x).^2.*...
+    (49.0 + 200.0*t^2 - 200.0*x + 200.0*x.^2 - 200.0*t*(-1.0 + 2.0*x)));
+
+% exact_solution_function = @(x, t) 0.1*sin(2*pi*(x - t)) + 0.15;
+% forcingFunction = @(x,t) -0.628319*cos(2*pi*(x-t)) ... 
+%     - 46.7564*cos(2*pi*(x-t)).^2.*(0.15 + 0.1*sin(2*pi*(x-t))).^2 ...
+%     + 155.855*(0.15 + 0.1*sin(2*pi*(x-t))).^3.*sin(2*pi*(x-t));
+
+forcing = false;
 
 a = 0.0;
 b = 1.0;
@@ -34,9 +45,13 @@ for i = 1:num_doublings
     deltaX = (b - a)/num_cells;
 
     x = (a + 0.5*deltaX):deltaX:(b-0.5*deltaX);
-    forcing_function = @(t) forcingFunction (x', t);
+    if(forcing)
+        forcing_function = @(t) forcingFunction (x', t);
+    else
+        forcing_function = @(t) zeros(size(x'));
+    end
  
-    deltaT = 0.75*deltaX;
+    deltaT = 0.5^4*deltaX;
     num_time_steps = round(final_time/deltaT);
     deltaT = final_time/num_time_steps;
     
@@ -59,7 +74,7 @@ for i = 1:num_doublings
   
         residual = res(q_FD);
         iter = 0;
-        max_num_iterations = 3;
+        max_num_iterations = 20;
         tolerance = 1e-10;
         
         rhs = q_FD_old + 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) + 0.25*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
@@ -99,19 +114,19 @@ for i = 1:num_doublings
     plot(x, q_FD, x, exact_solution_function(x, final_time));
     title('Approximate Solution');
     xlabel('x');
-    %pause();
+    pause();
     plot(1:num_time_steps, residual_array_1, 1:num_time_steps, residual_array_2);
     title('Residuals');
     xlabel('Time Steps');
-    %pause();
+    pause();
     plot(error_array);
     title('Errors');
     xlabel('Time Steps');
-    %pause();
+    pause();
     plot(1:num_time_steps, iteration_array_1, 1:num_time_steps, iteration_array_2);
     title('Number of Iterations');
     xlabel('Time Steps');
-    %pause();
+    pause();
 end
 deltaXArray = (b-a)./(initial_num_cells*2.^(0:num_doublings-1));
 log(err(1:end-1)./err(2:end))./log(deltaXArray(1:end-1)./deltaXArray(2:end))

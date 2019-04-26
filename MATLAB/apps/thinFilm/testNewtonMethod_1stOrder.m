@@ -23,6 +23,8 @@ forcingFunction = @(x, t) 60.0*exp(-300.0*(1.0 + 2.0*t - 2.0*x).^2).* ...
 %     - 46.7564*cos(2*pi*(x-t)).^2.*(0.15 + 0.1*sin(2*pi*(x-t))).^2 ...
 %     + 155.855*(0.15 + 0.1*sin(2*pi*(x-t))).^3.*sin(2*pi*(x-t));
 
+forcing = false;
+
 a = 0.0;
 b = 1.0;
 
@@ -43,7 +45,11 @@ for i = 1:num_doublings
     deltaX = (b - a)/num_cells;
 
     x = (a + 0.5*deltaX):deltaX:(b-0.5*deltaX);
-    forcing_function = @(t) forcingFunction (x', t);
+    if(forcing)
+        forcing_function = @(t) forcingFunction (x', t);
+    else
+        forcing_function = @(t) zeros(size(x'));
+    end
  
     deltaT = deltaX;
     num_time_steps = final_time/deltaT;

@@ -36,23 +36,23 @@
   $v_h, w_h, y_h, z_h \in V_h$ and for all $j$ the following equations are
   satisfied
   \begin{align*}
-    \dintt{I_j}{}{r_h w_h}{x} &= \dintt{I_j}{}{(q_h)_x w_h}{x} \\
-    \dintt{I_j}{}{s_h y_h}{x} &= \dintt{I_j}{}{(r_h)_x y_h}{x} \\
-    \dintt{I_j}{}{u_h z_h}{x} &= \dintt{I_j}{}{q_h^3 (s_h)_x z_h}{x} \\
-    \dintt{I_j}{}{(q_h)_t v_h}{x} &= -\dintt{I_j}{}{(u_h)_x v_h}{x}
+    \dintt{I_j}{}{r_h w_h}{x} &= \dintt{I_j}{}{{(q_h)}_x w_h}{x} \\
+    \dintt{I_j}{}{s_h y_h}{x} &= \dintt{I_j}{}{{(r_h)}_x y_h}{x} \\
+    \dintt{I_j}{}{u_h z_h}{x} &= \dintt{I_j}{}{q_h^3 {(s_h)}_x z_h}{x} \\
+    \dintt{I_j}{}{{(q_h)}_t v_h}{x} &= -\dintt{I_j}{}{{(u_h)}_x v_h}{x}
   \end{align*}
-  After integrating by parts, these equations are
+  after integrating by parts, these equations are
   \begin{align*}
-    \dintt{I_j}{}{r_h w_h}{x} &= \p{\p{\hat{q}_h w^-_h}_{j+1/2} - \p{\hat{q}_j w^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h (w_h)_x}{x} \\
-    \dintt{I_j}{}{s_h y_h}{x} &= \p{\p{\hat{r}_h y^-_h}_{j+1/2} - \p{\hat{r}_j y^+_h}_{j-1/2}} - \dintt{I_j}{}{r_h (y_h)_x}{x} \\
-    \dintt{I_j}{}{(q_h)_t v_h}{x} &= -\p{\p{\hat{u}_h v^-_h}_{j+1/2} - \p{\hat{u}_h v^+_h}_{j-1/2}} + \dintt{I_j}{}{u_h (v_h)_x}{x}
+    \dintt{i_j}{}{r_h w_h}{x} &= \p{\p{\hat{q}_h w^-_h}_{j+1/2} - \p{\hat{q}_j w^+_h}_{j-1/2}} - \dintt{i_j}{}{q_h {(w_h)}_x}{x} \\
+    \dintt{i_j}{}{s_h y_h}{x} &= \p{\p{\hat{r}_h y^-_h}_{j+1/2} - \p{\hat{r}_j y^+_h}_{j-1/2}} - \dintt{i_j}{}{r_h {(y_h)}_x}{x} \\
+      \dintt{i_j}{}{{(q_h)}_t v_h}{x} &= -\p{\p{\hat{u}_h v^-_h}_{j+1/2} - \p{\hat{u}_h v^+_h}_{j-1/2}} + \dintt{i_j}{}{u_h {(v_h)}_x}{x}
   \end{align*}
-  The third equation is trickier and requires integrating by parts twice.
+  the third equation is trickier and requires integrating by parts twice.
   \begin{align*}
-    \dintt{I_j}{}{u_h z_h}{x} &= \dintt{I_j}{}{q_h^3 (r_h)_x z_h}{x} \\
-    \dintt{I_j}{}{u_h z_h}{x} &= \p{\p{\hat{r}_h \hat{q_h^3} z^-_h}_{j+1/2} - \p{\hat{r}_j \hat{q_h^3} z^+_h}_{j-1/2}} - \dintt{I_j}{}{r_h (q_h^3 z_h)_x}{x} \\
-    \dintt{I_j}{}{u_h z_h}{x} &= \p{\p{\hat{r}_h \hat{q_h^3} z^-_h}_{j+1/2} - \p{\hat{r}_j \hat{q_h^3} z^+_h}_{j-1/2}} \\
-    &-\p{\p{\hat{r}_h \p{q^-_h}^3 z^-_h}_{j+1/2} - \p{\hat{r}_j \p{q^+_h}^3 z^+_h}_{j-1/2}} + \dintt{I_j}{}{(r_h)_x q_h^3 z_h}{x} \\
+      \dintt{i_j}{}{u_h z_h}{x} &= \dintt{i_j}{}{q_h^3 {(r_h)}_x z_h}{x} \\
+      \dintt{i_j}{}{u_h z_h}{x} &= \p{\p{\hat{r}_h \hat{q_h^3} z^-_h}_{j+1/2} - \p{\hat{r}_j \hat{q_h^3} z^+_h}_{j-1/2}} - \dintt{i_j}{}{r_h {(q_h^3 z_h)}_x}{x} \\
+    \dintt{i_j}{}{u_h z_h}{x} &= \p{\p{\hat{r}_h \hat{q_h^3} z^-_h}_{j+1/2} - \p{\hat{r}_j \hat{q_h^3} z^+_h}_{j-1/2}} \\
+      &-\p{\p{\hat{r}_h \p{q^-_h}^3 z^-_h}_{j+1/2} - \p{\hat{r}_j \p{q^+_h}^3 z^+_h}_{j-1/2}} + \dintt{i_j}{}{{(r_h)}_x q_h^3 z_h}{x} \\
   \end{align*}
 
   A common choice of numerical fluxes are the so-called alternating fluxes.
