@@ -1,5 +1,5 @@
 function [ G ] = FDThinFilmOperator( q_FD, deltaX )
-  	num_cells = length(q_FD);
+    num_cells = length(q_FD);
     odx4 = 1/deltaX^4;
 
     % q3_iphalf(i) = (0.5*(Q_{i} + Q_{i+1}))^3

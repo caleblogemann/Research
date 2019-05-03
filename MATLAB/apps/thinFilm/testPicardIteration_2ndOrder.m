@@ -9,21 +9,32 @@
 %     exp(30.0*(t+30.0*(x-0.5).^2)).*...
 %     (777707 - 6350400*x + 19310400*x.^2 - 25920000*x.^3 + 12960000*x.^4));
 
-exact_solution_function = @(x, t) 0.2.*exp(-300.0*(x - t - 0.5).^2) + 0.1;
-forcingFunction = @(x, t) 60.0*exp(-300.0*(1.0 + 2.0*t - 2.0*x).^2).* ...
-    (3600.0*exp(225.0*(1.0 + 2.0*t - 2.0*x).^2).*...
-    (0.1 + 0.2*exp(-75.0*(1 + 2.0*t - 2.0*x).^2)).^3.*...
-    (1.0 - 300.0*(1.0 + 2.0*t - 2.0*x).^2 + 7500.0*(1.0 + 2.0*t - 2.0*x).^4) ...
-    + exp(225.0*(1.0 + 2.0*t - 2.0*x).^2).*(-1.0 - 2.0*t + 2.0*x) ...
-    +  3240.0*(2.0 + exp(75.0*(1.0 + 2.0*t - 2.0*x).^2)).^2.*(1.0 + 2.0*t - 2.0*x).^2.*...
-    (49.0 + 200.0*t^2 - 200.0*x + 200.0*x.^2 - 200.0*t*(-1.0 + 2.0*x)));
+% exact_solution_function = @(x, t) 0.2.*exp(-300.0*(x - t - 0.5).^2) + 0.1;
+% forcingFunction = @(x, t) 60.0*exp(-300.0*(1.0 + 2.0*t - 2.0*x).^2).* ...
+%     (3600.0*exp(225.0*(1.0 + 2.0*t - 2.0*x).^2).*...
+%     (0.1 + 0.2*exp(-75.0*(1 + 2.0*t - 2.0*x).^2)).^3.*...
+%     (1.0 - 300.0*(1.0 + 2.0*t - 2.0*x).^2 + 7500.0*(1.0 + 2.0*t - 2.0*x).^4) ...
+%     + exp(225.0*(1.0 + 2.0*t - 2.0*x).^2).*(-1.0 - 2.0*t + 2.0*x) ...
+%     +  3240.0*(2.0 + exp(75.0*(1.0 + 2.0*t - 2.0*x).^2)).^2.*(1.0 + 2.0*t - 2.0*x).^2.*...
+%     (49.0 + 200.0*t^2 - 200.0*x + 200.0*x.^2 - 200.0*t*(-1.0 + 2.0*x)));
 
-% exact_solution_function = @(x, t) 0.1*sin(2*pi*(x - t)) + 0.15;
-% forcingFunction = @(x,t) -0.628319*cos(2*pi*(x-t)) ... 
-%     - 46.7564*cos(2*pi*(x-t)).^2.*(0.15 + 0.1*sin(2*pi*(x-t))).^2 ...
-%     + 155.855*(0.15 + 0.1*sin(2*pi*(x-t))).^3.*sin(2*pi*(x-t));
 
-forcing = false;
+amplitude = 0.1;
+wavespeed = 1.0;
+wavenumber = 1.0;
+offset = 0.15;
+exact_solution_function = @(x, t) amplitude*sin(2*pi*wavenumber*(x - wavespeed*t)) + offset;
+q_t = @(x, t) -1.0*amplitude*2*pi*wavenumber*wavespeed*cos(2*pi*wavenumber*(x - wavespeed*t));
+q_x = @(x, t) amplitude*2*pi*wavenumber*cos(2*pi*wavenumber*(x - wavespeed*t));
+q_xxx = @(x, t) -amplitude*(2*pi*wavenumber)^3*cos(2*pi*wavenumber*(x - wavespeed*t));
+q_xxxx = @(x, t) amplitude*(2*pi*wavenumber)^4*sin(2*pi*wavenumber*(x - wavespeed*t));
+forcingFunction = @(x,t) q_t(x, t) + 3.0*exact_solution_function(x, t).^2.0.*q_x(x, t).*q_xxx(x, t) + exact_solution_function(x, t).^3.0.*q_xxxx(x, t);
+    
+max_num_iterations = 3;
+tolerance = 1e-10;  
+
+forcing = true;
+pausing = false;
 
 a = 0.0;
 b = 1.0;
@@ -34,11 +45,11 @@ quad_order = 2;
 
 time_order = 2;
 initial_time = 0.0;
-final_time = 0.1;
+final_time = 1.0;
 
-num_doublings = 4;
+num_doublings = 5;
 err = zeros(1, num_doublings);
-initial_num_cells = 50;
+initial_num_cells = 25;
 for i = 1:num_doublings
     
     num_cells = initial_num_cells*2^(i-1);
@@ -51,7 +62,7 @@ for i = 1:num_doublings
         forcing_function = @(t) zeros(size(x'));
     end
  
-    deltaT = 0.5^4*deltaX;
+    deltaT = deltaX;
     num_time_steps = round(final_time/deltaT);
     deltaT = final_time/num_time_steps;
     
@@ -69,20 +80,20 @@ for i = 1:num_doublings
         q_FD_old = q_FD;
         
         % 1st stage
-        F = @(q) q - 0.25*deltaT*FDThinFilmOperator(q, deltaX) - q_FD_old - 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) - 0.25*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
+        LHS = @(q) q - 0.25*deltaT*FDThinFilmOperator(q, deltaX);
+        RHS = q_FD_old + 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) + 0.25*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
+        F = @(q) LHS(q) - RHS;
         res = @(q) norm(F(q))/norm(q);
   
         residual = res(q_FD);
         iter = 0;
-        max_num_iterations = 20;
-        tolerance = 1e-10;
+
         
-        rhs = q_FD_old + 0.25*deltaT*FDThinFilmOperator(q_FD_old, deltaX) + 0.25*deltaT*(forcing_function(old_time) + forcing_function(old_time + 0.5*deltaT));
         % initial guess
         qstar = q_FD_old;
         while(residual > tolerance && iter < max_num_iterations)
                 A = getFDThinFilmMatrix(qstar, deltaX);
-                qstar = (I - 0.25*deltaT*A)\rhs;
+                qstar = (I - 0.25*deltaT*A)\RHS;
                 
                 residual = res(qstar);
                 iter = iter+1;
@@ -114,19 +125,27 @@ for i = 1:num_doublings
     plot(x, q_FD, x, exact_solution_function(x, final_time));
     title('Approximate Solution');
     xlabel('x');
-    pause();
+    if(pausing)
+        pause();
+    end
     plot(1:num_time_steps, residual_array_1, 1:num_time_steps, residual_array_2);
     title('Residuals');
     xlabel('Time Steps');
-    pause();
+    if(pausing)
+        pause();
+    end
     plot(error_array);
     title('Errors');
     xlabel('Time Steps');
-    pause();
+    if(pausing)
+        pause();
+    end
     plot(1:num_time_steps, iteration_array_1, 1:num_time_steps, iteration_array_2);
     title('Number of Iterations');
     xlabel('Time Steps');
-    pause();
+    if(pausing)
+        pause();
+    end
 end
 deltaXArray = (b-a)./(initial_num_cells*2.^(0:num_doublings-1));
 log(err(1:end-1)./err(2:end))./log(deltaXArray(1:end-1)./deltaXArray(2:end))
