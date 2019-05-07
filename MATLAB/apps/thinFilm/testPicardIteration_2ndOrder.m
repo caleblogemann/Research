@@ -9,28 +9,40 @@
 %     exp(30.0*(t+30.0*(x-0.5).^2)).*...
 %     (777707 - 6350400*x + 19310400*x.^2 - 25920000*x.^3 + 12960000*x.^4));
 
-% exact_solution_function = @(x, t) 0.2.*exp(-300.0*(x - t - 0.5).^2) + 0.1;
-% forcingFunction = @(x, t) 60.0*exp(-300.0*(1.0 + 2.0*t - 2.0*x).^2).* ...
-%     (3600.0*exp(225.0*(1.0 + 2.0*t - 2.0*x).^2).*...
-%     (0.1 + 0.2*exp(-75.0*(1 + 2.0*t - 2.0*x).^2)).^3.*...
-%     (1.0 - 300.0*(1.0 + 2.0*t - 2.0*x).^2 + 7500.0*(1.0 + 2.0*t - 2.0*x).^4) ...
-%     + exp(225.0*(1.0 + 2.0*t - 2.0*x).^2).*(-1.0 - 2.0*t + 2.0*x) ...
-%     +  3240.0*(2.0 + exp(75.0*(1.0 + 2.0*t - 2.0*x).^2)).^2.*(1.0 + 2.0*t - 2.0*x).^2.*...
-%     (49.0 + 200.0*t^2 - 200.0*x + 200.0*x.^2 - 200.0*t*(-1.0 + 2.0*x)));
-
-
-amplitude = 0.1;
+amplitude = 0.2;
+steepness = -300.0;
 wavespeed = 1.0;
-wavenumber = 1.0;
-offset = 0.15;
-exact_solution_function = @(x, t) amplitude*sin(2*pi*wavenumber*(x - wavespeed*t)) + offset;
-q_t = @(x, t) -1.0*amplitude*2*pi*wavenumber*wavespeed*cos(2*pi*wavenumber*(x - wavespeed*t));
-q_x = @(x, t) amplitude*2*pi*wavenumber*cos(2*pi*wavenumber*(x - wavespeed*t));
-q_xxx = @(x, t) -amplitude*(2*pi*wavenumber)^3*cos(2*pi*wavenumber*(x - wavespeed*t));
-q_xxxx = @(x, t) amplitude*(2*pi*wavenumber)^4*sin(2*pi*wavenumber*(x - wavespeed*t));
-forcingFunction = @(x,t) q_t(x, t) + 3.0*exact_solution_function(x, t).^2.0.*q_x(x, t).*q_xxx(x, t) + exact_solution_function(x, t).^3.0.*q_xxxx(x, t);
+center = 0.5;
+offset = 0.1;
+exact_solution_function = @(x, t) amplitude*exp(steepness*(x - wavespeed*t - center).^2) + offset;
+q_x = @(x, t) amplitude*2.0*steepness*(x - wavespeed*t - center)...
+    .*exp(steepness*(x - wavespeed*t - center).^2.0);
+q_t = @(x, t) -1.0*wavespeed*q_x(x, t);
+q_xxx = @(x, t) amplitude*(12.0*exp(steepness*(x - wavespeed*t - center).^2.0)...
+    .*steepness^2.0.*(x - wavespeed*t - center) ...
+    + 8.0*exp(steepness*(x - wavespeed*t - center).^2.0)...
+    .*steepness^3.0.*(x - wavespeed*t - center).^3.0);
+q_xxxx = @(x, t) amplitude*(12.0*exp(steepness*(x - wavespeed*t - center).^2.0)...
+    .*steepness.^2.0 + 48.0*exp(steepness*(x - wavespeed*t - center).^2.0)...
+    .*steepness^3.0.*(x - wavespeed*t - center).^2.0 ...
+    + 16.0*exp(steepness*(x - wavespeed*t - center).^2.0)...
+    .*steepness^4.0.*(x - wavespeed*t -center).^4.0);
+
+% amplitude = 0.1;
+% wavespeed = 1.0;
+% wavenumber = 1.0;
+% offset = 0.15;
+% exact_solution_function = @(x, t) amplitude*sin(2*pi*wavenumber*(x - wavespeed*t)) + offset;
+% q_t = @(x, t) -1.0*amplitude*2*pi*wavenumber*wavespeed*cos(2*pi*wavenumber*(x - wavespeed*t));
+% q_x = @(x, t) amplitude*2*pi*wavenumber*cos(2*pi*wavenumber*(x - wavespeed*t));
+% q_xxx = @(x, t) -amplitude*(2*pi*wavenumber)^3*cos(2*pi*wavenumber*(x - wavespeed*t));
+% q_xxxx = @(x, t) amplitude*(2*pi*wavenumber)^4*sin(2*pi*wavenumber*(x - wavespeed*t));
+
+forcingFunction = @(x,t) q_t(x, t) ...
+    + 3.0*exact_solution_function(x, t).^2.0.*q_x(x, t).*q_xxx(x, t) ...
+    + exact_solution_function(x, t).^3.0.*q_xxxx(x, t);
     
-max_num_iterations = 3;
+max_num_iterations = 10;
 tolerance = 1e-10;  
 
 forcing = true;
