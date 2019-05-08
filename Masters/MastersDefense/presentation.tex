@@ -119,7 +119,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             \partial_t h_b + \p{u, v}^T \cdot \nabla h_b &= w
           \end{align*}
         \item Lubrication or reduced Reynolds number approximation
-        \item Thin-Film Equation - 1D with $q$ as fluid height.
+        \item Thin-Film Equation --- 1D with $q$ as fluid height.
           \[
             q_t + \p{f(x, t) q^2 - g(x, t) q^3}_x = -\p{h(x, t) q^3 q_{xxx}}_x
           \]
@@ -391,7 +391,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \midrule
         $N$ & error & order & error & order\\
         \midrule
-        100 & 0.0131 &      - & 0.0053 & - \\
+        100 & 0.0131 &    --- & 0.0053 & --- \\ 
         200 & 0.0064 & 1.0264 & 0.0026 & 1.0466 \\
         400 & 0.0033 & 0.96   & 0.0013 & 0.9704 \\
         800 & 0.0016 & 1.0069 & 0.0007 & 1.0134 \\
@@ -415,7 +415,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \midrule
         $N$ & error & order & error & order & error & order\\
         \midrule
-         50 & 0.0075 &      - & 0.00047   & -      & 0.0004901 & - \\
+         50 & 0.0075 &    --- & 0.00047   & ---    & 0.0004901 & --- \\
         100 & 0.0041 & 0.8601 & 0.00012   & 1.9844 & 0.0001209 & 2.0194 \\
         200 & 0.0020 & 1.0391 & 0.0000312 & 1.9451 & 0.0000305 & 1.9887 \\
         400 & 0.0010 & 0.9652 & 0.0000082 & 1.9244 & 0.0000078 & 1.9641 \\
@@ -423,6 +423,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \end{tabular}
       \end{center}
     \end{frame}
+
     \begin{frame}
       \frametitle{Manufactured Solution}
       \begin{align*}
@@ -438,7 +439,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \midrule
         $N$ & error & order & error & order\\
         \midrule
-        100 & 0.0097 &     - & 0.0933 & - \\
+        100 & 0.0097 &   --- & 0.0933 & --- \\
         200 & 0.0050 &  0.95 & 0.0421 & 1.1494 \\
         400 & 0.0027 &  0.87 & 3.756 & -6.48 \\
         800 & 33.21 & -13.5 & 16.51 & -2.14 \\
@@ -448,7 +449,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \end{frame}
 
     \begin{frame}
-      \frametitle{Manufactured Solution - Newton's Method}
+      \frametitle{Manufactured Solution with Newton's Method}
       \begin{align*}
         q_t &= -\p{q^3 q_{xxx}}_x + s(x,t) \\
         q(x, t) &= \frac{2}{10} e^{-10t} e^{-300\p{x - \frac{1}{2}}^2} + \frac{1}{10}
@@ -460,7 +461,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \midrule
         $N$ & error & order \\
         \midrule
-         50 & 0.0280 & - \\
+         50 & 0.0280 & --- \\
         100 & 0.0153 & 0.8765 \\
         200 & 0.0080 & 0.9249 \\
         400 & 5.5e75 & -258 \\
@@ -468,85 +469,176 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \end{tabular}
       \end{center}
     \end{frame}
-    %\begin{frame}
-      %\frametitle{Linear Solver}
-      %\begin{itemize}
-        %\item Generalized Minimal Residual (GMRES)
-          %\begin{gather*}
-            %\min[x \in K_n]{\norm{A\v{x} - \v{b}}} \\
-            %K_n = \spanspace{\v{b}, A\v{b}, A^2\v{b}, \ldots, A^{n-1}\v{b}} 
-          %\end{gather*}
 
-        %\item Preconditioned
-          %\begin{align*}
-            %P &= A^{-1}_0 \\
-            %PAx &= Pb
-          %\end{align*}
-      %\end{itemize}
-    %\end{frame}
+  \subsection{Travelling Waves}
+    \begin{frame}
+      \frametitle{Hyperbolic Wave Structure}
+      \begin{itemize}
+        \item Conservation Law
+          \[
+            q_t + f{(q)}_x = 0
+          \]
+        \item Riemann Problem Initial Data
+          \[
+            q(x, 0) =
+            \begin{cases}
+              q_l & x < d \\
+              q_r & x > d
+            \end{cases}
+          \]
 
-    %\begin{frame}
-      %\frametitle{Riemann Problem}
-      %\begin{center}
-        %\includegraphics[scale=0.5]{Figures/reimann0.png}
-      %\end{center}
-    %\end{frame}
-    %\begin{frame}
-      %\frametitle{Numerical Results - Riemann Problem}
-      %\begin{center}
-        %\includegraphics[scale=0.5]{Figures/reimann20.png}
-      %\end{center}
-    %\end{frame}
-    %\begin{frame}
-      %\frametitle{Numerical Results - Riemann Problem}
-      %\begin{center}
-        %\includegraphics[scale=0.5]{Figures/reimann40.png}
-      %\end{center}
-    %\end{frame}
-    %\begin{frame}
-      %\frametitle{Riemann Problem}
-      %\begin{center}
-        %\includegraphics[scale=0.5]{Figures/reimann60.png}
-      %\end{center}
-    %\end{frame}
-    %\begin{frame}
-      %\frametitle{Numerical Results - Riemann Problem}
-      %\begin{center}
-        %\includegraphics[scale=0.5]{Figures/reimann80.png}
-      %\end{center}
-    %\end{frame}
-    %\begin{frame}
-      %\frametitle{Numerical Results - Riemann Problem}
-      %\begin{center}
-        %\includegraphics[scale=0.5]{Figures/reimann100.png}
-      %\end{center}
-    %\end{frame}
+        \item Rankine-Hugoniot Condition
+          \[
+            s = \frac{f(q_l) - f(q_r)}{q_l - q_r}
+          \]
+      \end{itemize}
+    \end{frame}
 
-    %\begin{frame}
-      %\frametitle{Square Wave}
-      %\begin{center}
-        %\includegraphics[scale=0.5]{Figures/squareWaveInitial.png}
-      %\end{center}
-    %\end{frame}
-    %\begin{frame}
-      %\frametitle{Square Wave}
-      %\begin{center}
-        %\includegraphics[scale=0.5]{Figures/squareWaveFinal.png}
-      %\end{center}
-    %\end{frame}
+    \begin{frame}
+      \frametitle{Convex Flux Function}
+      \begin{itemize}
+        \item Shock Wave
+          \[
+            f'(q_l) > s > f'(q_r)
+          \]
+          \begin{center}
+            \includegraphics[scale=]{Figures/}
+          \end{center}
+        \item Rarefaction
+          \[
+            f'(q_l) < s < f'(q_r)
+          \]
+      \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Nonconvex Flux Function}
+      \[
+          q_t + \p{q^2 - q^3}_x = 0
+      \]
+      \begin{center}
+        \includegraphics[scale=0.35]{Figures/FluxFunctionNonconvex.pdf}
+      \end{center}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Nonconvex Flux Function}
+      \begin{align*}
+        f'(q_b) &= s \\
+        q_b &= (1 - q_r)/2 
+      \end{align*}
+      \begin{center}
+        \includegraphics[scale=0.35]{Figures/FluxFunction2Cases.pdf}
+      \end{center}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Compressive Shock}
+      \begin{align*}
+        q_l &< q_b \\
+        q(x, t) &=
+        \begin{cases}
+          q_l & x \le st \\
+          q_r & x > st
+        \end{cases}
+      \end{align*}
+      \begin{center}
+        \includegraphics[scale=0.2]{Figures/FluxFunctionCompressiveShock.pdf}
+        \includegraphics[scale=0.2]{Figures/CompressiveShock.pdf}
+      \end{center}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Rarefaction-Compressive Shock}
+      \begin{gather*}
+        q_l > q_b \\
+        q(x, t) =
+        \begin{cases}
+          q_l & x < f'(q_l)t \\
+          h_r(x) & f'(q_l)t < x < f'(q_b)t \\
+          q_r & x > f'(q_b)t
+        \end{cases}
+      \end{gather*}
+      \begin{center}
+        \includegraphics[scale=0.2]{Figures/FluxFunctionRarefactionShock.pdf}
+        \includegraphics[scale=0.3]{Figures/RarefactionShock.png}
+      \end{center}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Wave Structure with Nonlinear Hyper Diffusion}
+      \[
+        q_t + \p{q^2 - q^3}_x = -\p{q^3q_{xxx}}_x
+      \]
+      \[
+        q_r = 0.1 \qquad q_l = 0.3
+      \]
+      \begin{center}
+        \includegraphics[scale=0.4]{Figures/case1.png}
+      \end{center}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Wave Structure with Nonlinear Hyper Diffusion}
+      \[
+        q_r = 0.1 \qquad q_l = 0.3323
+      \]
+      \[
+        q(x, 0) = \p{-\tanh{x - 50} + 1}\frac{q_l - q_r}{2} + q_r
+      \]
+      \begin{center}
+        \includegraphics[scale=0.4]{Figures/case2_1.png}
+      \end{center}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Wave Structure with Nonlinear Hyper Diffusion}
+      \[
+        q_r = 0.1 \qquad q_l = 0.3323 \qquad q_m = 0.6
+      \]
+      \[
+        q(x, 0) = 
+        \begin{cases}
+          \frac{q_m - q_l}{2}\tanh{x - 50} + \frac{q_m + q_l}{2} & x < 55 \\
+          -\frac{q_m - q_r}{2}\tanh{x - 60} + \frac{q_m + q_r}{2} + q_r & x > 55 \\
+        \end{cases}
+      \]
+      \begin{center}
+        \includegraphics[scale=0.4]{Figures/case2_2.png}
+      \end{center}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Wave Structure with Nonlinear Hyper Diffusion}
+      \[
+        q_r = 0.1 \qquad q_l = 0.4
+      \]
+      \[
+        q(x, 0) = \p{-\tanh{x - 50} + 1}\frac{q_l - q_r}{2} + q_r
+      \]
+      \begin{center}
+        \includegraphics[scale=0.4]{Figures/case3.png}
+      \end{center}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Wave Structure with Nonlinear Hyper Diffusion}
+      \[
+        q_r = 0.1 \qquad q_l = 0.8
+      \]
+      \[
+        q(x, 0) = \p{-\tanh{x - 1100} + 1}\frac{q_l - q_r}{2} + q_r
+      \]
+      \begin{center}
+        \includegraphics[scale=0.4]{Figures/case4.png}
+      \end{center}
+    \end{frame}
 
   \section{Conclusion}
-    %\begin{frame}
-      %\frametitle{Conclusions}
-      %\begin{itemize}
-        %\item 
-      %\end{itemize}
-    %\end{frame}
     \begin{frame}
       \frametitle{Conclusion}
       Observations
       \begin{itemize}
-        \item Expensive computations
         \item Nonlinear Hyper Diffusion has subtle instabilities
       \end{itemize}
       Future Work
