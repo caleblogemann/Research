@@ -110,19 +110,19 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \section{Derivation}
     \begin{frame}
       \frametitle{Model Equations}
+      \begin{center}
+        \includegraphics[scale=0.35]{Figures/ThinFilm.pdf}
+      \end{center}
       \begin{itemize}
-        \item Navier-Stokes Equation
+        \item Incompressible Navier-Stokes Equation
           \begin{align*}
-            \nabla \cdot \v{u} &= 0 \\
-            \partial_t \v{u} + \nabla \cdot \p{\v{u}\v{u}} &= - \frac{1}{\rho} \nabla p + \frac{1}{\rho}\nabla \cdot \sigma + \v{g} \\
-            \partial_t h_s + \p{u, v}^T \cdot \nabla h_s &= w \\
-            \partial_t h_b + \p{u, v}^T \cdot \nabla h_b &= w
+            u_x + w_z &= 0 \\
+            \rho\p{u_t + u u_x + w u_z} &= -p_x + \mu \Delta u - \phi_x \\
+            \rho\p{w_t + u w_x + w w_z} &= -p_z + \mu \Delta w - \phi_z \\
+            w &= 0, u = 0 &\text{ at } z = 0 \\
+            w &= h_t + u h_x &\text{ at } z = h\\
+            T \cdot n &= -\kappa \sigma n + \pd{\sigma}{s} t + f &\text{ at } z = h
           \end{align*}
-        \item Lubrication or reduced Reynolds number approximation
-        \item Thin-Film Equation --- 1D with $q$ as fluid height.
-          \[
-            q_t + \p{f(x, t) q^2 - g(x, t) q^3}_x = -\p{h(x, t) q^3 q_{xxx}}_x
-          \]
       \end{itemize}
     \end{frame}
 
@@ -501,9 +501,9 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           \[
             f'(q_l) > s > f'(q_r)
           \]
-          \begin{center}
-            \includegraphics[scale=]{Figures/}
-          \end{center}
+          %\begin{center}
+            %\includegraphics[scale=]{Figures/}
+          %\end{center}
         \item Rarefaction
           \[
             f'(q_l) < s < f'(q_r)
