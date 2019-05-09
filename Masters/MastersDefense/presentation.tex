@@ -119,11 +119,58 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             u_x + w_z &= 0 \\
             \rho\p{u_t + u u_x + w u_z} &= -p_x + \mu \Delta u - \phi_x \\
             \rho\p{w_t + u w_x + w w_z} &= -p_z + \mu \Delta w - \phi_z \\
-            w &= 0, u = 0 &\text{ at } z = 0 \\
-            w &= h_t + u h_x &\text{ at } z = h\\
-            T \cdot n &= -\kappa \sigma n + \pd{\sigma}{s} t + f &\text{ at } z = h
+            w &= 0, u = 0 &\text{at } z = 0 \\
+            w &= h_t + u h_x &\text{at } z = h\\
+            \v{T} \cdot \v{n} &= \p{-\kappa \sigma + \Pi}\v{n} + \p{\pd{\sigma}{s} + \tau}\v{t} &\text{at } z = h
           \end{align*}
       \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Nondimensionalization}
+      \begin{center}
+        \includegraphics[scale=0.35]{Figures/ThinFilm.pdf}
+      \end{center}
+      \begin{align*}
+        &\varepsilon = \frac{h_0}{\lambda} \ll 1 &
+        &Z = \frac{z}{h_0} & 
+        &X = \frac{\varepsilon x}{h_0} &\\
+        &U = \frac{u}{U_0} &
+        &W = \frac{w}{\varepsilon U_0} &
+        &T = \frac{\varepsilon U_0 t}{h_0} &
+      \end{align*}
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Nondimensionalization}
+      \begin{center}
+        \includegraphics[scale=0.35]{Figures/ThinFilm.pdf}
+      \end{center}
+      \small{\begin{align*}
+        U_X + W_Z &= 0 \\
+        \varepsilon Re\p{U_T + U U_X + W U_Z} &= -P_X + U_{ZZ} + \varepsilon^2 U_{XX} - \Phi_X \\
+        \varepsilon^3 Re\p{W_T + W W_X + W W_Z} &= -P_Z + \varepsilon^2\p{W_{ZZ} + \varepsilon^2 W_{XX}} - \Phi_Z \\
+        W &= 0, U = 0 &\text{at } Z = 0 \\
+        W &= H_T + U H_X &\text{at } Z = H\\
+        \v{T} \cdot \v{n} &= \p{-\kappa \sigma + \Pi}\v{n} + \p{\pd{\sigma}{s} + \tau}\v{t} &\text{at } Z = H
+      \end{align*}}
+    \end{frame}
+
+    \begin{frame}
+      \begin{align*}
+        U_X + W_Z &= 0 \\
+        U_{ZZ} &= P_X + \Phi_X \\
+        0 &= -P_Z - \Phi_Z
+      \end{align*}
+      \begin{align*}
+        W &= 0 \qquad \text{at } Z = 0 \\
+        U &= 0
+      \end{align*}
+      \begin{align*}
+        W &= H_T + U H_X  \qquad \text{at } Z = H \\
+        U_Z &= \tau_0 + \Sigma_X  \\
+        -\Pi_0 - P &= C^{-1} H_{XX}
+      \end{align*}
     \end{frame}
 
   \section{Method}
@@ -643,14 +690,12 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \end{itemize}
       Future Work
       \begin{itemize}
-        \item Hybridized Discontinuous Galerkin Method
         \item Higher Order Convergence
           \begin{itemize}
-            \item Higher order finite difference approximations
-            \item More accurate transition from finite difference to discontinuous Galerkin
             \item Runge Kutta IMEX
+            \item Local Discontinuous Galerkin Method
+            \item Hybridized Discontinuous Galerkin Method
           \end{itemize}
-        \item Space and time dependent coefficients
       \end{itemize}
     \end{frame}
 
