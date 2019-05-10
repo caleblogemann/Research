@@ -159,6 +159,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \end{frame}
 
     \begin{frame}
+      Take $\varepsilon \to 0$,
       \begin{align*}
         U_X + W_Z &= 0 \\
         U_{ZZ} &= P_X + \Phi_X \\
@@ -176,7 +177,18 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \end{frame}
 
     \begin{frame}
-      
+      Integrate over $Z$ and simplify
+      \begin{align*}
+        0 &= H_T + \p{\dintt{0}{H}{U}{Z}}_X \\
+        P + \Phi &= \eval{\Phi}{Z = H} - C^{-1} H_{XX} - \Pi \\
+        U &= \p{\tau + \Sigma_X}Z - \p{P_X + \Phi_X}\p{HZ - \frac{1}{2}Z^2} \\
+        0 &= H_T + \p{\p{\tau + \Sigma_X}\frac{1}{2}H^2 - \p{P_X + \Phi_X}\frac{1}{3}H^3}_X \\
+        P_X + \Phi_X &= \p{\eval{\Phi}{Z = H} - \Pi}_X - C^{-1} H_{XXX}
+      \end{align*}
+
+      \small{\begin{gather*}
+        H_T + \p{\frac{1}{2}\p{\tau + \Sigma_X}H^2 - \frac{1}{3}\p{\eval{\Phi}{Z = H} - \Pi}_X H^3}_X = - \frac{1}{3}C^{-1}\p{H^3 H_{XXX}}_X
+      \end{gather*}}
     \end{frame}
 
   \section{Method}
@@ -295,50 +307,50 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \end{itemize}
     \end{frame}
 
-    \begin{frame}
-      \frametitle{Local Discontinuous Galerkin}
-      Find $Q(t, x), R(x), S(x), U(x)$ such that for all $t \in \p{0, T}$
-      $Q(t, \cdot), R, S, U \in V_h = \set{v \in L^1(\Omega): \eval{v}{I_j} \in P^k(I_j)}$
-      \begin{align*}
-        \dintt{I_j}{}{R v}{x} &= -\dintt{I_j}{}{Q v_x}{x} + \p{\hat{Q}_{j+1/2}v^-_{j+1/2} - \hat{Q}_{j-1/2} v^+_{j-1/2}} \\
-        \dintt{I_j}{}{S w}{x} &= -\dintt{I_j}{}{R w_x}{x} + \p{\hat{R}_{j+1/2}w^-_{j+1/2} - \hat{R}_{j-1/2} w^+_{j-1/2}} \\
-        \dintt{I_j}{}{U y}{x} &= \dintt{I_j}{}{S_x f y}{x} - \p{S^-_{j+1/2}f^-_{j+1/2}y^-_{j+1/2} - S^+_{j-1/2}f^+_{j-1/2}y^+_{j-1/2}} \\
-        &+ \p{\hat{S}_{j+1/2} \hat{f}_{j+1/2} y^-_{j+1/2} - \hat{S}_{j-1/2} \hat{f}_{j-1/2} y^+_{j-1/2}} \\
-        \dintt{I_j}{}{Q_t z}{x} &= -\dintt{I_j}{}{U z_x}{x} + \p{\hat{U}_{j+1/2}z^-_{j+1/2} - \hat{U}_{j-1/2} z^+_{j-1/2}}
-      \end{align*}
-      for all $I_j \in \Omega$ and all $v, w, y, z \in V_h$.
-    \end{frame}
+    % \begin{frame}
+      % \frametitle{Local Discontinuous Galerkin}
+      % Find $Q(t, x), R(x), S(x), U(x)$ such that for all $t \in \p{0, T}$
+      % $Q(t, \cdot), R, S, U \in V_h = \set{v \in L^1(\Omega): \eval{v}{I_j} \in P^k(I_j)}$
+      % \begin{align*}
+        % \dintt{I_j}{}{R v}{x} &= -\dintt{I_j}{}{Q v_x}{x} + \p{\hat{Q}_{j+1/2}v^-_{j+1/2} - \hat{Q}_{j-1/2} v^+_{j-1/2}} \\
+        % \dintt{I_j}{}{S w}{x} &= -\dintt{I_j}{}{R w_x}{x} + \p{\hat{R}_{j+1/2}w^-_{j+1/2} - \hat{R}_{j-1/2} w^+_{j-1/2}} \\
+        % \dintt{I_j}{}{U y}{x} &= \dintt{I_j}{}{S_x f y}{x} - \p{S^-_{j+1/2}f^-_{j+1/2}y^-_{j+1/2} - S^+_{j-1/2}f^+_{j-1/2}y^+_{j-1/2}} \\
+        % &+ \p{\hat{S}_{j+1/2} \hat{f}_{j+1/2} y^-_{j+1/2} - \hat{S}_{j-1/2} \hat{f}_{j-1/2} y^+_{j-1/2}} \\
+        % \dintt{I_j}{}{Q_t z}{x} &= -\dintt{I_j}{}{U z_x}{x} + \p{\hat{U}_{j+1/2}z^-_{j+1/2} - \hat{U}_{j-1/2} z^+_{j-1/2}}
+      % \end{align*}
+      % for all $I_j \in \Omega$ and all $v, w, y, z \in V_h$.
+    % \end{frame}
 
-    \begin{frame}
-      \frametitle{Numerical Fluxes}
-      \begin{align*}
-        \hat{f}_{j+1/2} &= \frac{1}{2}\p{f^+_{j+1/2} + f^-_{j+1/2}} \\
-        \hat{Q}_{j+1/2} &= Q^+_{j+1/2} \\
-        \hat{R}_{j+1/2} &= R^-_{j+1/2} \\
-        \hat{S}_{j+1/2} &= S^+_{j+1/2} \\
-        \hat{U}_{j+1/2} &= U^-_{j+1/2}
-      \end{align*}
-      \begin{center}
-        \includegraphics[scale=0.3]{Figures/localDG.png}
-      \end{center}
-    \end{frame}
+    % \begin{frame}
+      % \frametitle{Numerical Fluxes}
+      % \begin{align*}
+        % \hat{f}_{j+1/2} &= \frac{1}{2}\p{f^+_{j+1/2} + f^-_{j+1/2}} \\
+        % \hat{Q}_{j+1/2} &= Q^+_{j+1/2} \\
+        % \hat{R}_{j+1/2} &= R^-_{j+1/2} \\
+        % \hat{S}_{j+1/2} &= S^+_{j+1/2} \\
+        % \hat{U}_{j+1/2} &= U^-_{j+1/2}
+      % \end{align*}
+      % \begin{center}
+        % \includegraphics[scale=0.3]{Figures/localDG.png}
+      % \end{center}
+    % \end{frame}
 
-    \begin{frame}
-      \frametitle{LDG Complications}
-      \begin{itemize}
-        \item Explicit time step scales with $h^4$
-        \item Implicit System is difficult to solve efficiently
-          \begin{itemize}
-            \item GMRES iterations scale with size of system
-            \item Preconditioned GMRES
-              \begin{align*}
-                P &= A^{-1}_0 \\
-                PAx &= Pb
-              \end{align*}
-            \item Geometric Multigrid fails to converge
-          \end{itemize}
-      \end{itemize}
-    \end{frame}
+    % \begin{frame}
+      % \frametitle{LDG Complications}
+      % \begin{itemize}
+        % \item Explicit time step scales with $h^4$
+        % \item Implicit System is difficult to solve efficiently
+          % \begin{itemize}
+            % \item GMRES iterations scale with size of system
+            % \item Preconditioned GMRES
+              % \begin{align*}
+                % P &= A^{-1}_0 \\
+                % PAx &= Pb
+              % \end{align*}
+            % \item Geometric Multigrid fails to converge
+          % \end{itemize}
+      % \end{itemize}
+    % \end{frame}
 
     \begin{frame}
       \frametitle{Finite Difference Approach}
@@ -364,7 +376,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \begin{itemize}
         \item First derivative approximation
           \[
-            \p{-\p{f(x) q_{xxx}}_x}_i \approx -\frac{q^3_{i+1/2}\p{q_{xxx}}_{i+1/2} - q^3_{i-1/2}\p{q_{xxx}}_{i-1/2}}{h}
+            \p{-\p{f(x) q_{xxx}}_x}_i \approx -\frac{f_{i+1/2}\p{q_{xxx}}_{i+1/2} - f_{i-1/2}\p{q_{xxx}}_{i-1/2}}{h}
           \]
 
         \item Third derivative approximation
@@ -374,7 +386,12 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
         \item Value of $Q^3$ at boundary
           \[
-            q^3_{i+1/2} = \p{\frac{Q_i + Q_{i+1}}{2}}^3
+            f_{i+1/2} = q^3_{i+1/2} = \p{\frac{Q_i + Q_{i+1}}{2}}^3
+          \]
+
+        \item Full operator
+          \[
+            L(q^{n+1}) = L(f = \p{q^{n+1}}^3, q^{n+1}) = Aq^{n+1}
           \]
       \end{itemize}
     \end{frame}
@@ -400,25 +417,24 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \begin{itemize}
         \item Picard Iteration
           \begin{align*}
-            L(q) &= A(f \approx q^3) q \\
+            % L(q) &= A(f \approx q^3) q \\
             q^{n+1}_0 &= q^n
           \end{align*}
           \begin{align*}
-            q^{n+1}_{m+1} &= q^n + \Delta t A(q^{n+1}_m) q^{n+1}_{m+1}
+            q^{n+1}_{m+1} &= q^n + \Delta t L\p{f = \p{q^{n+1}_m}^3, q^{n+1}_{m+1}}
           \end{align*}
           \begin{align*}
-            q^{\star}_{m+1} &= q^n + \frac{1}{4} \Delta t \p{L(q^n) + A(q^{\star}_m)q^{\star}_{m+1}} \\
-            3 q^{n+1}_{m+1} &= 4 q^{\star} - q^{n} + \Delta t A(q^{n+1}_m) q^{n+1}_{m+1}
+            q^{\star}_{m+1} &= q^n + \frac{1}{4} \Delta t \p{L(q^n) + L\p{f = \p{q^{\star}_m}^3, q^{\star}_{m+1}}} \\
+            3 q^{n+1}_{m+1} &= 4 q^{\star} - q^{n} + \Delta t L\p{f = \p{q^{n+1}_m}^3, q^{n+1}_{m+1}}
           \end{align*}
-
-        \item Newton's Method
-          \begin{align*}
-            q^{n+1}_{m+1} = q^{n+1}_m - J{(q^{n+1}_m)}^{-1}F(q^{n+1}_m)
-          \end{align*}
-          \begin{align*}
-            F(q) &= q - q^n - \Delta t L(q) \\
-            J(q) &= I - \Delta t L'(q)
-          \end{align*}
+        % \item Newton's Method
+          % \begin{align*}
+            % q^{n+1}_{m+1} = q^{n+1}_m - J{(q^{n+1}_m)}^{-1}F(q^{n+1}_m)
+          % \end{align*}
+          % \begin{align*}
+            % F(q) &= q - q^n - \Delta t L(q) \\
+            % J(q) &= I - \Delta t L'(q)
+          % \end{align*}
           %\begin{align*}
             %F(q) &= q - q^n - \frac{1}{4} \Delta t \p{L(q^n) + L(q)} \\
             %J(q) &= I - \frac{1}{4}\Delta t L'(q) \\
@@ -432,7 +448,9 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \begin{frame}
       \frametitle{Manufactured Solution}
       \begin{align*}
-        q_t &= -\p{q^3 q_{xxx}}_x + s(x,t) \\
+        q_t + \p{q^2 - q^3}_x &= -\p{q^3 q_{xxx}}_x + s(x,t) \\
+        q_t + \p{q^2 - q^3}_x &= s(x, t) \\
+        q_t &= -\p{q^3 q_{xxx}}_x \\
         q(x, t) &= 0.1*\sin{2\pi(x - t)} + 0.15
       \end{align*}
       \begin{center}
@@ -442,12 +460,12 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \midrule
             & \multicolumn{2}{c}{1 Iteration} & \multicolumn{2}{c}{2 Iterations} \\
         \midrule
-        $N$ & error & order & error & order\\
+        $N$      & error   & order & error  & order \\
         \midrule
-        100 & 0.0131 &    --- & 0.0053 & --- \\ 
-        200 & 0.0064 & 1.0264 & 0.0026 & 1.0466 \\
-        400 & 0.0033 & 0.96   & 0.0013 & 0.9704 \\
-        800 & 0.0016 & 1.0069 & 0.0007 & 1.0134 \\
+        25       & 0.1529  & ---   & 0.0776 & ---  \\
+        50       & 0.05334 & 1.52  & 0.0370 & 1.06 \\
+        100      & 0.02374 & 1.16  & 0.0177 & 1.06 \\
+        200      & 0.01186 & 1.00  & 0.0091 & 0.95 \\
         \bottomrule
       \end{tabular}
       \end{center}
@@ -456,7 +474,9 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \begin{frame}
       \frametitle{Manufactured Solution}
       \begin{align*}
-        q_t &= -\p{q^3 q_{xxx}}_x + s(x,t) \\
+        q_t + \p{q^2 - q^3}_x &= -\p{q^3 q_{xxx}}_x + s(x,t) \\
+        q_t + \p{q^2 - q^3}_x &= s(x, t) \\
+        q_t &= -\p{q^3 q_{xxx}}_x \\
         q(x, t) &= 0.1*\sin{2\pi(x - t)} + 0.15
       \end{align*}
       \begin{center}
@@ -468,10 +488,10 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \midrule
         $N$ & error & order & error & order & error & order\\
         \midrule
-         50 & 0.0075 &    --- & 0.00047   & ---    & 0.0004901 & --- \\
-        100 & 0.0041 & 0.8601 & 0.00012   & 1.9844 & 0.0001209 & 2.0194 \\
-        200 & 0.0020 & 1.0391 & 0.0000312 & 1.9451 & 0.0000305 & 1.9887 \\
-        400 & 0.0010 & 0.9652 & 0.0000082 & 1.9244 & 0.0000078 & 1.9641 \\
+        25  & 0.03449 & ---  & 0.02890 & ---  & 0.03103 & --- \\
+        50  & 0.01061 & 1.70 & 0.00875 & 1.72 & 0.00910 & 1.77 \\
+        100 & 0.00330 & 1.68 & 0.00197 & 2.14 & 0.00202 & 2.17 \\
+        200 & 0.00143 & 1.20 & 0.00051 & 1.96 & 0.00051 & 1.98 \\
         \bottomrule
       \end{tabular}
       \end{center}
@@ -480,48 +500,51 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \begin{frame}
       \frametitle{Manufactured Solution}
       \begin{align*}
-        q_t &= -\p{q^3 q_{xxx}}_x + s(x,t) \\
-        q(x, t) &= \frac{2}{10} e^{-10t} e^{-300\p{x - \frac{1}{2}}^2} + \frac{1}{10}
+        q_t + \p{q^2 - q^3}_x &= -\p{q^3 q_{xxx}}_x + s(x,t) \\
+        q_t + \p{q^2 - q^3}_x &= s(x, t) \\
+        q_t &= -\p{q^3 q_{xxx}}_x \\
+        q(x, t) &= \frac{2}{10} e^{-10\p{x - t - \frac{3}{2}}^2} + \frac{1}{10}
       \end{align*}
       \begin{center}
       \begin{tabular}{rllll}
         \toprule
-        \multicolumn{5}{c}{Backward Euler} \\
+        \multicolumn{5}{c}{2nd Order IRK} \\
         \midrule
             & \multicolumn{2}{c}{1 Iteration} & \multicolumn{2}{c}{2 Iterations} \\
         \midrule
         $N$ & error & order & error & order\\
         \midrule
-        100 & 0.0097 &   --- & 0.0933 & --- \\
-        200 & 0.0050 &  0.95 & 0.0421 & 1.1494 \\
-        400 & 0.0027 &  0.87 & 3.756 & -6.48 \\
-        800 & 33.21 & -13.5 & 16.51 & -2.14 \\
+        50  & 0.05609 & ---  & 0.3808 & ---  \\
+        100 & 0.04178 & 0.42 & 0.2335 & 0.7  \\
+        200 & 0.01182 & 1.82 & 0.0429 & 2.44 \\
+        400 & 0.00612 & 0.94 & 0.0104 & 2.04 \\
+        800 &         &      & 0.0026 & 2.03 \\
         \bottomrule
       \end{tabular}
       \end{center}
     \end{frame}
 
-    \begin{frame}
-      \frametitle{Manufactured Solution with Newton's Method}
-      \begin{align*}
-        q_t &= -\p{q^3 q_{xxx}}_x + s(x,t) \\
-        q(x, t) &= \frac{2}{10} e^{-10t} e^{-300\p{x - \frac{1}{2}}^2} + \frac{1}{10}
-      \end{align*}
-      \begin{center}
-      \begin{tabular}{rll}
-        \toprule
-        \multicolumn{3}{c}{Backward Euler} \\
-        \midrule
-        $N$ & error & order \\
-        \midrule
-         50 & 0.0280 & --- \\
-        100 & 0.0153 & 0.8765 \\
-        200 & 0.0080 & 0.9249 \\
-        400 & 5.5e75 & -258 \\
-        \bottomrule
-      \end{tabular}
-      \end{center}
-    \end{frame}
+    % \begin{frame}
+      % \frametitle{Manufactured Solution with Newton's Method}
+      % \begin{align*}
+        % q_t &= -\p{q^3 q_{xxx}}_x + s(x,t) \\
+        % q(x, t) &= \frac{2}{10} e^{-10t} e^{-300\p{x - \frac{1}{2}}^2} + \frac{1}{10}
+      % \end{align*}
+      % \begin{center}
+      % \begin{tabular}{rll}
+        % \toprule
+        % \multicolumn{3}{c}{Backward Euler} \\
+        % \midrule
+        % $N$ & error & order \\
+        % \midrule
+         % 50 & 0.0280 & --- \\
+        % 100 & 0.0153 & 0.8765 \\
+        % 200 & 0.0080 & 0.9249 \\
+        % 400 & 5.5e75 & -258 \\
+        % \bottomrule
+      % \end{tabular}
+      % \end{center}
+    % \end{frame}
 
   \subsection{Travelling Waves}
     \begin{frame}
@@ -554,13 +577,18 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           \[
             f'(q_l) > s > f'(q_r)
           \]
-          %\begin{center}
-            %\includegraphics[scale=]{Figures/}
-          %\end{center}
+          \begin{center}
+            \includegraphics[scale=0.13]{Figures/ShockCharacteristics.pdf}
+            \includegraphics[scale=0.13]{Figures/CompressiveShock.pdf}
+          \end{center}
         \item Rarefaction
           \[
             f'(q_l) < s < f'(q_r)
           \]
+          \begin{center}
+            \includegraphics[scale=0.13]{Figures/RarefactionCharacteristics.pdf}
+            \includegraphics[scale=0.13]{Figures/Rarefaction.pdf}
+          \end{center}
       \end{itemize}
     \end{frame}
 
@@ -705,7 +733,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \end{itemize}
     \end{frame}
 
-    \begin{frame}
+    \begin{frame}[allowframebreaks]
       \frametitle{Bibliography}
       % TODO: Bibliography
       \nocite{*}
