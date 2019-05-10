@@ -78,7 +78,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 \medskip
 \textit{logemann@iastate.edu}} % Your email address
 
-\date{\today} % Date, can be changed to a custom date
+\date{May 13, 2019} % Date, can be changed to a custom date
 
 \begin{document}
   \begin{frame}
@@ -138,6 +138,9 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         &U = \frac{u}{U_0} &
         &W = \frac{w}{\varepsilon U_0} &
         &T = \frac{\varepsilon U_0 t}{h_0} &
+      \end{align*}
+      \begin{align*}
+        Re = \frac{U_0 h_0 \rho}{\mu} \qquad C = \frac{U_0 \mu}{\sigma}
       \end{align*}
     \end{frame}
 
@@ -292,20 +295,20 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \end{frame}
 
   \subsection{Diffusion}
-    \begin{frame}
-      \frametitle{Diffusion}
-      \begin{itemize}
-        \item Diffusion Equation
-          \begin{align*}
-            q_t &= -\p{q^3 q_{xxx}}_x \qquad \p{0, T} \times \Omega
-          \end{align*}
+    % \begin{frame}
+      % \frametitle{Diffusion}
+      % \begin{itemize}
+        % \item Diffusion Equation
+          % \begin{align*}
+            % q_t &= -\p{q^3 q_{xxx}}_x \qquad \p{0, T} \times \Omega
+          % \end{align*}
 
-        \item Linearize operator at $t = t^n$, let $f(x) = q^3(t = t^n, x)$
-          \[
-            q_t = -\p{f(x) q_{xxx}}_x \qquad \p{0, T} \times \Omega
-          \]
-      \end{itemize}
-    \end{frame}
+        % \item Linearize operator at $t = t^n$, let $f(x) = q^3(t = t^n, x)$
+          % \[
+            % q_t = -\p{f(x) q_{xxx}}_x \qquad \p{0, T} \times \Omega
+          % \]
+      % \end{itemize}
+    % \end{frame}
 
     % \begin{frame}
       % \frametitle{Local Discontinuous Galerkin}
@@ -355,6 +358,10 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \begin{frame}
       \frametitle{Finite Difference Approach}
       \begin{itemize}
+        \item Diffusion Equation
+          \begin{align*}
+            q_t &= -\p{q^3 q_{xxx}}_x \qquad \p{0, T} \times \Omega
+          \end{align*}
         \item Let cell centers, $x_i$, form finite difference grid.
         \item Finite difference space, $\RR^N$.
         \item $Q_{DG} \in V_h \to Q_{FD} \in \RR^N$
@@ -391,7 +398,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
         \item Full operator
           \[
-            L(q^{n+1}) = L(f = \p{q^{n+1}}^3, q^{n+1}) = Aq^{n+1}
+            L(q) = L(f = q^3, q) = A(f)q
           \]
       \end{itemize}
     \end{frame}
@@ -518,7 +525,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         100 & 0.04178 & 0.42 & 0.2335 & 0.7  \\
         200 & 0.01182 & 1.82 & 0.0429 & 2.44 \\
         400 & 0.00612 & 0.94 & 0.0104 & 2.04 \\
-        800 &         &      & 0.0026 & 2.03 \\
+        800 & 0.00268 & 1.19 & 0.0026 & 2.03 \\
         \bottomrule
       \end{tabular}
       \end{center}
