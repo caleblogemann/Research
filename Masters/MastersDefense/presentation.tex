@@ -183,14 +183,14 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       Integrate over $Z$ and simplify
       \begin{align*}
         0 &= H_T + \p{\dintt{0}{H}{U}{Z}}_X \\
-        P + \Phi &= \eval{\Phi}{Z = H} - C^{-1} H_{XX} - \Pi \\
+        P + \Phi &= \eval{\Phi}{Z = H} - \bar{C}^{-1} H_{XX} - \Pi \\
         U &= \p{\tau + \Sigma_X}Z - \p{P_X + \Phi_X}\p{HZ - \frac{1}{2}Z^2} \\
         0 &= H_T + \p{\p{\tau + \Sigma_X}\frac{1}{2}H^2 - \p{P_X + \Phi_X}\frac{1}{3}H^3}_X \\
-        P_X + \Phi_X &= \p{\eval{\Phi}{Z = H} - \Pi}_X - C^{-1} H_{XXX}
+        P_X + \Phi_X &= \p{\eval{\Phi}{Z = H} - \Pi}_X - \bar{C}^{-1} H_{XXX}
       \end{align*}
 
       \small{\begin{gather*}
-        H_T + \p{\frac{1}{2}\p{\tau + \Sigma_X}H^2 - \frac{1}{3}\p{\eval{\Phi}{Z = H} - \Pi}_X H^3}_X = - \frac{1}{3}C^{-1}\p{H^3 H_{XXX}}_X
+        H_T + \p{\frac{1}{2}\p{\tau + \Sigma_X}H^2 - \frac{1}{3}\p{\eval{\Phi}{Z = H} - \Pi}_X H^3}_X = - \frac{1}{3}\bar{C}^{-1}\p{H^3 H_{XXX}}_X
       \end{gather*}}
     \end{frame}
 
@@ -738,6 +738,10 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             \item Hybridized Discontinuous Galerkin Method
           \end{itemize}
       \end{itemize}
+    \end{frame}
+
+    \begin{frame}
+      Questions?
     \end{frame}
 
     \begin{frame}[allowframebreaks]
