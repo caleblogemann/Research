@@ -1,0 +1,3 @@
+[submodule "Python/PyDogPack"]
+	path = Python/PyDogPack
+	url = git@github.com:caleblogemann/pydogpack.git

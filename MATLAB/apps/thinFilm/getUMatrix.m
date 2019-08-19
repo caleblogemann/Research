@@ -12,19 +12,19 @@ function [U] = getUMatrix(q, nCells, nBasisCpts, deltaX, bc)
     %     Added first column to use S_{0}
     %     U is (M+1) x (M+2) because added row and 2 columns
 
-    Phi0 = getPhiMatrix(1, 1, nBasisCpts);
-    Phi1 = getPhiMatrix(-1, -1, nBasisCpts);
-    Phi2 = getPhiMatrix(1, -1, nBasisCpts);
+    Phi0 = basis.getPhiMatrix(1, 1, nBasisCpts);
+    Phi1 = basis.getPhiMatrix(-1, -1, nBasisCpts);
+    Phi2 = basis.getPhiMatrix(1, -1, nBasisCpts);
 
     % left side at xi = 1
-    phiVectorMinus = arrayfun(@(l) legendrePolynomial(l,  1), 1:nBasisCpts);
+    phiVectorMinus = arrayfun(@(l) basis.legendrePolynomial(l,  1), 1:nBasisCpts);
     % right side at xi = -1
-    phiVectorPlus  = arrayfun(@(l) legendrePolynomial(l, -1), 1:nBasisCpts);
+    phiVectorPlus  = arrayfun(@(l) basis.legendrePolynomial(l, -1), 1:nBasisCpts);
     switch bc
         case 'extrapolation'
-            qExtended = [q(1,:); q(1,:); q; q(end,:)];
+            qExtended = [q(1,:,:); q(1,:,:); q; q(end,:,:)];
         case 'periodic'
-            qExtended = [q(end-1,:); q(end,:); q; q(1,:)];
+            qExtended = [q(end-1,:,:); q(end,:,:); q; q(1,:,:)];
     end
     % qminus(i) = q^-_{i-3/2}^3
     qminus = (qExtended(1:end-1,:)*phiVectorMinus').^3;

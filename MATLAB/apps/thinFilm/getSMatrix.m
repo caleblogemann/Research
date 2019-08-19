@@ -18,9 +18,9 @@ function [S] = getSMatrix(nCells, nBasisCpts, deltaX)
     % one at bottom right
     sparseUpperDiagonal = sparse(1:nCells+2, 2:nCells+3,1, nCells+2, nCells+3);
 
-    A = getAMatrix(nBasisCpts);
-    Phi1 = getPhiMatrix(1, 1, nBasisCpts);
-    Phi2 = getPhiMatrix(-1, 1, nBasisCpts);
+    A = dog_math.getAMatrix(nBasisCpts);
+    Phi1 = basis.getPhiMatrix(1, 1, nBasisCpts);
+    Phi2 = basis.getPhiMatrix(-1, 1, nBasisCpts);
 
     C = -1/deltaX*Phi2;
     D = -1/deltaX*(A - Phi1);

@@ -1,6 +1,4 @@
 function [integral] = gaussQuadrature(integrandFunction, quad_order, lower_bound, upper_bound)
-    % assume integral between -1 and 1
-
     [quad_pts, quad_wgts] = dog_math.getGaussQuadPtsAndWgts(quad_order);
     interval_width = (upper_bound - lower_bound);
     interval_center = 0.5*(upper_bound + lower_bound);

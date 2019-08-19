@@ -29,9 +29,9 @@ function [R] = getRMatrix(nCells, nBasisCpts, deltaX, bc)
     % one at (2, 1)
     sparseUpperDiagonal = sparse(2:nCells+1, 1:nCells, 1, nCells+3, nCells);
 
-    A = getAMatrix(nBasisCpts);
-    Phi1 = getPhiMatrix(-1, -1, nBasisCpts);
-    Phi2 = getPhiMatrix(1, -1, nBasisCpts);
+    A = dog_math.getAMatrix(nBasisCpts);
+    Phi1 = basis.getPhiMatrix(-1, -1, nBasisCpts);
+    Phi2 = basis.getPhiMatrix(1, -1, nBasisCpts);
 
     V = -1/deltaX*(A + Phi1);
     W = 1/deltaX*Phi2;
