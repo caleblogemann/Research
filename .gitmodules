@@ -1,3 +1,6 @@
 [submodule "Python/PyDogPack"]
 	path = Python/PyDogPack
 	url = git@github.com:caleblogemann/pydogpack.git
+[submodule "ThinFilmPaper"]
+	path = ThinFilmPaper
+	url = git@bitbucket.org:imsejae/thin-film-logemann.git
