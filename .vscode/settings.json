@@ -1,4 +1,9 @@
 {
     "python.pythonPath": "/Users/caleblogemann/miniconda3/envs/Research/bin/python",
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+    "files.exclude": {
+        "Python": true,
+        "ThinFilmPaper": true
+    },
+    "git.detectSubmodules": false,
 }
