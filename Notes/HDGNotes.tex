@@ -9,7 +9,7 @@
 
 \begin{document}
 \begin{center}
-\textbf{\Large{Hybridized Discontinuous Galerkin Method \\}}
+  \textbf{\Large{Hybridized Discontinuous Galerkin Method}} \\
 \end{center}
 
 These notes are intended to give background on Hyridized Discontinuous Galerkin
@@ -19,7 +19,7 @@ methods and then explore how to apply this method to Thin Film Equations
   To start we will consider Poisson's equation with Dirichlet boundary conditions
   \begin{align*}
     -\Delta u &= f \qquad \text{in } \Omega \\
-    u &= g \qquad \text{on } \dOmega 
+    u &= g \qquad \text{on } \dOmega
   \end{align*}
   We will consider this in mixed form by introducing the auxilliary variable
   $\v{q} = -\nabla u$,  then the equation becomes
@@ -85,7 +85,7 @@ methods and then explore how to apply this method to Thin Film Equations
     We have introduced another unknown $\hat{u}$ on each interior face
     $F \in \eho$.
     This unknown automatically makes us satisfy $\bbr{u\v{n}} = \v{0}$, so the
-    transmission condition becomes 
+    transmission condition becomes
     \begin{align*}
       \bbr{\v{q}\cdot\v{n}} = 0 \quad \text{ on } F \in \eho
     \end{align*}

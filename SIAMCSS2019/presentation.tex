@@ -75,7 +75,7 @@
 
 \author{Caleb Logemann \and James Rossmanith} % Your name
 \institute[Iowa State University]{% Your institution as it will appear on the bottom of every slide, may be shorthand to save space
-Mathematics Department,\\ Iowa State University \\ % Your institution for the title page 
+Mathematics Department,\\ Iowa State University \\ % Your institution for the title page
 \medskip
 \textit{logemann@iastate.edu}} % Your email address
 
@@ -147,7 +147,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           \end{itemize}
           \begin{align*}
             F(q) &= -\p{q^2 - q^3}_x  \\
-            G(q) &= \p{q^3 q_{xxx}}_x 
+            G(q) &= \p{q^3 q_{xxx}}_x
           \end{align*}
 
       \end{itemize}
@@ -189,7 +189,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \begin{frame}
       \frametitle{Runge Kutta Discontinuous Galerkin}
       \begin{itemize}
-        \item 
+        \item
           Find $Q(t,x)$ such that for each time $t \in \p{0, T}$, $Q(t, \cdot) \in V_h = \set{v \in L^1(\Omega): \eval{v}{I_j} \in P^k(I_j)}$
           \begin{align*}
             \dintt{I_j}{}{F(Q) v}{x} &= \dintt{I_j}{}{f(Q)v_x}{x} \\
@@ -279,12 +279,12 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           \begin{tabular}{r|l}
             0 & 0 \\
             \midrule
-              & 1 
+              & 1
           \end{tabular}\hspace{0.5cm}
           \begin{tabular}{r|l}
             1 & 1 \\
             \midrule
-              & 1 
+              & 1
           \end{tabular}
 
         \vspace{0.5cm}
@@ -345,7 +345,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
         \item Picard Iteration
           \begin{align*}
-            \tilde{G}(q, u) &= (q^3 u_{xxx})_x 
+            \tilde{G}(q, u) &= (q^3 u_{xxx})_x
           \end{align*}
           \begin{gather*}
             u_0 = q^n  \qquad u_i^0 = u_{i-1} \\
@@ -470,7 +470,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         q_r = 0.1 \qquad q_l = 0.3323 \qquad q_m = 0.6
       \]
       \[
-        q(x, 0) = 
+        q(x, 0) =
         \begin{cases}
           \frac{q_m - q_l}{2}\tanh{x - 50} + \frac{q_m + q_l}{2} & x < 55 \\
           -\frac{q_m - q_r}{2}\tanh{x - 60} + \frac{q_m + q_r}{2} + q_r & x > 55 \\
