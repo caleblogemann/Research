@@ -74,7 +74,7 @@
 
 \author{Caleb Logemann \and James Rossmanith} % Your name
 \institute[Iowa State University]{% Your institution as it will appear on the bottom of every slide, may be shorthand to save space
-Mathematics Department,\\ Iowa State University \\ % Your institution for the title page 
+Mathematics Department,\\ Iowa State University \\ % Your institution for the title page
 \medskip
 \textit{logemann@iastate.edu}} % Your email address
 
@@ -133,7 +133,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \end{center}
       \begin{align*}
         &\varepsilon = \frac{h_0}{\lambda} \ll 1 &
-        &Z = \frac{z}{h_0} & 
+        &Z = \frac{z}{h_0} &
         &X = \frac{\varepsilon x}{h_0} &\\
         &U = \frac{u}{U_0} &
         &W = \frac{w}{\varepsilon U_0} &
@@ -261,7 +261,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \begin{frame}
       \frametitle{Runge Kutta Discontinuous Galerkin}
       \begin{itemize}
-        \item 
+        \item
           Find $Q(t,x)$ such that for each time $t \in \p{0, T}$, $Q(t, \cdot) \in V_h = \set{v \in L^1(\Omega): \eval{v}{I_j} \in P^k(I_j)}$
           \begin{align*}
             \dintt{I_j}{}{Q_t v}{x} &= \dintt{I_j}{}{f(Q)v_x}{x} \\
@@ -613,7 +613,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \frametitle{Nonconvex Flux Function}
       \begin{align*}
         f'(q_b) &= s \\
-        q_b &= (1 - q_r)/2 
+        q_b &= (1 - q_r)/2
       \end{align*}
       \begin{center}
         \includegraphics[scale=0.35]{Figures/FluxFunction2Cases.pdf}
@@ -685,7 +685,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         q_r = 0.1 \qquad q_l = 0.3323 \qquad q_m = 0.6
       \]
       \[
-        q(x, 0) = 
+        q(x, 0) =
         \begin{cases}
           \frac{q_m - q_l}{2}\tanh{x - 50} + \frac{q_m + q_l}{2} & x < 55 \\
           -\frac{q_m - q_r}{2}\tanh{x - 60} + \frac{q_m + q_r}{2} + q_r & x > 55 \\
