@@ -4,5 +4,6 @@
     "files.exclude": {
         "Python": true,
         "ThinFilmPaper": true,
-    }
+    },
+    "git.detectSubmodules": false,
 }
