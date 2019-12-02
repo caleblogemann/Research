@@ -1,92 +1,271 @@
-\chapter{PAPER 2 TITLE GOES HERE}
-%\label{polymer_fibers}
-
+\chapter{Numerical Methods}
+\subsection{IMEX Runge Kutta Scheme}\label{ssec:imex}
+The Thin-Film model we are trying to solve is a very stiff equation due to the
+high order derivatives.
+In order to take reasonable timesteps despite this stiffness we use Implicit
+Explicit (IMEX) Runge Kutta schemes to propogate our solution through time.
+The IMEX Runge Kutta scheme propogates time for ordinary differential
+equations of the form
+\begin{equation}
+  q_t = F(t, q) + G(t, q),
+\end{equation}
+where \(F\) is solely handled explicitly, but \(G\) needs to be solved implicitly.
+A single step of the Runge Kutta IMEX scheme is computed as follows,
+\begin{align}
+  q^{n+1} &= q^n + \Delta t \sum{i = 1}{s}{b_i' F(t_i, u_i)} + \Delta t \sum{i=1}{s}{b_i G(t_i, u_i)} \\
+  u_i &= q^n + \Delta t \sum{j = 1}{i-1}{a_{ij}' F(t_j, u_j)} + \Delta t \sum{j=1}{i}{a_{ij} G(t_j, u_j)} \\
+  t_i &= t^n + c_i \Delta t
+\end{align}
+where the coefficients \(a_{ij}\), \(b_i\), \(c_i\), \(a_{ij}'\), \(b_i'\), and \(c_i'\)
+are set in the double Butcher tableau
 \begin{center}
-    A paper accepted by \textit{Name of the Journal} \\
-    First Author and Second Author
+  \begin{tabular}{r|l}
+    \(c'\) & \(a'\) \\
+    \midrule
+      & \(b'^T\)
+  \end{tabular}\hspace{0.5cm}
+  \begin{tabular}{r|l}
+    \(c\) & \(a\) \\
+    \midrule
+      & \(b^T\)
+  \end{tabular}.
 \end{center}
 
-\section{Abstract}
-This is the text of my abstract that is part of the thesis itself.
-The abstract describes the work in the first paper general. You can use the same abstract as your paper here.
+Specifically we used the IMEX Schemes first introduced by Pareschi and Russo
+in~\cite{article:pareschi2000IMEX, article:pareschi2005IMEX}.
+The double Butcher tableaus for the 1st, 2nd and 3rd order schemes are given below,
+\begin{center}
+  \begin{tabular}{r|l}
+    0 & 0 \\
+    \midrule
+      & 1
+  \end{tabular}\hspace{0.5cm}
+  \begin{tabular}{r|l}
+    1 & 1 \\
+    \midrule
+      & 1
+  \end{tabular}
+\end{center}
+\begin{center}
+  \begin{tabular}{r|lll}
+    0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 \\
+    1 & 0 & 1 & 0 \\
+    \midrule
+      & 0 & \(\frac{1}{2}\) & \(\frac{1}{2}\) \\
+  \end{tabular}\hspace{0.5cm}
+  \begin{tabular}{r|lll}
+    \(\frac{1}{2}\) & \(\frac{1}{2}\) & 0 & 0 \\
+    0 & \(-\frac{1}{2}\) & \(\frac{1}{2}\) & 0 \\
+    1 & 0 & \(\frac{1}{2}\) & \(\frac{1}{2}\) \\
+    \midrule
+      & 0 & \(\frac{1}{2}\) & \(\frac{1}{2}\) \\
+  \end{tabular}
+\end{center}
+\begin{center}
+  \begin{tabular}{r|llll}
+    0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 0 & 0 & 0 \\
+    1 & 0 & 1 & 0 & 0 \\
+    \(\frac{1}{2}\) & 0 & \(\frac{1}{4}\) & \(\frac{1}{4}\) & 0 \\
+    \midrule
+      & 0 & \(\frac{1}{6}\) & \(\frac{1}{6}\) & \(\frac{2}{3}\) \\
+  \end{tabular} \hspace{0.5cm}
+  \begin{tabular}{r|llll}
+    \(\alpha \) & \(\alpha \) & 0 & 0 & 0 \\
+    0 & \(-\alpha \) & \(\alpha \) & 0 & 0 \\
+    1 & \(0\) & \(1 - \alpha \) & \(\alpha \) & 0 \\
+    \(\frac{1}{2}\) & \(\beta \) & \(\eta \) & \(\zeta \) & \(\alpha \) \\
+    \midrule
+      & 0 & \(\frac{1}{6}\) & \(\frac{1}{6}\) & \(\frac{2}{3}\) \\
+  \end{tabular} \\
+  \begin{align*}
+    \alpha &= 0.24169426078821 \\
+    \beta &= 0.06042356519705 \\
+    \eta &= 0.1291528696059 \\
+    \zeta &= \frac{1}{2} - \beta - \eta - \alpha
+  \end{align*}
+\end{center}
 
-%\pagebreak %remove if needed
+For our thin-film model \(F\) and \(G\) will be the spatial discretizations of
+the convection and diffusive terms respectively, that is
+\begin{align}
+  F(t, q) &= -\p{q^2 - q^3}_x \\
+  G(t, q) &= -\p{q^3 q_{xxx}}_x.
+\end{align}
+Since \(G\) is the stiffest part of our model, we would like to handle this term
+implicitly so that our time step is less restricted.
+Also handling \(F\) explicitly allows us to more easily capture the nonlinear
+behavior.
 
-% Please include sections as the paper has, some of the following sections are meant as examples of what can be done, the bibliography should be made as given
+\subsection{Space Discretization}
+We chose to use the Discontinuous Galerkin Method to discretize our equation in
+space.
+First let \(\set{x_{j+1/2}}_0^N\) partition the domain, \(\br{a, b}\), and denote
+each interval as \(I_j = \br{x_{j-1/2}, x_{j+1/2}}\) with
+\(\Delta x_j = x_{j+1/2} - x_{j-1/2}\).
+The Discontinuous Galerkin solution then exists in the following finite dimensional
+space,
+\begin{equation}
+  V_h^k = \set{v \in L^1\p{\br{a, b}}: \eval{v}{I_j} \in P^k(I_j), j = 1, \ldots, N},
+\end{equation}
+where \(P^k(I_j)\) denotes the set of polynomials of degree k or less on \(I_j\).
 
-\section{Overview}
+\subsubsection{Modal Discontinuous Galerkin}\label{ssec:dg}
+First we consider the continuous operator \(F(t, q) = -\p{q^2 - q^3}_x\).
+Note that \(F: \br{0, T} \times C^1(a, b) \to C^0(a, b)\), and we would like to
+form an approximation, \(F_h\) to this continuous operator, such that
+\(F_h: \br{0, T} \times V_h^k \to V_h^k\).
+In order to do this, consider the weak formulation of the continuous operator,
+\(F\).
+The weak form requires finding \(F(t, q) \in C^0(a, b)\) such that
+\begin{equation}
+  \dintt{a}{b}{F(t, q) v(x)}{x} = -\dintt{a}{b}{\p{q^2 - q^3}_x v(x)}{x}
+\end{equation}
+for all smooth functions, \(v \in C^{\infty}(a, b)\).
+The discontinuous Galerkin approximation is formed by replacing these function
+spaces with the DG space, \(V_h^k\).
+This gives that the weak formulation of the approximation \(F_h\) is to find
+\(F_h(t, q_h) \in V_h^k\) such that
+\begin{equation}
+  \dintt{a}{b}{F_h(t, q_h) v_h(x)}{x} = -\dintt{a}{b}{\p{q_h^2 - q_h^3}_x v_h(x)}{x}
+\end{equation}
+for all \(v_h \in V_h^k\).
+Using integration by parts this is equivalent to
+finding \(F_h(t, q_h) \in V_h^k\) such that
+\begin{align}
+  \dintt{I_j}{}{F_h(t, q_h)v_h(x)}{x} &= \dintt{I_j}{}{\p{q_h^2 - q_h^3} v_h'(x)}{x} \\
+  &- \hat{f}\p{q_h}_{j+1/2} v_h(x_{j+1/2}) + \hat{f}\p{q_h}_{j-1/2} v_h(x_{j-1/2}) \nonumber
+\end{align}
+for \(j = 1, \ldots, N\) and for all \(v_h \in V_h^k\).
+Since \(q_h\) is discontinuous at the cell interfaces \(x_{j\pm 1/2}\), some
+numerical flux \(\hat{f}\) must be chosen.
 
-The  construct of this section or any further section is same as the authors paper.
-This is the opening paragraph to my thesis which
-explains in general terms the concepts and hypothesis
-which will be used in my thesis.
+We chose to use the Local Lax-Friedrich's numerical flux, that is
+\begin{equation}
+  \hat{f}(q_l, q_r) = \frac{1}{2} \p{f(q_l) + f(q_r) - \lambda_{max} \p{q_r - q_l}}
+\end{equation}
+where \(f\) is the flux function, \(q_l\) and \(q_r\) and the left and right
+states at the interface, and \(\lambda_{max}\) is the locally maximum wavespeed,
+that is
+\begin{equation}
+  \lambda_{max} = \max[q \in \br{\min{q_l, q_r}, \max{q_l, q_r}}]{f'(q)}
+\end{equation}
+In our case \(f(q) = q^2 - q^3\) and at the interface \(x_{j+1/2}\),
+\(q_l = q_h^-(x_{j+1/2})\) and \(q_r = q_h^+(x_{j+1/2})\).
 
-With more general information given here than really
-necessary.
+% \begin{equation}
+%   \hat{f}\p{q_h}_{j+1/2} = \frac{1}{2} \p{\p{\p{\p{q_h^+(x_{j+1/2})}^2 - \p{q_h^+(x_{j+1/2})}^3} + \p{\p{q_h^-(x_{j+1/2})}^2 - \p{q_h^-(x_{j+1/2})}^3}}
+%   - \lambda_{\max} \p{q_h^+(x_{j+1/2}) - q_h^-(x_{j+1/2})}}
+% \end{equation}
+% where
+% \begin{equation}
+%   \lambda_{\max} = \max[q \in \br{}]{2q - 3q^2}
+% \end{equation}
 
-\section{Introduction}
+\subsubsection{Local Discontinuous Galerkin Scheme}\label{ssec:ldg}
+Next we look at the continuous operator \(G(t, q) = -\p{q^3 q_{xxx}}_x\).
+In discretizing this operator we follow Local Discontinuous Galerkin (LDG) method
+first introduced by Cockburn and Shu in~\cite{article:Cockburn1998LDG} for
+convection-diffusion systems.
+We first introduce three auxilliary variables, \(r, s, u\), and rewrite the equation
+as the following system,
+\begin{align}
+  r &= q_x \\
+  s &= r_x \\
+  u &= s_x \\
+  G(t, q) &= -\p{q^3 u}_x.
+\end{align}
+The weak form of this system is solved by finding functions \(r, s, u, G\) such that
+\begin{align}
+  \dintt{a}{b}{r(x) w(x)}{x} &= \dintt{a}{b}{q_x(x) w(x)}{x} \\
+  \dintt{a}{b}{s(x) y(x)}{x} &= \dintt{a}{b}{r_x(x) y(x)}{x} \\
+  \dintt{a}{b}{u(x) z(x)}{x} &= \dintt{a}{b}{s_x(x) z(x)}{x} \\
+  \dintt{a}{b}{G(t, q) v(x)}{x} &= -\dintt{a}{b}{\p{q^3(x) u(x)}_x v(x)}{x}
+\end{align}
+for all smooth functions \(w, y, z, v \in C^{\infty}(a, b)\).
+The LDG method arrives from applying the standard DG method to each of these
+equations.
+That is we replace the continuous function spaces with the
+discontinuous finite dimensional DG space, \(V_h^k\).
+The approximate operator \(G_h\) becomes the process of finding
+\(r_h, s_h, u_h, G_h(t, q_h) \in V_h\) such that for all test functions
+\(v_h, w_h, y_h, z_h \in V_h\) the following equations are
+satisfied
+\begin{align}
+  \dintt{a}{b}{r_h w_h}{x} &= \dintt{a}{b}{\p{q_h}_x w_h}{x} \\
+  \dintt{a}{b}{s_h y_h}{x} &= \dintt{a}{b}{\p{r_h}_x y_h}{x} \\
+  \dintt{a}{b}{u_h z_h}{x} &= \dintt{a}{b}{\p{s_h}_x z_h}{x} \\
+  \dintt{a}{b}{G_h(t, q_h) v_h}{x} &= -\dintt{a}{b}{\p{q_h^3 u_h}_x v_h}{x}
+\end{align}
+given \(t\) and \(q_h \in V_h^k\).
+This is equivalent to the following equations for all \(j\), if we use integration
+by parts,
+\begin{align}
+  \dintt{I_j}{}{r_h w_h}{x} &= \p{\p{\hat{q}_h w^-_h}_{j+1/2}
+  - \p{\hat{q}_h w^+_h}_{j-1/2}} - \dintt{I_j}{}{q_h \p{w_h}_x}{x} \\
+  \dintt{I_j}{}{s_h y_h}{x} &= \p{\p{\hat{r}_h y^-_h}_{j+1/2}
+  - \p{\hat{r}_h y^+_h}_{j-1/2}} - \dintt{I_j}{}{r_h \p{y_h}_x}{x} \\
+  \dintt{I_j}{}{u_h z_h}{x} &= \p{\p{\hat{s}_h z^-_h}_{j+1/2}
+  - \p{\hat{s}_h z^+_h}_{j-1/2}} - \dintt{I_j}{}{s_h \p{z_h}_x}{x} \\
+  \dintt{I_j}{}{G_h(t, q_h) v_h}{x} &= -\p{\p{\widehat{q^3 u}_h v^-_h}_{j+1/2}
+  - \p{\widehat{q^3 u}_h v^+_h}_{j-1/2}} + \dintt{I_j}{}{q_h^3 u_h \p{v_h}_x}{x}
+\end{align}
+where \(\hat{q}, \hat{r}, \hat{s}, \widehat{q^3 u}\) are suitably chosen numerical fluxes.
+A common choice of numerical fluxes are the so-called alternating fluxes, shown below
+\begin{align}
+  \hat{q}_h &= q^-_h \\
+  \hat{r}_h &= r^+_h \\
+  \hat{s}_h &= s^-_h \\
+  \widehat{q^3 u}_h &= \p{q^3 u}^+_h.
+\end{align}
+These numerical fluxes are one-sided fluxes that alternate sides for each
+derivative.
+They are chosen to make this method stable, and they also allow for the auxilliary
+variables to be locally solved in terms of \(q_h\), hence where the Local DG method
+gets its name.
 
-Here initial concepts and conditions are explained and
-several hypothesis are mentioned in brief.
+\subsection{Nonlinear Solver}
+Using these discretizations in the Runge Kutta IMEX scheme, requires solving the
+nonlinear system,
+\begin{equation}
+  u_i - \Delta t a_{ii} G_h(t_i, u_i) = q^n
+  + \Delta t \sum{j = 1}{i-1}{a_{ij}' F_h(t_j, u_j)}
+  + \Delta t \sum{j=1}{i-1}{a_{ij} G_h(t_j, u_j)}.
+\end{equation}
+for \(u_i\).
+The standard approach to solving this system would be to use a Newton iteration,
+however that would require the Jacobian of the operator \(I - \Delta t a_{ii} G_h\),
+which would be relatively intractable.
+Therefore we chose to linearize this operator and use a Picard iteration instead,
+which does not require the Jacobian.
 
-\cite{allen}, \cite{bruner} and \cite{cox}
-did the initial work in this area. But in Struss' work [\cite{struss}]
-the definitive model is seen.
+Suppose we are trying to solve the nonlinear equation \(L(u) = b\), where
+\(L'(v, u)\) is the nonlinear operator linearized about \(v\) acting on \(u\).
+The Picard iteration for solving this nonlinear equation starts with some initial
+guess \(u_0\).
+The next solution is found by solving the following linear problem,
+\begin{equation}
+  L'(u_i, u_{i+1}) = b.
+\end{equation}
+In other words the next iteration is found by solving the problem linearized about
+the the previous iteration.
 
-\subsection{Hypothesis}
+We linearize the operator \(G_h(t, q_h)\) by first linearizing \(G(t, q)\).
+The continuous operator linearized about \(v\) is given by
+\begin{equation}
+  G'(v, t, q) = - \p{v^3 q_{xxx}}_x.
+\end{equation}
+The linearized discrete operator is now just the LDG method applied to this
+linearized continuous operator.
 
-Here one particular hypothesis is explained in depth
-and is examined in the light of current literature.
+We find that the Picard iteration approach provides good results with relatively few
+iterations.
+In fact in Section~\ref{sec:results} we show that we can achieve first, second, and
+third order accuracy with only one, two, and three iterations respectively per
+stage.
+This approach is much more tractable than a Newton iteration and it converges
+quickly to the nonlinear solution.
 
-\subsubsection{Parts of the hypothesis}
-
-Here one particular part of the hypothesis that is 
-currently being explained is examined and particular
-elements of that part are given careful scrutiny.
-
-% Below \subsubsection
-% Sectional commands: \paragraph and \subparagraph may also be used
-
-\subsection{Second Hypothesis}
-
-Here one particular hypothesis is explained in depth
-and is examined in the light of current literature.
-
-\subsubsection{Parts of the second hypothesis}
-
-Here one particular part of the hypothesis that is 
-currently being explained is examined and particular
-elements of that part are given careful scrutiny.
-
-\section{Criteria Review}
-
-Here certain criteria are explained thus eventually
-leading to a foregone conclusion.
-
-\section{Conclusion}\label{Conclusion1}
-
-The conclusion of the paper goes here.
-
-\cite{allen}, \cite{bruner}, 
-\cite{Hal82},
-\cite{Rud73}, \cite{Con90}, 
-\cite{Con78}, \cite{KR83}, 
-\cite{KR86}
-
-% This section may or may not be included
-\section{Appendix: supplemental procedure description}
-If there is an appendix that needs to go with the paper it can be as a section
-
-\subsection{Procedure details}
-Details of the paper specific appendix procedures
-
-%\section{Bibliography}
-\bibliographystyle{apa}
-% \vspace{-20pt}
-\begingroup
-    \setlength{\bibsep}{13.2pt}
-    \linespread{1}\selectfont
-    \bibliography{master_bib}
-\endgroup
 \clearpage
 \pagebreak

@@ -1,57 +1,57 @@
 % Chapter 1 of the Thesis Template File
-\chapter{INTRODUCTION}
-This chapter will have the introduction to your thesis as a whole.
+\chapter{Introduction}
 
-This is the opening paragraph to my thesis which
-explains in general terms the concepts and hypothesis
-which will be used in my thesis.
+In this paper we look at the model equation,
+\begin{equation}
+  q_t + \p{q^2 - q^3}_x = -\p{q^3 q_{xxx}}_x \quad (x, t) \in \br{a, b} \times \br{0, T}. \label{eq:thin_film_model}
+\end{equation}
+This equation describes the motion of a thin film of liquid flowing over a one-dimensional domain,
+where \(q(x, t) \ge 0\) is the height of the liquid.
+This fluid is acted upon by gravity, by forces on the surface, and by surface tension.
+An equivalent model can be derived using thermocapillary forces and molecular forces.
+This model is useful in many different applications including airplane de-icing\cite{}
+and industrial coating.
+Some experimental study~\cite{article:cazabat1990fingering,
+article:kataoka1997theoretical, article:ludviksson1971dynamics} has been done and
+numerical results have shown good agreement with those experiments
+in~\cite{article:bertozzi1998contact}.
 
-With more general information given here than really
-necessary.
+Previous numerical methods for this type of equation have focused on finite difference
+approaches.
+Bertozzi and Brenner\cite{bertozzi1997linear} used a fully implicit centered finite
+difference scheme to explore instabilities.
+Ha et al.\cite{article:Ha2008} explored several different finite difference schemes,
+some fully implicit and some using the Crank-Nicolson method.
+In their analysis the considered several different methods for the hyperbolic terms
+including WENO, Godunov, and an adapted Upwind method.
+All of these methods were limited to just first or second order, and they required
+solving a Newton iteration.
+Finite difference methods also lack provable stability.
+% other drawbacks to finite difference methods
 
-\section{Overview}
+We chose to use discontinuous Galerkin methods as they allow for high order
+convergence.
+The discontinuous Galerkin methods were first introduced by Reed and
+Hill\cite{techreport:Reed1973}, and then were formalized by Cockburn and Shu
+in a series of papers\cite{article:Cockburn1991I, article:Cockburn1989II,
+article:Cockburn1989III, article:Cockburn1990IV, article:cockburn1998V}.
+We use the original modal discontinuous Galerkin method as well as the local
+discontinuous Galerkin method.
+The local discontinuous Galerkin method was also formulated by Cockburn and
+Shu\cite{article:Cockburn1998LDG} to handle higher order derivatives with the
+discontinuous Galerkin method.
+We use the modal discontinuous Galerkin method to discretize the convection term and
+the local discontinuous Galerkin method to discretize the diffusion term.
 
-Here initial concepts and conditions are explained and
-several hypothesis are mentioned in brief.
-
-\subsection{Hypothesis}
-
-Here one particular hypothesis is explained in depth
-and is examined in the light of current literature.
-
-\subsubsection{Parts of the hypothesis}
-
-Here one particular part of the hypothesis that is 
-currently being explained is examined and particular
-elements of that part are given careful scrutiny.
-
-% Below \subsubsection
-% Sectional commands: \paragraph and \subparagraph may also be used
-
-\subsection{Second Hypothesis}
-
-Here one particular hypothesis is explained in depth
-and is examined in the light of current literature.
-
-\subsubsection{Parts of the second hypothesis}
-
-Here one particular part of the hypothesis that is 
-currently being explained is examined and particular
-elements of that part are given careful scrutiny
-\cite{allen}, \cite{bruner}, \cite{prime-number-theorem} abcd.
-
-\section{Criteria Review}
-
-Here certain criteria are explained thus eventually
-leading to a foregone conclusion.
-
-% \section{Bibliography}
-\bibliographystyle{apa}
-% \vspace{-20pt}
-\begingroup
-    \setlength{\bibsep}{13.2pt}
-    \linespread{1}\selectfont
-    \bibliography{master_bib}
-\endgroup
+The diffusion term is much stiffer of a problem then the hyperbolic convection.
+If the diffusion is handled explicitly in time, then a very strict time step
+restriction is present for stability.
+Therefore implicit schemes should be preferred.
+However the hyperbolic term is nonlinear, and so an implicit scheme would require a
+Newton iteration.
+Thus we chose to use an Implicit-Explicit Runge Kutta scheme for propagating in time.
+These schemes were first introduced by Ascher et al.\cite{article:ascher1997implicit}
+and have been expanded on by Kennedy and Carpenter\cite{kennedy2003additive} and
+Pareschi and Russo\cite{article:pareschi2000IMEX}.
 \clearpage
 \pagebreak
