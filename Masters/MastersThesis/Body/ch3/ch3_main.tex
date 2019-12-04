@@ -1,5 +1,7 @@
+% !TEX root = ../../thesis.tex
+
 \chapter{Numerical Methods}
-\subsection{IMEX Runge Kutta Scheme}\label{ssec:imex}
+\section{IMEX Runge Kutta Scheme}\label{ssec:imex}
 The Thin-Film model we are trying to solve is a very stiff equation due to the
 high order derivatives.
 In order to take reasonable timesteps despite this stiffness we use Implicit
@@ -98,7 +100,7 @@ implicitly so that our time step is less restricted.
 Also handling \(F\) explicitly allows us to more easily capture the nonlinear
 behavior.
 
-\subsection{Space Discretization}
+\section{Space Discretization}
 We chose to use the Discontinuous Galerkin Method to discretize our equation in
 space.
 First let \(\set{x_{j+1/2}}_0^N\) partition the domain, \(\br{a, b}\), and denote
@@ -111,7 +113,7 @@ space,
 \end{equation}
 where \(P^k(I_j)\) denotes the set of polynomials of degree k or less on \(I_j\).
 
-\subsubsection{Modal Discontinuous Galerkin}\label{ssec:dg}
+\subsection{Modal Discontinuous Galerkin}\label{ssec:dg}
 First we consider the continuous operator \(F(t, q) = -\p{q^2 - q^3}_x\).
 Note that \(F: \br{0, T} \times C^1(a, b) \to C^0(a, b)\), and we would like to
 form an approximation, \(F_h\) to this continuous operator, such that
@@ -163,7 +165,7 @@ In our case \(f(q) = q^2 - q^3\) and at the interface \(x_{j+1/2}\),
 %   \lambda_{\max} = \max[q \in \br{}]{2q - 3q^2}
 % \end{equation}
 
-\subsubsection{Local Discontinuous Galerkin Scheme}\label{ssec:ldg}
+\subsection{Local Discontinuous Galerkin Scheme}\label{ssec:ldg}
 Next we look at the continuous operator \(G(t, q) = -\p{q^3 q_{xxx}}_x\).
 In discretizing this operator we follow Local Discontinuous Galerkin (LDG) method
 first introduced by Cockburn and Shu in~\cite{article:Cockburn1998LDG} for
@@ -225,7 +227,7 @@ They are chosen to make this method stable, and they also allow for the auxillia
 variables to be locally solved in terms of \(q_h\), hence where the Local DG method
 gets its name.
 
-\subsection{Nonlinear Solver}
+\section{Nonlinear Solver}
 Using these discretizations in the Runge Kutta IMEX scheme, requires solving the
 nonlinear system,
 \begin{equation}
@@ -261,11 +263,19 @@ linearized continuous operator.
 
 We find that the Picard iteration approach provides good results with relatively few
 iterations.
-In fact in Section~\ref{sec:results} we show that we can achieve first, second, and
+In fact in Section~\ref{chp:results} we show that we can achieve first, second, and
 third order accuracy with only one, two, and three iterations respectively per
 stage.
 This approach is much more tractable than a Newton iteration and it converges
 quickly to the nonlinear solution.
+
+\bibliographystyle{plain}
+% \vspace{-20pt}
+\begingroup
+    \setlength{\bibsep}{13.2pt}
+    \linespread{1}\selectfont
+    \bibliography{refs}
+\endgroup
 
 \clearpage
 \pagebreak

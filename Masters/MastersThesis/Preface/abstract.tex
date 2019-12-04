@@ -1,5 +1,13 @@
 \specialchapt{ABSTRACT}
-
-This is the text of my abstract that is part of the thesis itself.
-The abstract describes the work in general and the heading and style
-match the rest of the document.
+This paper provides a high-order numerical scheme for solving Thin-Film models of the
+form \(q_t + \p{q^2 - q^3}_x = -\p{q^3 q_{xxx}}_x\).
+This numerical scheme is a discontinuous Galerkin method that builds upon the original
+modal discontinuous Galerkin method as well as the local discontinuous Galerkin
+method.
+Propogation in time is done with an Implicit-Explicit Runge Kutta scheme, so as to
+allow for larger time steps.
+The timestep restriction for these methods is determined by the hyperbolic wavespeed
+restriction, and is not limited by the diffusion term.
+The resulting nonlinear equations are solved with a Newton-Free iteration.
+In fact the nonlinear system is solved using a Picard Iteration, where very few
+iterations are required for convergence.
