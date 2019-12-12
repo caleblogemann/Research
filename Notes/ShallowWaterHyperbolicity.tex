@@ -1,0 +1,188 @@
+\documentclass[oneside]{article}
+\usepackage[letterpaper, margin=2cm]{geometry}
+\usepackage{Notes}
+
+\begin{document}
+  \begin{center}
+    \textbf{\Large{Hyperbolicity of Shallow Water Equations}} \\
+  \end{center}
+
+  The one dimensional shallow water equations in primitive variables are given as
+  \begin{equation}
+    \begin{bmatrix}
+      h \\
+      hu
+    \end{bmatrix}_t +
+    \begin{bmatrix}
+      hu \\
+      hu^2 + \frac{1}{2}gh^2
+    \end{bmatrix}_x
+    =
+    \begin{bmatrix}
+      0 \\
+      0
+    \end{bmatrix},
+  \end{equation}
+  where \(h\) is the height of the water, \(u\) is the horizontal velocity, and \(g\)
+  is the gravitational constant.
+  Often it may be better to use the conserved variables of mass and momentum instead of
+  height and velocity.
+  Let \(q_1 = h\) be the mass and \(q_2 = hu\) be the momentum of a cross section of the
+  water.
+  In the conserved variables the shallow water equations are
+  \begin{equation}
+    \begin{bmatrix}
+      q_1 \\
+      q_2
+    \end{bmatrix}_t +
+    \begin{bmatrix}
+      q_2 \\
+      \frac{q_2^2}{q_1} + \frac{1}{2}g q_1^2
+    \end{bmatrix}_x
+    =
+    \begin{bmatrix}
+      0 \\
+      0
+    \end{bmatrix},
+  \end{equation}
+  or in vector form
+  \begin{equation}
+    \v{q}_t + \v{f}\p{\v{q}}_x = \v{0},
+  \end{equation}
+  where
+  \begin{equation}
+    \v{q} =
+    \begin{bmatrix}
+      q_1 \\
+      q_2
+    \end{bmatrix} \quad \text{ and } \quad
+    \v{f}\p{\v{q}} =
+    \begin{bmatrix}
+      q_2 \\
+      \frac{q_2^2}{q_1} + \frac{1}{2}g q_1^2
+    \end{bmatrix}.
+  \end{equation}
+
+  For smooth solutions this can be expressed in its quasilinear form,
+  \begin{equation}
+    \v{q}_t + \v{f}'\p{\v{q}} \v{q}_x = \v{0},
+  \end{equation}
+  where \(\v{f}'\p{\v{q}}\) is the Jacobian matrix.
+  We say that a system of conservation laws is hyperbolic if the Jacobian matrix is
+  diagonalizable with real eigenvalues.
+  To this end, consider the Jacobian matrix of the shallow water equations,
+  \begin{equation}
+    \v{f}'\p{\v{q}} =
+    \begin{bmatrix}
+      0 & 1 \\
+      -\frac{q_2^2}{q_1^2} + gq_1 & 2\frac{q_2}{q_1}
+    \end{bmatrix}
+  \end{equation}
+  or in primitive variables
+  \begin{equation}
+    \v{f}'\p{\v{q}} =
+    \begin{bmatrix}
+      0 & 1 \\
+      -u^2 + gh & 2u
+    \end{bmatrix}.
+  \end{equation}
+  Note that the Jacobian must be computed with respect to the conserved variables, but
+  can then be expressed in terms of the primitive variables.
+  In order to determine if these equations are hyperbolic, we must find the eigenvalues
+  of this Jacobian matrix.
+  This is easiest to do when expressed in terms of the primitive variables.
+  The eigenvalues are computed as follows
+  \begin{align*}
+    \begin{vmatrix}
+      -\lambda & 1 \\
+      -u^2 + gh & 2u - \lambda
+    \end{vmatrix} &= 0 \\
+    -\lambda\p{2u - \lambda} - \p{-u^2 + gh} &= 0 \\
+    \lambda^2 - 2u\lambda + u^2 - gh &= 0 \\
+    \lambda &= \frac{2u \pm \sqrt{4u^2 - 4\p{u^2 - gh}}}{2} \\
+    \lambda &= \frac{2u \pm \sqrt{4u^2 - 4u^2 + 4gh}}{2} \\
+    \lambda &= \frac{2u \pm \sqrt{4gh}}{2} \\
+    \lambda &= u \pm \sqrt{gh}.
+  \end{align*}
+  These eigenvalues are real if and only if \(h \ge 0\).
+  As a negative height of the water does not make physical sense this is an intuitive
+  result.
+  In conserved variables the eigenvalues are
+  \begin{equation}
+    \lambda = \frac{q_2}{q_1} \pm \sqrt{g q_1}.
+  \end{equation}
+
+  Next we will find the eigenvectors for these eigenvalues.
+  For the eigenvalue \(u + \sqrt{gh}\), we can compute the eigenvector as follows
+  \begin{align*}
+    \begin{bmatrix}
+      -u - \sqrt{gh} & 1 \\
+      -u^2 + gh & 2u - u - \sqrt{gh}
+    \end{bmatrix}
+    \begin{bmatrix}
+      v_1 \\
+      v_2
+    \end{bmatrix} &=
+    \begin{bmatrix}
+      0 \\
+      0
+    \end{bmatrix} \\
+    \p{-u - \sqrt{gh}}v_1 + v_2 &= 0 \\
+    \p{-u^2 + gh}v_1 + \p{u - \sqrt{gh}}v_2 &= 0
+    \intertext{Multiplying the first equation by \(u - \sqrt{gh}\) gives}
+    \p{-u^2 + \sqrt{gh}}v_1 + \p{u - \sqrt{gh}}v_2 &= 0 \\
+    v_1 &= 1 \\
+    v_2 &= u + \sqrt{gh} \\
+    \v{v} &=
+    \begin{bmatrix}
+      1 \\
+      u + \sqrt{gh}
+    \end{bmatrix}
+  \end{align*}
+  In conservative form this eigenvector is
+  \begin{equation}
+    \v{v} =
+    \begin{bmatrix}
+      1 \\
+      \frac{q_2}{q_1} + \sqrt{g q_1}
+    \end{bmatrix}.
+  \end{equation}
+
+  For the eigenvalue \(u - \sqrt{gh}\) the eigenvector is computed as follows,
+  \begin{align*}
+    \begin{bmatrix}
+      -u + \sqrt{gh} & 1 \\
+      -u^2 + gh & 2u - u + \sqrt{gh}
+    \end{bmatrix}
+    \begin{bmatrix}
+      v_1 \\
+      v_2
+    \end{bmatrix}
+    &=
+    \begin{bmatrix}
+      0 \\
+      0
+    \end{bmatrix} \\
+    \p{-u + \sqrt{gh}}v_1 + v_2 &= 0 \\
+    \p{-u^2 + gh}v_1 + \p{u + \sqrt{gh}}v_2 &= 0
+    \intertext{Multiplying the first equation by \(\p{u + \sqrt{gh}}\) gives}
+    \p{-u^2 + gh}v_1 + \p{u + \sqrt{gh}}v_2 &= 0 \\
+    v_1 &= 1 \\
+    v_2 &= u - \sqrt{gh} \\
+    \v{v} &=
+    \begin{bmatrix}
+      1 \\
+      u - \sqrt{gh}
+    \end{bmatrix}.
+  \end{align*}
+  In conservative form this eigenvector is
+  \begin{equation}
+    \v{v} =
+    \begin{bmatrix}
+      1 \\
+      \frac{q_2}{q_1} - \sqrt{g q_1}
+    \end{bmatrix}.
+  \end{equation}
+
+
+\end{document}
