@@ -7,4 +7,48 @@
     \textbf{\Large{Derivation of Shallow Water Equations}} \\
   \end{center}
 
+  We begin by considering the Navier-Stokes equations,
+  \begin{align}
+    \div{\v{u}} &= 0 \\
+    \v{u}_t + \div*{\v{u}\v{u}} &= - \frac{1}{\rho} \grad{p} + \frac{1}{\rho} \div{\sigma} + \v{g},
+  \end{align}
+  where \(\v{u} = \br{u, v, w}^T\) is the vector of velocities, \(p\) is the pressure,
+  \(\rho \) is the constant density, \(\sigma \) is the deviatoric stress tensor, and
+  \(\v{g}\) is the gravitational force vector.
+  We also have two boundaries, the bottom topography \(h_b(t, x, y)\), and the free
+  surface \(h_s(t, x, y)\).
+  At both of these boundaries the kinimatic boundary conditions are in effect and can
+  be expressed as
+  \begin{align}
+    \p{h_s}_t + \br{u(t, x, y, h_s), v(t, x, y, h_s)}^T \cdot \grad{h_s} &= w(t, x, y, h_s) \\
+    \p{h_b}_t + \br{u(t, x, y, h_b), v(t, x, y, h_b)}^T \cdot \grad{h_b} &= w(t, x, y, h_b).
+  \end{align}
+  In practice the bottom topography is unchanging in time, but we express \(h_b\) with
+  time dependence to allow for a symmetric representation of the boundary conditions.
+
+  \subsection{Dimensional Analysis}
+    Now we consider the characteristic scales of the problem.
+    Let \(L\) be the characteristic horizontal length scale, and let \(H\) be the
+    characteristic vertical length scale.
+    For this problem we assume that \(H << L\) and we denote the ratio of these
+    lengths as \(\varepsilon = H/L\).
+    With these characteristic lengths we can scale the length variables to a
+    nondimensional form
+    \begin{equation}
+      x = L\hat{x}, \quad  y = L\hat{y}, \quad z = H\hat{z}.
+    \end{equation}
+    Now let \(U\) be the characteristic horizontal velocity, then because of the
+    shallowness the characteristic vertical velocity will be \(\varepsilon U\).
+    Therefore the velocity variables can be scaled as follows,
+    \begin{equation}
+      u = U\hat{u}, \quad v = U\hat{v}, \quad w = \varepsilon U \hat{w}.
+    \end{equation}
+    Now with the characteristic length and velocity, the time scaling can be described
+    as
+    \begin{equation}
+      t = \frac{L}{U}\hat{t}
+    \end{equation}
+
+
+
 \end{document}
