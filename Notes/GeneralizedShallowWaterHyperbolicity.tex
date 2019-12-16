@@ -1,0 +1,161 @@
+\documentclass[oneside]{article}
+\usepackage[letterpaper, margin=2cm]{geometry}
+\usepackage{Notes}
+
+\begin{document}
+  \begin{center}
+    \textbf{\Large{Hyperbolicity of Generalized Shallow Water Equations}} \\
+  \end{center}
+
+  The one dimensional first order inviscid generalized shallow water equations in
+  primitive variables are given as
+  \begin{equation}
+    \begin{bmatrix}
+      h \\
+      hu \\
+      hs
+    \end{bmatrix}_t +
+    \begin{bmatrix}
+      hu \\
+      hu^2 + \frac{1}{2}gh^2 + \frac{1}{3}hs^2 \\
+      2hus
+    \end{bmatrix}_x
+    =
+    \begin{bmatrix}
+      0 & 0 & 0 \\
+      0 & 0 & 0 \\
+      0 & 0 & u
+    \end{bmatrix}
+    \begin{bmatrix}
+      h \\
+      hu \\
+      hs
+    \end{bmatrix}_x,
+  \end{equation}
+  where \(h\) is the height of the water, \(u\) is the mean horizontal velocity, \(s\)
+  is linear scaling of the horizontal velocity, and \(g\) is the gravitational constant.
+  Often it may be better to use the conserved variables of mass and momentum instead of
+  height and velocity.
+  Let \(q_1 = h\) be the mass and \(q_2 = hu\) be the momentum of a cross section of the
+  water, and \(q_3 = hs\) be the final conserved variable.
+  In the conserved variables the shallow water equations are
+  \begin{equation}
+    \begin{bmatrix}
+      q_1 \\
+      q_2 \\
+      q_3
+    \end{bmatrix}_t +
+    \begin{bmatrix}
+      q_2 \\
+      \frac{q_2^2}{q_1} + \frac{1}{2}g q_1^2 + \frac{1}{3} \frac{q_3^2}{q_1} \\
+      2 \frac{q_2 q_3}{q_1}
+    \end{bmatrix}_x
+    =
+    \begin{bmatrix}
+      0 & 0 & 0 \\
+      0 & 0 & 0 \\
+      0 & 0 & \frac{q_2}{q_1}
+    \end{bmatrix}
+    \begin{bmatrix}
+      q_1 \\
+      q_2 \\
+      q_3
+    \end{bmatrix}_x,
+  \end{equation}
+  or in vector form
+  \begin{equation}
+    \v{q}_t + \v{f}\p{\v{q}}_x = Q\v{q}_x,
+  \end{equation}
+  where
+  \begin{equation}
+    \v{q} =
+    \begin{bmatrix}
+      q_1 \\
+      q_2 \\
+      q_3
+    \end{bmatrix}, \quad
+    \v{f}\p{\v{q}} =
+    \begin{bmatrix}
+      q_2 \\
+      \frac{q_2^2}{q_1} + \frac{1}{2}g q_1^2 + \frac{1}{3} \frac{q_3^2}{q_1} \\
+      2 \frac{q_2 q_3}{q_1}
+    \end{bmatrix}, \quad
+    Q =
+    \begin{bmatrix}
+      0 & 0 & 0 \\
+      0 & 0 & 0 \\
+      0 & 0 & \frac{q_2}{q_1}
+    \end{bmatrix}
+  \end{equation}
+
+  For smooth solutions this can be expressed in its quasilinear form,
+  \begin{equation}
+    \v{q}_t + \p{\v{f}'\p{\v{q}} - Q} \v{q}_x = \v{0},
+  \end{equation}
+  where \(\v{f}'\p{\v{q}}\) is the Jacobian matrix.
+  A system of balance laws is said to be hyperbolic if the matrix
+  \(A = \v{f}'\p{\v{q}} - Q\) is diagonalizable with real eigenvalues.
+  To show that this system is hyperbolic we proceed to find the eigenvalues of the
+  matrix \(A\), where the flux Jacobian is
+  \begin{equation}
+    \v{f}'\p{\v{q}} =
+    \begin{bmatrix}
+       0 & 1 & 0 \\
+       -\frac{q_2^2}{q_1^2} + gq_1 - \frac{1}{3} \frac{q_3^2}{q_1^2} & 2 \frac{q_2}{q_1} & \frac{2}{3} \frac{q_3}{q_1} \\
+       -2 \frac{q_2 q_3}{q_1} & 2 \frac{q_3}{q_1} & 2\frac{q_2}{q_1}
+    \end{bmatrix}
+  \end{equation}
+  or in primitive variables
+  \begin{equation}
+    \v{f}'\p{\v{q}} =
+    \begin{bmatrix}
+      0 & 1 & 0 \\
+      -u^2 + gh - \frac{1}{3}s^2 & 2u & \frac{2}{3}s \\
+      -2us & 2s & 2u
+    \end{bmatrix}
+  \end{equation}
+  So the matrix \(A\) is thus
+  \begin{equation}
+    A =
+    \begin{bmatrix}
+       0 & 1 & 0 \\
+       -\frac{q_2^2}{q_1^2} + gq_1 - \frac{1}{3} \frac{q_3^2}{q_1^2} & 2 \frac{q_2}{q_1} & \frac{2}{3} \frac{q_3}{q_1} \\
+       -2 \frac{q_2 q_3}{q_1} & 2 \frac{q_3}{q_1} & \frac{q_2}{q_1}
+    \end{bmatrix} =
+    \begin{bmatrix}
+      0 & 1 & 0 \\
+      -u^2 + gh - \frac{1}{3}s^2 & 2u & \frac{2}{3}s \\
+      -2us & 2s & u
+    \end{bmatrix}.
+  \end{equation}
+  The eigenvalues, \(\lambda \) of \(A\) satisfy \(\det{A - \lambda I} = 0\).
+  This equation can be solved as follows,
+  \begin{align*}
+    \det{A - \lambda I} &= 0 \\
+    \begin{vmatrix}
+      -\lambda & 1 & 0 \\
+      -u^2 + gh - \frac{1}{3}s^2 & 2u - \lambda & \frac{2}{3}s \\
+      -2us & 2s & u - \lambda
+    \end{vmatrix} &= 0 \\
+    \begin{vmatrix}
+      -\lambda & 1 & 0 \\
+      -u^2 + gh - \frac{1}{3}s^2 & 2u - \lambda & \frac{2}{3}s \\
+      -2us & 2s & u - \lambda
+    \end{vmatrix} &= 0 \\
+    -\lambda \p{\p{2u - \lambda}\p{u - \lambda} - \frac{4}{3}s^2} - \p{\p{-u^2 + gh - \frac{1}{3}s^2}\p{u - \lambda} + \frac{4}{3}s^2 u} &= 0 \\
+    \p{u - \lambda}\lambda \p{\lambda - 2u} + \frac{4}{3}s^2\lambda - \frac{4}{3}s^2 u + \p{u - \lambda}\p{u^2 - gh + \frac{1}{3}s^2} &= 0 \\
+    \p{u - \lambda}\p{\lambda \p{\lambda - 2u} - \frac{4}{3}s^2 + u^2 - gh + \frac{1}{3}s^2} &= 0 \\
+    \p{u - \lambda}\p{\lambda^2 - 2u\lambda + u^2 - gh - s^2} &= 0
+  \end{align*}
+  Thus the eigenvalues of \(A\) are
+  \begin{align*}
+    \lambda &= u \\
+    \lambda &= \frac{2u \pm \sqrt{4u^2 - 4\p{u^2 - gh - s^2}}}{2} \\
+    \lambda &= u \pm \sqrt{gh + s^2}
+  \end{align*}
+
+  % TODO: Compute eigenvectors
+
+  % TODO: Second Order
+  % TODO: Third Order
+\end{document}
