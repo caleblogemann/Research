@@ -26,7 +26,7 @@
   In practice the bottom topography is unchanging in time, but we express \(h_b\) with
   time dependence to allow for a symmetric representation of the boundary conditions.
 
-  \subsection{Dimensional Analysis}
+  \section{Dimensional Analysis}
     Now we consider the characteristic scales of the problem.
     Let \(L\) be the characteristic horizontal length scale, and let \(H\) be the
     characteristic vertical length scale.
@@ -52,7 +52,7 @@
     will be scaled by a characteristic stress, \(S\).
     It is assumed that the basal shear stresses, \(\sigma_{xz}\) and \(\sigma_{yz}\) are
      of larger order than the lateral shear stress, \(\sigma_{xy}\), and the normal
-    stresses, \(\sigam_{xx}\), \(\sigma_{yy}\), and \(\sigma_{zz}\), so that
+    stresses, \(\sigma_{xx}\), \(\sigma_{yy}\), and \(\sigma_{zz}\), so that
     \begin{equation}
       p = \rho g H \hat{p}, \quad \sigma_{xz/yz} = S\hat{\sigma}_{xz/yz}, \quad
       \sigma_{xx/xy/yy/zz} = \varepsilon S \hat{\sigma}_{xx/xy/yy/zz}.
@@ -65,6 +65,8 @@
       u_t + \p{u^2}_x + \p{uv}_y + \p{uw}_z &= -\frac{1}{\rho} p_x + \frac{1}{\rho} \p{\p{\sigma_{xx}}_x + \p{\sigma_{xy}}_y + \p{\sigma_{xz}}_z} + g e_x \\
       v_t + \p{uv}_x + \p{v^2}_y + \p{vw}_z &= -\frac{1}{\rho} p_y + \frac{1}{\rho} \p{\p{\sigma_{xy}}_x + \p{\sigma_{yy}}_y + \p{\sigma_{yz}}_z} + g e_y \\
       w_t + \p{uw}_x + \p{vw}_y + \p{w^2}_z &= -\frac{1}{\rho} p_z + \frac{1}{\rho} \p{\p{\sigma_{xz}}_x + \p{\sigma_{yz}}_y + \p{\sigma_{zz}}_z} + g e_z \\
+    \end{align*}
+    \begin{align*}
       u_x &= \p{U\hat{u}}_x = \p{U\hat{u}}_{\hat{x}} \hat{x}_x = \frac{U}{L} \hat{u}_{\hat{x}} \\
       v_y &= \p{U\hat{v}}_{\hat{y}} \hat{y}_y = \frac{U}{L} \hat{v}_{\hat{y}} \\
       w_z &= \p{\varepsilon U \hat{w}}_{\hat{z}} \hat{z}_z = \frac{\varepsilon U}{H} \hat{w}_{\hat{z}} = \frac{U}{L} \hat{w}_{\hat{z}} \\
@@ -82,6 +84,8 @@
       \p{uw}_x &= \p{\varepsilon U^2 \hat{u}\hat{w}}_{\hat{x}} \hat{x}_x = \varepsilon \frac{U^2}{L} \p{\hat{u}\hat{w}}_{\hat{x}} \\
       \p{vw}_y &= \p{\varepsilon U^2 \hat{v}\hat{w}}_{\hat{y}} \hat{y}_y = \varepsilon \frac{U^2}{L} \p{\hat{v}\hat{w}}_{\hat{x}} \\
       \p{w^2}_z &= \p{\varepsilon^2 U^2 \hat{w}^2}_{\hat{z}} \hat{z}_z = \varepsilon \frac{U^2}{L} \p{\hat{w}^2}_{\hat{z}} \\
+    \end{align*}
+    \begin{align*}
       \frac{1}{\rho} p_x &= \frac{1}{\rho} \p{\rho g H \hat{p}}_{\hat{x}} \hat{x}_x = \frac{\varepsilon g L}{L} \hat{p}_{\hat{x}} = \varepsilon g \hat{p}_{\hat{x}} \\
       \frac{1}{\rho} p_y &= \frac{1}{\rho} \p{\rho g H \hat{p}}_{\hat{y}} \hat{y}_y = \frac{\varepsilon g L}{L} \hat{p}_{\hat{y}} = \varepsilon g \hat{p}_{\hat{y}} \\
       \frac{1}{\rho} p_z &= \frac{1}{\rho} \p{\rho g H \hat{p}}_{\hat{z}} \hat{z}_z = \frac{\varepsilon g L}{\varepsilon L} \hat{p}_{\hat{z}} = g \hat{p}_{\hat{z}} \\
@@ -104,6 +108,52 @@
       \hat{u}_{\hat{x}} + \hat{v}_{\hat{y}} + \hat{w}_{\hat{z}} &= 0 \\
       \frac{U^2}{gL} \p{\hat{u}_{\hat{t}} + \p{\hat{u}^2}_{\hat{x}} + \p{\hat{u}\hat{v}}_{\hat{y}} + \p{\hat{u}\hat{w}}_{\hat{z}}} &= -\varepsilon \hat{p}_{\hat{x}} + \frac{S}{\rho gL} \p{\varepsilon \p{\hat{\sigma}_{xx}}_{\hat{x}} + \varepsilon \p{\hat{\sigma}_{xy}}_{\hat{y}} + \p{\hat{\sigma}_{xz}}_{\hat{z}}} + e_x \\
       \frac{U^2}{gL} \p{\hat{v}_{\hat{t}} + \p{\hat{u}\hat{v}}_{\hat{x}} + \p{\hat{v}^2}_{\hat{y}} + \p{\hat{v}\hat{w}}_{\hat{z}}} &= -\varepsilon \hat{p}_{\hat{y}} + \frac{S}{\rho gL} \p{\varepsilon \p{\hat{\sigma}_{xy}}_{\hat{x}} + \varepsilon \p{\hat{\sigma}_{yy}}_{\hat{y}} + \p{\hat{\sigma}_{yz}}_{\hat{z}}} + e_y \\
+    \end{align*}
+
+
+    \begin{align*}
+      u_x + v_y + w_z &= 0 \\
+      u_t + \p{u^2}_x + \p{uv}_y + \p{uw}_z &= -\frac{1}{\rho} p_x + \frac{1}{\rho} \p{\sigma_{xz}}_z + g e_x \\
+      v_t + \p{uv}_x + \p{v^2}_y + \p{vw}_z &= -\frac{1}{\rho} p_y + \frac{1}{\rho} \p{\sigma_{yz}}_z + g e_y
+    \end{align*}
+
+  \section{Mapping}
+    In order to make this system more accessible we will map the vertical variable \(z\)
+    to the normalized variable \(\zeta \), through the transformation
+    \[
+      \zeta(t, x, y, z) = \frac{z - h_b(t, x, y)}{h(t, x, y)},
+    \]
+    or equivalently
+    \[
+      z(t, x, y, \zeta) = h(t, x, y) \zeta + h_b(t, x, y)
+    \]
+    where \(h(t, x, y) = h_s(t, x, y) - h_b(t, x, y)\).
+    This transformation maps the vertical variable onto a scale from 0 to 1 everywhere.
+
+    Consider a function \(\Psi(t, x, y, z)\), then is mapped counterpart
+    \(\tilde{\Psi}(t, x, y, \zeta)\) can be described as
+    \[
+      \tilde{\Psi}(t, x, y, \zeta) = \Psi\p{t, x, y, z(t, x, y, \zeta)} = \Psi\p{t, x, y, h(t, x, y) \zeta + h_b(t, x, y)},
+    \]
+    or equivalently
+    \[
+      \Psi(t, x, y, z) = \tilde{\Psi}\p{t, x, y, \zeta(t, x, y, z)} = \tilde{\Psi}\p{t, x, y, \frac{z - h_b(t, x, y)}{h(t, x, y)}}.
+    \]
+    We also need to be able to map derivatives of functions in order to be able to map
+    the differential equations.
+    This can be described
+    \begin{align*}
+      \Psi_z(t, x, y, z) &= \p{\tilde{\Psi}\p{t, x, y, \zeta(t, x, y, z)}}_z \\
+      \Psi_z(t, x, y, z) &= \tilde{\Psi}_{\zeta}\p{t, z, y, \zeta(t, x, y, z)} \zeta_z(t, x, y, z) \\
+      \Psi_z(t, x, y, z) &= \tilde{\Psi}_{\zeta}\p{t, z, y, \zeta(t, x, y, z)} \frac{1}{h(t, x, y)} \\
+      h(t, x, y) \Psi_z(t, x, y, z) &= \tilde{\Psi}_{\zeta}\p{t, z, y, \zeta(t, x, y, z)} \\
+      h \Psi_z &= \tilde{\Psi}_{\zeta}
+    \end{align*}
+
+    \begin{align*}
+      \Psi_t(t, x, y, z) &= \p{\tilde{\Psi}\p{t, x, y, \zeta(t, x, y, z)}}_t \\
+      \Psi_t(t, x, y, z) &= \tilde{\Psi}_t\p{t, x, y, \zeta(t, x, y, z)} + \tilde{\Psi}_{\zeta}(t, x, y, \zeta(t, x, y, z)) \zeta_t(t, x, y, z) \\
+      \Psi_t(t, x, y, z) &= \tilde{\Psi}_t\p{t, x, y, \zeta(t, x, y, z)} + \tilde{\Psi}_{\zeta}(t, x, y, \zeta(t, x, y, z)) \p{\frac{\p{h_b}_t(t, x, y)}{h(t, x, y)} - \zeta(t, x, y, z)\frac{h_t(t, x, y)}{h(t, x, y)}} \\
     \end{align*}
 
 
