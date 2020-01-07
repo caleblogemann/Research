@@ -150,11 +150,69 @@
       h \Psi_z &= \tilde{\Psi}_{\zeta}
     \end{align*}
 
+    For the other derivatives, the partial derivatives are identical for
+    \(s \in \set{t, x, y}\).
+    \begin{align*}
+      \zeta_s(t, x, y, z) &= \p{\frac{z - h_b(t, x, y)}{h(t, x, y)}}_s \\
+      &= -\frac{\p{z - h_b(t, x, y)}h_s(t, x, y)}{h\p{t, x, y}^2} - \frac{\p{h_b}_s(t, x, y)}{h(t, x, y)} \\
+      &= -\zeta(t, x, y, z)\frac{h_s(t, x, y)}{h\p{t, x, y}} - \frac{\p{h_b}_s(t, x, y)}{h(t, x, y)} \\
+      &= -\frac{\zeta(t, x, y, z)h_s(t, x, y) + \p{h_b}_s(t, x, y)}{h\p{t, x, y}}
+    \end{align*}
+
+    \begin{align*}
+      \Psi_s(t, x, y, z) &= \p{\tilde{\Psi}\p{t, x, y, \zeta(t, x, y, z)}}_s \\
+      \Psi_s(t, x, y, z) &= \tilde{\Psi}_s\p{t, x, y, \zeta(t, x, y, z)} + \tilde{\Psi}_{\zeta}(t, x, y, \zeta(t, x, y, z)) \zeta_s(t, x, y, z) \\
+      \Psi_s(t, x, y, z) &= \tilde{\Psi}_s\p{t, x, y, \zeta} - \tilde{\Psi}_{\zeta}(t, x, y, \zeta) \p{\frac{\zeta h_s(t, x, y) + \p{h_b}_s(t, x, y)}{h\p{t, x, y}}} \\
+      h(t, x, y)\Psi_s(t, x, y, z) &= h(t, x, y)\tilde{\Psi}_s\p{t, x, y, \zeta} - \tilde{\Psi}_{\zeta}(t, x, y, \zeta) \p{\zeta h_s(t, x, y) + \p{h_b}_s(t, x, y)} \\
+      h(t, x, y)\Psi_s(t, x, y, z) &= h(t, x, y)\tilde{\Psi}_s\p{t, x, y, \zeta} - \tilde{\Psi}_{\zeta}(t, x, y, \zeta) \p{\zeta h_s(t, x, y) + \p{h_b}_s(t, x, y)} \\
+      h\Psi_s &= h\tilde{\Psi}_s - \tilde{\Psi}_{\zeta} \p{\zeta h_s + \p{h_b}_s} \\
+      h\Psi_s &= h\tilde{\Psi}_s + h_s\tilde{\Psi} - h_s\tilde{\Psi} - \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_s \\
+      h\Psi_s &= \p{h\tilde{\Psi}}_s - \p{h_s \tilde{\Psi} + \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_s} \\
+      h\Psi_s &= \p{h\tilde{\Psi}}_s - \p{\p{\p{\zeta h + h_b}_{\zeta}}_s \tilde{\Psi} + \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_s} \\
+      h\Psi_s &= \p{h\tilde{\Psi}}_s - \p{\p{\p{\zeta h + h_b}_s}_{\zeta} \tilde{\Psi} + \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_s} \\
+      h\Psi_s &= \p{h\tilde{\Psi}}_s - \p{\p{\zeta h + h_b}_s \tilde{\Psi}}_{\zeta} \\
+    \end{align*}
+
     \begin{align*}
       \Psi_t(t, x, y, z) &= \p{\tilde{\Psi}\p{t, x, y, \zeta(t, x, y, z)}}_t \\
       \Psi_t(t, x, y, z) &= \tilde{\Psi}_t\p{t, x, y, \zeta(t, x, y, z)} + \tilde{\Psi}_{\zeta}(t, x, y, \zeta(t, x, y, z)) \zeta_t(t, x, y, z) \\
-      \Psi_t(t, x, y, z) &= \tilde{\Psi}_t\p{t, x, y, \zeta(t, x, y, z)} + \tilde{\Psi}_{\zeta}(t, x, y, \zeta(t, x, y, z)) \p{\frac{\p{h_b}_t(t, x, y)}{h(t, x, y)} - \zeta(t, x, y, z)\frac{h_t(t, x, y)}{h(t, x, y)}} \\
+      \Psi_t(t, x, y, z) &= \tilde{\Psi}_t\p{t, x, y, \zeta(t, x, y, z)} - \tilde{\Psi}_{\zeta}(t, x, y, \zeta(t, x, y, z)) \p{\frac{\zeta(t, x, y, z)h_t(t, x, y) + \p{h_b}_t(t, x, y)}{h\p{t, x, y}}} \\
+      h(t, x, y)\Psi_t(t, x, y, z) &= h(t, x, y)\tilde{\Psi}_t\p{t, x, y, \zeta(t, x, y, z)} - \tilde{\Psi}_{\zeta}(t, x, y, \zeta(t, x, y, z)) \p{\zeta(t, x, y, z)h_t(t, x, y) + \p{h_b}_t(t, x, y)} \\
+      h(t, x, y)\Psi_t(t, x, y, z) &= h(t, x, y)\tilde{\Psi}_t\p{t, x, y, \zeta} - \tilde{\Psi}_{\zeta}(t, x, y, \zeta) \p{\zeta h_t(t, x, y) + \p{h_b}_t(t, x, y)} \\
+      h\Psi_t &= h\tilde{\Psi}_t - \tilde{\Psi}_{\zeta} \p{\zeta h_t + \p{h_b}_t} \\
+      h\Psi_t &= h\tilde{\Psi}_t + h_t\tilde{\Psi} - h_t\tilde{\Psi} - \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_t \\
+      h\Psi_t &= \p{h\tilde{\Psi}}_t - \p{h_t \tilde{\Psi} + \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_t} \\
+      h\Psi_t &= \p{h\tilde{\Psi}}_t - \p{\p{\p{\zeta h + h_b}_{\zeta}}_t \tilde{\Psi} + \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_t} \\
+      h\Psi_t &= \p{h\tilde{\Psi}}_t - \p{\p{\p{\zeta h + h_b}_t}_{\zeta} \tilde{\Psi} + \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_t} \\
+      h\Psi_t &= \p{h\tilde{\Psi}}_t - \p{\p{\zeta h + h_b}_t \tilde{\Psi}}_{\zeta} \\
     \end{align*}
+
+    \begin{align*}
+      u_x + v_y + w_z &= 0 \\
+      h\p{u_x + v_y + w_z} &= 0 \\
+      hu_x + hv_y + hw_z &= 0 \\
+      \p{h\tilde{u}}_x - \p{\p{\zeta h + h_b}_x \tilde{u}}_{\zeta} + \p{h\tilde{v}}_y - \p{\p{\zeta h + h_b}_y \tilde{v}}_{\zeta} + \p{\tilde{w}}_{\zeta} &= 0 \\
+      \p{h\tilde{u}}_x + \p{h\tilde{v}}_y + \p{\tilde{w} - \p{\zeta h + h_b}_x \tilde{u} - \p{\zeta h + h_b}_y \tilde{v}}_{\zeta} &= 0 \\
+      -\p{h\tilde{u}}_x - \p{h\tilde{v}}_y + \p{\p{\zeta h + h_b}_x \tilde{u} + \p{\zeta h + h_b}_y \tilde{v}}_{\zeta} &= \p{\tilde{w}}_{\zeta} \\
+      -\dintt{0}{\zeta'}{\p{h\tilde{u}}_x}{\zeta} - \dintt{0}{\zeta'}{\p{h\tilde{v}}_y}{\zeta} + \dintt{0}{\zeta'}{\p{\p{\zeta h + h_b}_x \tilde{u} + \p{\zeta h + h_b}_y \tilde{v}}_{\zeta}}{\zeta} &= \dintt{0}{\zeta'}{\p{\tilde{w}}_{\zeta}}{\zeta} \\
+      -\dintt{0}{\zeta'}{\p{h\tilde{u}}_x}{\zeta} - \dintt{0}{\zeta'}{\p{h\tilde{v}}_y}{\zeta} + \p{\zeta' h + h_b}_x \tilde{u}(t, x, y, \zeta') &+ \p{\zeta' h + h_b}_y \tilde{v}(t, x, y, \zeta') \\
+      - \p{h_b}_x \tilde{u}(t, x, y, 0) - \p{h_b}_y \tilde{v}(t, x, y, 0) &= \tilde{w}(t, x, y, \zeta') - \tilde{w}(t, x, y, 0) \\
+      -\dintt{0}{\zeta'}{\p{h\tilde{u}}_x}{\zeta} - \dintt{0}{\zeta'}{\p{h\tilde{v}}_y}{\zeta} + \p{\zeta' h + h_b}_x \tilde{u}(t, x, y, \zeta') + \p{\zeta' h + h_b}_y \tilde{v}(t, x, y, \zeta') &= \tilde{w}(t, x, y, \zeta') \\
+    \end{align*}
+
+    Original Kinematic Boundary Conditions
+    \begin{align*}
+      \p{h_s}_t + \br{u(t, x, y, h_s), v(t, x, y, h_s)}^T \cdot \grad{h_s} &= w(t, x, y, h_s) \\
+      \p{h_b}_t + \br{u(t, x, y, h_b), v(t, x, y, h_b)}^T \cdot \grad{h_b} &= w(t, x, y, h_b)
+    \end{align*}
+
+    Mapped Kinematic Boundary Conditions
+    \begin{align*}
+      \p{h_s}_t + \br{\tilde{u}(t, x, y, 1), \tilde{v}(t, x, y, 1)}^T \cdot \grad{h_s} &= \tilde{w}(t, x, y, 1) \\
+      \p{h_b}_t + \br{\tilde{u}(t, x, y, 0), \tilde{v}(t, x, y, 0)}^T \cdot \grad{h_b} &= \tilde{w}(t, x, y, 0)
+    \end{align*}
+
+
 
 
 
