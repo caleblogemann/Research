@@ -1,0 +1,13 @@
+# ignore LaTeX objects
+*.synctex.gz
+*.aux
+*.log
+*.bbl
+*.blg
+# *.pdf
+*.spl
+*.dvi
+*.bak
+# ignore pyc files
+*.pyc
+

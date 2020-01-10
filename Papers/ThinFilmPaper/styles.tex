@@ -1,0 +1,117 @@
+%%% STUFF THAT WE WANT TO INCLUDE IN THE THESIS.  THIS PART WAS NOT INCLUDED IN
+%THE THESIS TEMPLATE PROVIDED BY THE DEPT. -DS.
+
+%%%%% Uncommenting these three lines breaks the whole build ... ! -DS
+
+%\newtheorem*{thm}{Theorem}
+
+\usepackage{epsfig,psfrag}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{latexsym,pifont,color,comment}
+\usepackage{mathtools}
+\usepackage{Logemann}
+\usepackage{Integral}
+\usepackage{Derivative}
+\usepackage{Sum}
+\usepackage{booktabs}
+
+% command for vector notation
+\renewcommand{\v}[1]{\mathbf{#1}}
+
+\newcommand{\Tau}{\mathrm{T}}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\reals}{\mathbb{R}}
+
+% left superscript macro -see
+% http://www.math.leidenuniv.nl/~edix/public_html_rennes/sgahtml/typesetting_rules.html
+\newcommand{\leftexp}[2]{{\vphantom{#2}}^{#1}{#2}}
+
+\newcommand{\tens}[1]{\ensuremath{\overset{\leftrightarrow}{#1}}}
+\newcommand{\mbf}[1]{\text{\mbox{\boldmath{\(#1\)}}}}
+\newcommand{\inwhite}[1]{\mbox{\color{white} #1}}
+\renewcommand\O{\mathcal{O}}
+
+\newcommand{\Tm}{{\mathcal{T}}}
+\newcommand{\de}{\delta}
+\newcommand{\Av}{{\mathbb{A}}}
+\newcommand{\xv}{{\bf x}}
+\newcommand\x{{\bf x}}
+\renewcommand\u{{\bf u}}
+\newcommand{\nv}{{\bf n}}
+\newcommand{\X}{X}
+\newcommand{\Y}{Y}
+\newcommand{\C}{C}
+\newcommand{\D}{D}
+\newcommand{\dist}{\text{\bf dist}}
+\newcommand{\Bm}{{\mathcal{B}}}
+\newcommand{\hmet}{\tens{h}}
+\newcommand{\asdq}{{{\mathcal{A}}}_1^{\pm}\Delta{Q}}
+\newcommand{\bsdq}{{{\mathcal{A}}}_2^{\pm}\Delta{Q}}
+\newcommand{\apdq}{{{\mathcal{A}}}_1^{+}\Delta{Q}}
+\newcommand{\bpdq}{{{\mathcal{A}}}_2^{+}\Delta{Q}}
+\newcommand{\amdq}{{{\mathcal{A}}}_1^{-}\Delta{Q}}
+\newcommand{\bmdq}{{{\mathcal{A}}}_2^{-}\Delta{Q}}
+\newcommand{\deldot}{\vec{\nabla} \cdot}
+\newcommand{\A}{\mathbb{A}}
+\newcommand{\Om}{{\mathcal{O}}}
+\newcommand{\pt}{{\frac{\partial}{\partial{} t}}}
+\newcommand{\pk}{{\frac{\partial}{\partial{} x^k}}}
+\newcommand{\Ft}{\tilde{F}}
+\newcommand{\fwave}{{\mathcal{Z}}}
+\newcommand{\id}{{\mathbb{I}}}
+
+%commands for the non-dimensionalization:
+
+\newcommand{\ft}{\tilde{f}}
+\newcommand{\xt}{\tilde{x}}
+\newcommand{\vt}{\tilde{v}}
+
+\newcommand{\Et}{\tilde{E}}
+\newcommand{\Bt}{\tilde{B}}
+
+\newcommand{\phit}{\tilde{\phi}}
+\newcommand{\nt}{\tilde{n}}
+\newcommand{\rhot}{\tilde{\rho}}
+\newcommand{\meter}{\text{m}}
+\newcommand{\Volts}{\text{Volts}}
+\newcommand{\farad}{\text{F}}
+\newcommand{\kg}{\text{kg}}
+\newcommand{\coulomb}{\text{C}}
+\newcommand{\tit}{\tilde{t}}
+
+\newcommand{\bb}[1]{{\bf #1}}
+
+% nondimensionalized with vectors instead of scalars:
+% bold - tilde - n
+\newcommand{\bEt}{\tilde{\bf E}}
+\newcommand{\bBt}{\tilde{\bf B}}
+\newcommand\bvt{{\tilde{\bf v}}}
+\newcommand\bxt{{\tilde{\bf x}}}
+
+
+% electric and magnetic fields
+\newcommand\E{{\bf E}}
+\newcommand\B{{\bf B}}
+\def\J{{\bf J}}
+
+% Used for writing norms:
+\providecommand{\norm}[1]{\lVert#1\rVert}
+
+\newcommand{\half}{\frac{1}{2}}
+
+% for operator split section:
+\newcommand\oA{{\mathcal{A}}}
+\newcommand\oB{{\mathcal{B}}}
+
+% for Poisson equation solver in (2+2)D
+% \def\v{{\bf v}}
+\def\x{{\bf x}}
+\def\u{{\bf u}}
+\def\c{{\bf c}}
+\def\En{{\mathcal{E}}}
+\def\NF{{\mathcal{F}}}
+\def\EL{{\mathbb{E}}}
+\def\PL{{\mathbb{P}}}
+\def\bmu{\mbf{\nu}}
