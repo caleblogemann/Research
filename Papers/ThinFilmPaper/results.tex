@@ -25,7 +25,7 @@
     This manufactued solution is chosen so that our flux \(q^2 - q^3\) is in it's convex
     region.
 
-    We solve this problem until \(t = 0.5\) with constant, linear, and quadratic basis
+    We solve this problem until \(t = 5.0\) with constant, linear, and quadratic basis
     polynomials.
     The time step size for these simulations is determined by the
     Courant–Friedrichs–Lewy (CFL) condition.
@@ -101,19 +101,18 @@
         \midrule
         \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order\\
         \midrule
-          20 &  \(0.0767\) &  --- & \(6.31 \times 10^{-3}\) &  --- & \(3.94 \times 10^{-4}\) &  --- \\
-          40 &  \(0.0386\) & 0.99 & \(1.99 \times 10^{-3}\) & 1.70 & \(5.25 \times 10^{-5}\) & 2.91 \\
-          80 &  \(0.0193\) & 1.00 & \(5.57 \times 10^{-4}\) & 1.80 & \(7.47 \times 10^{-6}\) & 2.81 \\
-         160 & \(0.00968\) & 1.00 & \(1.56 \times 10^{-4}\) & 1.84 & \(9.97 \times 10^{-7}\) & 2.91 \\
-         320 & \(0.00484\) & 1.00 & \(3.98 \times 10^{-5}\) & 1.97 & \(1.26 \times 10^{-7}\) & 2.98 \\
-         640 & \(0.00242\) & 1.00 & \(1.00 \times 10^{-5}\) & 1.99 & \(1.58 \times 10^{-8}\) & 3.00 \\
-        1280 & \(0.00121\) & 1.00 & \(2.50 \times 10^{-6}\) & 2.00 & \(1.98 \times 10^{-9}\) & 3.00 \\
+          20 &   \(0.136\) &  --- & \(7.33 \times 10^{-3}\) &  --- & \(5.29 \times 10^{-4}\) &  --- \\
+          40 &  \(0.0719\) & 0.92 & \(1.99 \times 10^{-3}\) & 1.88 & \(5.38 \times 10^{-5}\) & 3.30 \\
+          80 &  \(0.0378\) & 0.93 & \(5.60 \times 10^{-4}\) & 1.83 & \(7.47 \times 10^{-6}\) & 2.85 \\
+         160 &  \(0.0191\) & 0.99 & \(1.56 \times 10^{-4}\) & 1.85 & \(9.97 \times 10^{-7}\) & 2.91 \\
+         320 & \(0.00961\) & 0.99 & \(3.98 \times 10^{-5}\) & 1.97 & \(1.26 \times 10^{-7}\) & 2.98 \\
+         640 & \(0.00483\) & 0.99 & \(1.00 \times 10^{-5}\) & 1.99 & \(1.58 \times 10^{-8}\) & 3.00 \\
+        1280 & \(0.00242\) & 1.00 & \(2.50 \times 10^{-6}\) & 2.00 & \(1.98 \times 10^{-9}\) & 3.00 \\
         \bottomrule
       \end{tabular}
       \caption{Convergence table with a constant, linear, quadratic polynomial bases.
-       CFL = 0.9, 0.2, 0.1 respectively.}\label{tab:convergence_results}
+      CFL = 0.9, 0.2, 0.1 respectively.}\label{tab:convergence_results}
     \end{table}
-
     % Table~\ref{tab:iteration_results} shows how the error is affected when the number of
     % Picard iterations is decreased.
 
