@@ -205,11 +205,19 @@
       \p{h_s}_t + \br{u(t, x, y, h_s), v(t, x, y, h_s)}^T \cdot \grad{h_s} &= w(t, x, y, h_s) \\
       \p{h_b}_t + \br{u(t, x, y, h_b), v(t, x, y, h_b)}^T \cdot \grad{h_b} &= w(t, x, y, h_b)
     \end{align*}
+    \begin{align*}
+      \p{h_s}_t + u(t, x, y, h_s) \p{h_s}_x + v(t, x, y, h_s) \p{h_s}_y &= w(t, x, y, h_s) \\
+      \p{h_b}_t + u(t, x, y, h_b) \p{h_b}_x + v(t, x, y, h_b) \p{h_b}_y &= w(t, x, y, h_b)
+    \end{align*}
 
     Mapped Kinematic Boundary Conditions
     \begin{align*}
       \p{h_s}_t + \br{\tilde{u}(t, x, y, 1), \tilde{v}(t, x, y, 1)}^T \cdot \grad{h_s} &= \tilde{w}(t, x, y, 1) \\
       \p{h_b}_t + \br{\tilde{u}(t, x, y, 0), \tilde{v}(t, x, y, 0)}^T \cdot \grad{h_b} &= \tilde{w}(t, x, y, 0)
+    \end{align*}
+    \begin{align*}
+      \p{h_s}_t + \tilde{u}(t, x, y, 1) \p{h_s}_x + \tilde{v}(t, x, y, 1) \p{h_s}_y &= \tilde{w}(t, x, y, 1) \\
+      \p{h_b}_t + \tilde{u}(t, x, y, 0) \p{h_b}_x + \tilde{v}(t, x, y, 0) \p{h_b}_y &= \tilde{w}(t, x, y, 0)
     \end{align*}
 
 
