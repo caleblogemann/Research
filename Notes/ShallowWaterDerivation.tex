@@ -12,7 +12,7 @@
     \div{\v{u}} &= 0 \\
     \v{u}_t + \div*{\v{u}\v{u}} &= - \frac{1}{\rho} \grad{p}
     + \frac{1}{\rho} \div{\sigma} + \v{g},
-  \end{align}j
+  \end{align}
   where \(\v{u} = \br{u, v, w}^T\) is the vector of velocities, \(p\) is the pressure,
   \(\rho \) is the constant density, \(\sigma \) is the deviatoric stress tensor, and
   \(\v{g}\) is the gravitational force vector.
@@ -133,12 +133,12 @@
       \frac{1}{\rho} \p{\sigma_{yz}}_y &= \frac{1}{\rho} \p{S \hat{\sigma}_{yz}}_{\hat{y}} \hat{y}_y
         = \frac{S}{\rho L} \p{\hat{\sigma}_{yz}}_{\hat{y}} \\
       \frac{1}{\rho} \p{\sigma_{zz}}_z &= \frac{1}{\rho} \p{\varepsilon S \hat{\sigma}_{zz}}_{\hat{z}} \hat{z}_z
-        = \varepsilon \frac{S}{\rho H} \p{\hat{\sigma}_{zz}}_{\hat{z}}
+        = \varepsilon \frac{S}{\rho H} \p{\hat{\sigma}_{zz}}_{\hat{z}} \\
       \frac{U^2}{L} \hat{u}_{\hat{t}} + \frac{U^2}{L} \p{\hat{u}^2}_{\hat{x}}
         + \frac{U^2}{L} \p{\hat{u}\hat{v}}_{\hat{y}} + \frac{U^2}{L} \p{\hat{u}\hat{w}}_{\hat{z}}
         &= -\varepsilon g \hat{p}_{\hat{x}}
-        + \varepsilon^2 \frac{S}{\rho H} \p{\hat{\sigma}_{xx}}_{\hat{x}}
-        + \varepsilon^2 \frac{S}{\rho L} \p{\hat{\sigma}_{xy}}_{\hat{y}}
+        + \varepsilon \frac{S}{\rho L} \p{\hat{\sigma}_{xx}}_{\hat{x}}
+        + \varepsilon \frac{S}{\rho L} \p{\hat{\sigma}_{xy}}_{\hat{y}}
         + \frac{S}{\rho H} \p{\hat{\sigma}_{xz}}_{\hat{z}} + g e_x \\
       \frac{U^2}{L} \hat{v}_{\hat{t}} + \frac{U^2}{L} \p{\hat{u}\hat{v}}_{\hat{x}}
         + \frac{U^2}{L} \p{\hat{v}^2}_{\hat{y}} + \frac{U^2}{L} \p{\hat{v}\hat{w}}_{\hat{z}}
@@ -151,29 +151,146 @@
         +  \varepsilon \frac{U^2}{L} \p{\hat{v}\hat{w}}_{\hat{x}}
         + \varepsilon \frac{U^2}{L} \p{\hat{w}^2}_{\hat{z}}
         &= -g \hat{p}_{\hat{z}}
-        + \frac{S}{\rho L} \p{\hat{\sigma}_{xz}}_{\hat{x}} \p{\p{\sigma_{xz}}_x
-        + \p{\sigma_{yz}}_y + \p{\sigma_{zz}}_z} + g e_z \\
+        + \frac{S}{\rho L} \p{\hat{\sigma}_{xz}}_{\hat{x}}
+        + \frac{S}{\rho L} \p{\hat{\sigma}_{yz}}_{\hat{y}}
+        + \varepsilon \frac{S}{\rho H} \p{\hat{\sigma}_{zz}}_{\hat{z}} + g e_z \\
+      \frac{U^2}{L} \p{\hat{u}_{\hat{t}} + \p{\hat{u}^2}_{\hat{x}}
+        + \p{\hat{u}\hat{v}}_{\hat{y}} + \p{\hat{u}\hat{w}}_{\hat{z}}}
+        &= -\varepsilon g \hat{p}_{\hat{x}}
+        + \frac{S}{\rho H}
+        \p{\varepsilon^2 \p{\hat{\sigma}_{xx}}_{\hat{x}}
+          + \varepsilon^2 \p{\hat{\sigma}_{xy}}_{\hat{y}}
+          + \p{\hat{\sigma}_{xz}}_{\hat{z}}}
+        + g e_x \\
+      \frac{U^2}{L}
+        \p{\hat{v}_{\hat{t}}
+          + \p{\hat{u}\hat{v}}_{\hat{x}}
+          + \p{\hat{v}^2}_{\hat{y}}
+          + \p{\hat{v}\hat{w}}_{\hat{z}}
+        }
+        &=
+        -\varepsilon g \hat{p}_{\hat{y}}
+        + \frac{S}{\rho H}
+        \p{\varepsilon^2 \p{\hat{\sigma}_{xy}}_{\hat{x}}
+          + \varepsilon^2 \p{\hat{\sigma}_{yy}}_{\hat{y}}
+          + \p{\hat{\sigma}_{yz}}_{\hat{z}}
+        } + g e_y \\
+      \varepsilon \frac{U^2}{L}
+        \p{\hat{w}_{\hat{t}}
+          + \p{\hat{u}\hat{w}}_{\hat{x}}
+          + \p{\hat{v}\hat{w}}_{\hat{x}}
+          + \p{\hat{w}^2}_{\hat{z}}
+        }
+        &= -g \hat{p}_{\hat{z}}
+        + \varepsilon \frac{S}{\rho H}
+        \p{\p{\hat{\sigma}_{xz}}_{\hat{x}}
+          + \p{\hat{\sigma}_{yz}}_{\hat{y}}
+          + \p{\hat{\sigma}_{zz}}_{\hat{z}}
+        } + g e_z \\
     \end{align*}
 
     Substituting all of these scaled variables into the Navier-Stokes system gives,
     \begin{align*}
       \hat{u}_{\hat{x}} + \hat{v}_{\hat{y}} + \hat{w}_{\hat{z}} &= 0 \\
-      \frac{U^2}{gL} \p{\hat{u}_{\hat{t}} + \p{\hat{u}^2}_{\hat{x}}
+      \varepsilon\frac{U^2}{gH} \p{\hat{u}_{\hat{t}} + \p{\hat{u}^2}_{\hat{x}}
         + \p{\hat{u}\hat{v}}_{\hat{y}} + \p{\hat{u}\hat{w}}_{\hat{z}}}
         &= -\varepsilon \hat{p}_{\hat{x}}
-        + \frac{S}{\rho gL} \p{\varepsilon \p{\hat{\sigma}_{xx}}_{\hat{x}}
-        + \varepsilon \p{\hat{\sigma}_{xy}}_{\hat{y}}
-        + \p{\hat{\sigma}_{xz}}_{\hat{z}}} + e_x \\
-      \frac{U^2}{gL} \p{\hat{v}_{\hat{t}} + \p{\hat{u}\hat{v}}_{\hat{x}}
-        + \p{\hat{v}^2}_{\hat{y}} + \p{\hat{v}\hat{w}}_{\hat{z}}}
-        &= -\varepsilon \hat{p}_{\hat{y}}
-        + \frac{S}{\rho gL} \p{\varepsilon \p{\hat{\sigma}_{xy}}_{\hat{x}}
-        + \varepsilon \p{\hat{\sigma}_{yy}}_{\hat{y}}
-        + \p{\hat{\sigma}_{yz}}_{\hat{z}}} + e_y \\
+        + \frac{S}{\rho gH}
+        \p{\varepsilon^2 \p{\hat{\sigma}_{xx}}_{\hat{x}}
+          + \varepsilon^2 \p{\hat{\sigma}_{xy}}_{\hat{y}}
+          + \p{\hat{\sigma}_{xz}}_{\hat{z}}}
+        + e_x \\
+      \varepsilon \frac{U^2}{gH}
+        \p{\hat{v}_{\hat{t}}
+          + \p{\hat{u}\hat{v}}_{\hat{x}}
+          + \p{\hat{v}^2}_{\hat{y}}
+          + \p{\hat{v}\hat{w}}_{\hat{z}}
+        }
+        &=
+        -\varepsilon \hat{p}_{\hat{y}}
+        + \frac{S}{\rho gH}
+        \p{\varepsilon^2 \p{\hat{\sigma}_{xy}}_{\hat{x}}
+          + \varepsilon^2 \p{\hat{\sigma}_{yy}}_{\hat{y}}
+          + \p{\hat{\sigma}_{yz}}_{\hat{z}}
+        } + e_y \\
+      \varepsilon^2 \frac{U^2}{gH}
+        \p{\hat{w}_{\hat{t}}
+          + \p{\hat{u}\hat{w}}_{\hat{x}}
+          + \p{\hat{v}\hat{w}}_{\hat{x}}
+          + \p{\hat{w}^2}_{\hat{z}}
+        }
+        &= - \hat{p}_{\hat{z}}
+        + \varepsilon \frac{S}{\rho gH}
+        \p{\p{\hat{\sigma}_{xz}}_{\hat{x}}
+          + \p{\hat{\sigma}_{yz}}_{\hat{y}}
+          + \p{\hat{\sigma}_{zz}}_{\hat{z}}
+        } + e_z \\
     \end{align*}
 
+    Substituting all of these scaled variables into the Navier-Stokes system gives,
+    \begin{align*}
+      \hat{u}_{\hat{x}} + \hat{v}_{\hat{y}} + \hat{w}_{\hat{z}} &= 0 \\
+      \varepsilon F^2 \p{\hat{u}_{\hat{t}} + \p{\hat{u}^2}_{\hat{x}}
+        + \p{\hat{u}\hat{v}}_{\hat{y}} + \p{\hat{u}\hat{w}}_{\hat{z}}}
+        &= -\varepsilon \hat{p}_{\hat{x}}
+        + G
+        \p{\varepsilon^2 \p{\hat{\sigma}_{xx}}_{\hat{x}}
+          + \varepsilon^2 \p{\hat{\sigma}_{xy}}_{\hat{y}}
+          + \p{\hat{\sigma}_{xz}}_{\hat{z}}}
+        + e_x \\
+      \varepsilon F^2
+        \p{\hat{v}_{\hat{t}}
+          + \p{\hat{u}\hat{v}}_{\hat{x}}
+          + \p{\hat{v}^2}_{\hat{y}}
+          + \p{\hat{v}\hat{w}}_{\hat{z}}
+        }
+        &=
+        -\varepsilon \hat{p}_{\hat{y}}
+        + G
+        \p{\varepsilon^2 \p{\hat{\sigma}_{xy}}_{\hat{x}}
+          + \varepsilon^2 \p{\hat{\sigma}_{yy}}_{\hat{y}}
+          + \p{\hat{\sigma}_{yz}}_{\hat{z}}
+        } + e_y \\
+      \varepsilon^2 F^2
+        \p{\hat{w}_{\hat{t}}
+          + \p{\hat{u}\hat{w}}_{\hat{x}}
+          + \p{\hat{v}\hat{w}}_{\hat{x}}
+          + \p{\hat{w}^2}_{\hat{z}}
+        }
+        &= - \hat{p}_{\hat{z}}
+        + \varepsilon G
+        \p{\p{\hat{\sigma}_{xz}}_{\hat{x}}
+          + \p{\hat{\sigma}_{yz}}_{\hat{y}}
+          + \p{\hat{\sigma}_{zz}}_{\hat{z}}
+        } + e_z \\
+        F = \frac{U}{\sqrt{gH}} \approx 1, &\quad G = \frac{S}{\rho g H} < 1
+    \end{align*}
+    Drop terms with \(\varepsilon^2\) and \(\varepsilon G\), giving
+    \begin{align*}
+      \hat{u}_{\hat{x}} + \hat{v}_{\hat{y}} + \hat{w}_{\hat{z}} &= 0 \\
+      \varepsilon F^2 \p{\hat{u}_{\hat{t}} + \p{\hat{u}^2}_{\hat{x}}
+        + \p{\hat{u}\hat{v}}_{\hat{y}} + \p{\hat{u}\hat{w}}_{\hat{z}}}
+        &= -\varepsilon \hat{p}_{\hat{x}}
+        + G \p{\hat{\sigma}_{xz}}_{\hat{z}}
+        + e_x \\
+      \varepsilon F^2
+        \p{\hat{v}_{\hat{t}}
+          + \p{\hat{u}\hat{v}}_{\hat{x}}
+          + \p{\hat{v}^2}_{\hat{y}}
+          + \p{\hat{v}\hat{w}}_{\hat{z}}
+        }
+        &=
+        -\varepsilon \hat{p}_{\hat{y}}
+        + G \p{\hat{\sigma}_{yz}}_{\hat{z}}
+        + e_y \\
+        \hat{p}_{\hat{z}} &= e_z
+    \end{align*}
+    where we can solve for the hydrostatic pressure
+    \begin{align*}
+      \hat{p}(\hat{t}, \hat{x}, \hat{y}) = \p{\hat{h}_s(\hat{t}, \hat{x}, \hat{y}) - \hat{z}} e_z
+    \end{align*}
 
-    Starting system after nondimensionalization and scaling argument
+    Transforming back to dimensional variables for readability gives
     \begin{align*}
       u_x + v_y + w_z &= 0 \\
       u_t + \p{u^2}_x + \p{uv}_y + \p{uw}_z
@@ -293,6 +410,15 @@
         &= \tilde{w}(t, x, y, \zeta') \\
     \end{align*}
 
+    \begin{gather*}
+      \tilde{w}(t, x, y, \zeta') = -\p{h\dintt{0}{\zeta'}{\tilde{u}}{\zeta}}_x - \p{h\dintt{0}{\zeta'}{\tilde{v}}{\zeta}}_y \\
+      + \p{\zeta' h + h_b}_x \tilde{u}(t, x, y, \zeta') + \p{\zeta' h + h_b}_y \tilde{v}(t, x, y, \zeta')
+    \end{gather*}
+
+    \begin{align*}
+      h_t + \p{hu_m}_x + \p{hv_m}_y &= 0
+    \end{align*}
+
     Original Kinematic Boundary Conditions
     \begin{align*}
       \p{h_s}_t + \br{u(t, x, y, h_s), v(t, x, y, h_s)}^T \cdot \grad{h_s}
@@ -341,7 +467,81 @@
     \end{align*}
 
     \begin{align*}
-      pressure term
+      \tilde{p}(t, x, y, \zeta) &= h(t, x, y) \p{1 - \zeta} \rho g e_z \\
     \end{align*}
+    \begin{align*}
+      \frac{1}{\rho}\p{h\tilde{p}}_x - \frac{1}{\rho}\p{\p{\zeta h + h_b}_x \tilde{p}}_{\zeta}
+      &=
+      \frac{1}{\rho} \p{h^2 \p{1 - \zeta} \rho g e_z}_x
+      - \frac{1}{\rho}\p{\p{\zeta h + h_b}_x h \p{1 - \zeta} \rho g e_z}_{\zeta} \\
+      &=
+      \p{h^2 \p{1 - \zeta} g e_z}_x
+      - \p{\p{\zeta h + h_b}_x h \p{1 - \zeta} g e_z}_{\zeta} \\
+      &=
+      2 h h_x \p{1 - \zeta} g e_z
+      - \p{\p{\zeta h_x + \p{h_b}_x} h \p{1 - \zeta} g e_z}_{\zeta} \\
+      &= 2 h h_x \p{1 - \zeta} g e_z
+      - h g e_z \p{\p{\zeta h_x + \p{h_b}_x} \p{1 - \zeta}}_{\zeta} \\
+      &= 2 h h_x \p{1 - \zeta} g e_z
+      - h g e_z \p{h_x \p{1 - \zeta} - \zeta h_x - \p{h_b}_x} \\
+      &= h h_x g e_z + \p{h_b}_x h g e_z \\
+      &= \p{\frac{1}{2} h^2 g e_z}_x + \p{h_b}_x h g e_z \\
+    \end{align*}
+
+    \begin{gather*}
+      \p{h\tilde{u}}_t + \p{h\tilde{u}^2}_x + \p{h\tilde{u}\tilde{v}}_y \\
+        + \p{\tilde{u} \p{\tilde{w} - \p{\zeta h + h_b}_t
+        - \p{\zeta h + h_b}_x \tilde{u} - \p{\zeta h + h_b}_y \tilde{v}}}_{\zeta} \\
+        + \p{\frac{1}{2} h^2 g e_z}_x + \p{h_b}_x h g e_z
+        = \frac{1}{\rho} \p{\tilde{\sigma}_{xz}}_{\zeta} + g h e_x \\
+      \p{h\tilde{u}}_t + \p{h\tilde{u}^2 + \frac{1}{2} h^2 g e_z}_x + \p{h\tilde{u}\tilde{v}}_y \\
+        + \p{\tilde{u} \p{\tilde{w} - \p{\zeta h + h_b}_t
+        - \p{\zeta h + h_b}_x \tilde{u} - \p{\zeta h + h_b}_y \tilde{v}}}_{\zeta} \\
+        = \frac{1}{\rho} \p{\tilde{\sigma}_{xz}}_{\zeta} + g h \p{e_x - \p{h_b}_x e_z}\\
+    \end{gather*}
+
+    \begin{align*}
+      &\tilde{w} - \p{\zeta h + h_b}_t - \p{\zeta h + h_b}_x \tilde{u} - \p{\zeta h + h_b}_y \tilde{v} \\
+      &= -\p{h\dintt{0}{\zeta}{\tilde{u}}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}}{\zeta'}}_y
+        + \p{\zeta h + h_b}_x \tilde{u}
+        + \p{\zeta h + h_b}_y \tilde{v} \\
+      &\quad- \p{\zeta h + h_b}_t
+        - \p{\zeta h + h_b}_x \tilde{u}
+        - \p{\zeta h + h_b}_y \tilde{v} \\
+      &= -\p{h\dintt{0}{\zeta}{\tilde{u}}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}}{\zeta'}}_y
+        - \p{\zeta h + h_b}_t \\
+      &= -\p{h\dintt{0}{\zeta}{\tilde{u}}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}}{\zeta'}}_y
+        - \zeta h_t \\
+      &= -\p{h\dintt{0}{\zeta}{\tilde{u}}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}}{\zeta'}}_y
+        + \zeta \p{\p{hu_m}_x + \p{hv_m}_y} \\
+      &= -\p{h\dintt{0}{\zeta}{\tilde{u}}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}}{\zeta'}}_y
+        + \dintt{0}{\zeta}{}{\zeta'} \p{\p{hu_m}_x + \p{hv_m}_y} \\
+      &= -\p{h\dintt{0}{\zeta}{\tilde{u}}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}}{\zeta'}}_y
+        + \p{h\dintt{0}{\zeta}{u_m}{\zeta'}}_x + \p{h\dintt{0}{\zeta}{v_m}{\zeta'}}_y \\
+      &= -\p{h\dintt{0}{\zeta}{\tilde{u}}{\zeta'} + h\dintt{0}{\zeta}{u_m}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}}{\zeta'} + h\dintt{0}{\zeta}{v_m}{\zeta'}}_y \\
+      &= -\p{h\dintt{0}{\zeta}{\tilde{u} - u_m}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v} - v_m}{\zeta'}}_y \\
+      &= -\p{h\dintt{0}{\zeta}{\tilde{u}_d}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}_d}{\zeta'}}_y \\
+      &\tilde{u}_d = \tilde{u} - u_m \quad \tilde{v}_d = \tilde{v} - v_m
+    \end{align*}
+    We will label this term as
+    \[
+      h\omega = -\p{h\dintt{0}{\zeta}{\tilde{u}_d}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}_d}{\zeta'}}_y
+    \]
+    Note that this is the same as defining
+    \[
+      \omega = \frac{1}{h}\p{-\p{h\dintt{0}{\zeta}{\tilde{u}_d}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}_d}{\zeta'}}_y}
+    \]
+    The
 
 \end{document}

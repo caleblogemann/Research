@@ -69,7 +69,7 @@
 \usepackage[backend=biber]{biblatex}
 \addbibresource{refs.bib}
 
-\title[]{Discontinuous Galerkin Method for Solving Thin Film Equations} % The short title
+\title[]{Discontinuous Galerkin Method for Solving Thin Film and Shallow Water Equations} % The short title
 % appears at the bottom of every slide, the full title is only on the title page
 
 \author{Caleb Logemann \and James Rossmanith} % Your name
@@ -474,18 +474,362 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \section{Generalized Shallow Water Equations}
     \subsection{Model}
       \begin{frame}
-        \frametitle{Nondimensionalization}
+        \frametitle{Generalized Shallow Water}
+        \includegraphics[scale=0.3]{Figures/ShallowWaterModel.pdf}
+        \begin{align*}
+          \div{\v{u}} &= 0 \\
+          \v{u}_t + \div*{\v{u}\v{u}} &= - \frac{1}{\rho} \grad{p}
+          + \frac{1}{\rho} \div{\sigma} + \v{g}
+        \end{align*}
+        \begin{align*}
+          \p{h_s}_t + \br{u(t, x, y, h_s), v(t, x, y, h_s)}^T \cdot \grad{h_s}
+          &= w(t, x, y, h_s) \\
+          \p{h_b}_t + \br{u(t, x, y, h_b), v(t, x, y, h_b)}^T \cdot \grad{h_b}
+          &= w(t, x, y, h_b)
+        \end{align*}
+      \end{frame}
 
+      \begin{frame}
+        \frametitle{Nondimensionalization}
+        Characteristic Lengths
+        \begin{gather*}
+          \varepsilon = \frac{H}{L}, \quad x = L\hat{x}, \quad y = L\hat{y}, \quad z = H\hat{z}
+        \end{gather*}
+        Characteristic Velocities
+        \begin{gather*}
+          u = U\hat{u}, \quad v = U\hat{v}, \quad w = \varepsilon U \hat{w}
+        \end{gather*}
+        Characteristic Time
+        \begin{gather*}
+          t = \frac{L}{U}\hat{t}
+        \end{gather*}
+        Characteristic Stresses
+        \begin{gather*}
+          p = \rho g H \hat{p}, \quad \sigma_{xz/yz} = S\hat{\sigma}_{xz/yz}, \quad
+          \sigma_{xx/xy/yy/zz} = \varepsilon S \hat{\sigma}_{xx/xy/yy/zz}
+        \end{gather*}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Nondimensionalization}
+        \begin{gather*}
+          \hat{u}_{\hat{x}} + \hat{v}_{\hat{y}} + \hat{w}_{\hat{z}} = 0 \\
+          \varepsilon F^2
+            \p{\hat{u}_{\hat{t}}
+              + \p{\hat{u}^2}_{\hat{x}}
+              + \p{\hat{u}\hat{v}}_{\hat{y}}
+              + \p{\hat{u}\hat{w}}_{\hat{z}}}
+            = -\varepsilon \hat{p}_{\hat{x}} \\
+            \qquad\qquad\qquad\qquad+ G
+            \p{\varepsilon^2 \p{\hat{\sigma}_{xx}}_{\hat{x}}
+              + \varepsilon^2 \p{\hat{\sigma}_{xy}}_{\hat{y}}
+              + \p{\hat{\sigma}_{xz}}_{\hat{z}}}
+            + e_x \\
+          \varepsilon F^2
+            \p{\hat{v}_{\hat{t}}
+              + \p{\hat{u}\hat{v}}_{\hat{x}}
+              + \p{\hat{v}^2}_{\hat{y}}
+              + \p{\hat{v}\hat{w}}_{\hat{z}}}
+            =
+            -\varepsilon \hat{p}_{\hat{y}} \\
+            \qquad\qquad\qquad\qquad + G
+            \p{\varepsilon^2 \p{\hat{\sigma}_{xy}}_{\hat{x}}
+              + \varepsilon^2 \p{\hat{\sigma}_{yy}}_{\hat{y}}
+              + \p{\hat{\sigma}_{yz}}_{\hat{z}}
+            } + e_y \\
+          \varepsilon^2 F^2
+            \p{\hat{w}_{\hat{t}}
+              + \p{\hat{u}\hat{w}}_{\hat{x}}
+              + \p{\hat{v}\hat{w}}_{\hat{x}}
+              + \p{\hat{w}^2}_{\hat{z}}
+            }
+            = - \hat{p}_{\hat{z}} \\
+            \qquad\qquad\qquad\qquad+ \varepsilon G
+            \p{\p{\hat{\sigma}_{xz}}_{\hat{x}}
+              + \p{\hat{\sigma}_{yz}}_{\hat{y}}
+              + \p{\hat{\sigma}_{zz}}_{\hat{z}}
+            } + e_z \\
+            F = \frac{U}{\sqrt{gH}} \approx 1, \quad G = \frac{S}{\rho g H} < 1
+        \end{gather*}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Nondimensionalization}
+        Drop \(\varepsilon^2\) and \(\varepsilon G\) terms
+        \begin{align*}
+          \hat{u}_{\hat{x}} + \hat{v}_{\hat{y}} + \hat{w}_{\hat{z}} &= 0 \\
+          \varepsilon F^2 \p{\hat{u}_{\hat{t}} + \p{\hat{u}^2}_{\hat{x}}
+            + \p{\hat{u}\hat{v}}_{\hat{y}} + \p{\hat{u}\hat{w}}_{\hat{z}}}
+            &= -\varepsilon \hat{p}_{\hat{x}}
+            + G \p{\hat{\sigma}_{xz}}_{\hat{z}}
+            + e_x \\
+          \varepsilon F^2
+            \p{\hat{v}_{\hat{t}}
+              + \p{\hat{u}\hat{v}}_{\hat{x}}
+              + \p{\hat{v}^2}_{\hat{y}}
+              + \p{\hat{v}\hat{w}}_{\hat{z}}
+            }
+            &=
+            -\varepsilon \hat{p}_{\hat{y}}
+            + G \p{\hat{\sigma}_{yz}}_{\hat{z}}
+            + e_y \\
+            \hat{p}_{\hat{z}} &= e_z
+        \end{align*}
+        Solving for the hydrostatic pressure
+        \[
+          \hat{p}(\hat{t}, \hat{x}, \hat{y}) = \p{\hat{h}_s(\hat{t}, \hat{x}, \hat{y}) - \hat{z}} e_z
+        \]
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Nondimensionalization}
+        Dimensional Variables
+        \begin{align*}
+          u_x + v_y + w_z &= 0 \\
+          u_t + \p{u^2}_x + \p{uv}_y + \p{uw}_z
+            &= -\frac{1}{\rho} p_x + \frac{1}{\rho} \p{\sigma_{xz}}_z + g e_x \\
+          v_t + \p{uv}_x + \p{v^2}_y + \p{vw}_z
+            &= -\frac{1}{\rho} p_y + \frac{1}{\rho} \p{\sigma_{yz}}_z + g e_y \\
+        p(t, x, y, z) &= \p{h_s(t, x, y) - z} \rho g e_z
+        \end{align*}
+        Kinematic Boundary Conditions
+        \begin{align*}
+          \p{h_s}_t + \br{u(t, x, y, h_s), v(t, x, y, h_s)}^T \cdot \grad{h_s}
+          &= w(t, x, y, h_s) \\
+          \p{h_b}_t + \br{u(t, x, y, h_b), v(t, x, y, h_b)}^T \cdot \grad{h_b}
+          &= w(t, x, y, h_b)
+        \end{align*}
       \end{frame}
 
       \begin{frame}
         \frametitle{Mapping}
+        \includegraphics[scale=0.19]{Figures/ShallowWaterModel2.pdf}
+        \includegraphics[scale=0.19]{Figures/ShallowWaterModelTransformed.pdf} \\
+        Transform from \(z \to \zeta \), by
+        \[
+          \zeta = \frac{z - h_b(t, x, y)}{h(t, x, y)},
+        \]
+        or equivalently
+        \[
+          z = h(t, x, y) \zeta + h_b(t, x, y)
+        \]
+        where \(h(t, x, y) = h_s(t, x, y) - h_b(t, x, y)\).
+        \[
+          \tilde{\Psi}(t, x, y, \zeta) = \Psi(t, x, y, h(t, x, y) \zeta + h_b(t, x, y))
+        \]
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Mapping Continuity Equation}
+        \[
+          u_x + v_y + w_z = 0
+        \]
+        Map to new space
+        \[
+          \p{h\tilde{u}}_x - \p{\p{\zeta h + h_b}_x \tilde{u}}_{\zeta}
+            + \p{h\tilde{v}}_y - \p{\p{\zeta h + h_b}_y \tilde{v}}_{\zeta}
+            + \p{\tilde{w}}_{\zeta} = 0
+        \]
+        Solve for vertical velocity, \(w\),
+        \begin{gather*}
+          \tilde{w}(t, x, y, \zeta') = -\p{h\dintt{0}{\zeta'}{\tilde{u}}{\zeta}}_x - \p{h\dintt{0}{\zeta'}{\tilde{v}}{\zeta}}_y \\
+          + \p{\zeta' h + h_b}_x \tilde{u}(t, x, y, \zeta') + \p{\zeta' h + h_b}_y \tilde{v}(t, x, y, \zeta')
+        \end{gather*}
+
+        Depth averaged equation
+        \[
+          h_t + \p{h\dintt{0}{1}{\tilde{u}}{\zeta}}_x + \p{h\dintt{0}{1}{\tilde{v}}{\zeta}}_y = 0
+        \]
+
+        Let \(u_m\) and \(v_m\) denote the mean velocity
+        \[
+          h_t + \p{hu_m}_x + \p{hv_m}_y = 0
+        \]
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Mapping Momentum Equations}
+        \begin{align*}
+          u_t + \p{u^2}_x + \p{uv}_y + \p{uw}_z
+            &= -\frac{1}{\rho} p_x + \frac{1}{\rho} \p{\sigma_{xz}}_z + g e_x \\
+          v_t + \p{uv}_x + \p{v^2}_y + \p{vw}_z
+            &= -\frac{1}{\rho} p_y + \frac{1}{\rho} \p{\sigma_{yz}}_z + g e_y
+        \end{align*}
+        \small{
+        \begin{gather*}
+          \p{h\tilde{u}}_t + \p{h\tilde{u}^2 + \frac{1}{2}g e_z h^2}_x
+            + \p{h\tilde{u}\tilde{v}}_y
+            + \p{h\tilde{u}\omega - \frac{1}{\rho} \tilde{\sigma}_{xz}}_{\zeta}
+          = gh \p{e_x - e_z \p{h_b}_x} \\
+          \p{h\tilde{v}}_t + \p{h\tilde{u}\tilde{v}}_x
+            + \p{h\tilde{v}^2 + \frac{1}{2}g e_z h^2}_y
+            + \p{h\tilde{v}\omega - \frac{1}{\rho} \tilde{\sigma}_{yz}}_{\zeta}
+          = gh \p{e_x - e_z \p{h_b}_y}
+        \end{gather*}}
+        where
+        \[
+          \omega = \frac{1}{h}\p{-\p{h\dintt{0}{\zeta}{\tilde{u} - u_m}{\zeta'}}_x
+            - \p{h\dintt{0}{\zeta}{\tilde{v} - v_m}{\zeta'}}_y}
+        \]
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Mapped Reference System}
+        \small
+        \begin{gather*}
+          h_t + \p{hu_m}_x + \p{hv_m}_y = 0 \\
+          \p{h\tilde{u}}_t + \p{h\tilde{u}^2 + \frac{1}{2}g e_z h^2}_x
+            + \p{h\tilde{u}\tilde{v}}_y
+            + \p{h\tilde{u}\omega - \frac{1}{\rho} \tilde{\sigma}_{xz}}_{\zeta}
+          = gh \p{e_x - e_z \p{h_b}_x} \\
+          \p{h\tilde{v}}_t + \p{h\tilde{u}\tilde{v}}_x
+            + \p{h\tilde{v}^2 + \frac{1}{2}g e_z h^2}_y
+            + \p{h\tilde{v}\omega - \frac{1}{\rho} \tilde{\sigma}_{yz}}_{\zeta}
+          = gh \p{e_x - e_z \p{h_b}_y}
+        \end{gather*}
+        \[
+          \omega = \frac{1}{h}\p{-\p{h\dintt{0}{\zeta}{\tilde{u}_d}{\zeta'}}_x
+            - \p{h\dintt{0}{\zeta}{\tilde{v}_d}{\zeta'}}_y}
+        \]
+        with
+        \[
+          \tilde{u}_d = \tilde{u} - u_m \quad \tilde{v}_d = \tilde{v} - v_m
+        \]
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Newtonian Flow}
+        Newtonian Stree Tensor
+        \[
+          \sigma_{xz} = \mu u_z \quad \sigma_{yz} = \mu v_z
+        \]
+        Kinematic Viscosity
+        \[
+          \nu = \frac{\mu}{\rho}
+        \]
+        Mapped stress tensor
+        \[
+          \frac{1}{\rho} \tilde{\sigma}_{xz} = \frac{\nu}{h} \tilde{u}_{\zeta} \quad
+          \frac{1}{\rho} \tilde{\sigma}_{yz} = \frac{\nu}{h} \tilde{v}_{\zeta}
+        \]
+      \end{frame}
+      \begin{frame}
+        \frametitle{Boundary Conditions}
+        Stree Free Condition at surface
+        \[
+          \eval{u_z}{z = h_s} = \eval{v_z}{z = h_s} = 0
+        \]
+        Mixed Slip Condition at bottom topography
+        \[
+          \eval{u - \frac{\lambda}{\mu}\sigma_{xz}}{z = h_b} = \eval{v - \frac{\lambda}{\mu}\sigma_{yz}}{z = h_b} = 0
+        \]
+        Mapped with Newtonian Stress
+        \[
+          \eval{\tilde{u}_{\zeta}}{\zeta = 1} = \eval{\tilde{v}_{\zeta}}{\zeta = 1} = 0
+        \]
+        and
+        \[
+          \eval{\tilde{u} - \frac{\lambda}{h} \tilde{u}_{\zeta}}{\zeta = 0} = \eval{\tilde{v} - \frac{\lambda}{h}\tilde{v}_{\zeta}}{\zeta = 0} = 0
+        \]
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Moment Closure}
+        Depth Averaged Momentum Equations
+        \begin{gather*}
+          \p{hu_m}_t + \p{h \dintt{0}{1}{\tilde{u}^2}{\zeta} + \frac{1}{2}g e_z h^2}_x
+          + \p{h \dintt{0}{1}{\tilde{u}\tilde{v}}{\zeta}}_y \\
+          + \frac{\nu}{\lambda} \eval{u}{\zeta = 0}
+          = hg\p{e_x - e_z \p{h_b}_x} \\
+          \p{hv_m}_t + \p{h \dintt{0}{1}{\tilde{u}\tilde{v}}{\zeta}}_y
+          + \p{h \dintt{0}{1}{\tilde{v^2}}{\zeta} + \frac{1}{2}g e_z h^2}_y \\
+          + \frac{\nu}{\lambda} \eval{v}{\zeta = 0}
+          = hg\p{e_x - e_z \p{h_b}_y} \\
+        \end{gather*}
 
       \end{frame}
 
       \begin{frame}
-        \frametitle{Newton Closure}
+        \frametitle{Polynomial Ansatz}
+        \begin{align*}
+          \tilde{u}(t, x, y, \zeta) &= u_m(t, x, y) + u_d(t, x, y, \zeta) \\
+          &= u_m(t, x, y) + \sum{j = 1}{N}{\alpha_j(t, x, y) \phi_j(\zeta)} \\
+          % &= \sum{j = 0}{N}{\alpha_j(t, x, y) \phi_j(\zeta)} \\
+          \tilde{v}(t, x, y, \zeta) &= v_m(t, x, y) + v_d(t, x, y, \zeta) \\
+          &= v_m(t, x, y) + \sum{j = 1}{N}{\beta_j(t, x, y) \phi_j(\zeta)}
+          % &= \sum{j = 0}{N}{\beta_j(t, x, y) \phi_j(\zeta)}
+        \end{align*}
+        Orthogonality Condition
+        \[
+          \dintt{0}{1}{\phi_j(\zeta) \phi_i(\zeta)}{\zeta} = 0 \quad \text{for } j \neq i
+        \]
+        \begin{align*}
+          \phi_0(\zeta) = 1, \quad
+          \phi_1(\zeta) = 1 - 2\zeta, \quad
+          \phi_2(\zeta) = 1 - 6\zeta + 6 \zeta^2
+          % &\phi_3(\zeta) = 1 - 12\zeta + 30\zeta^2 - 20\zeta^3
+        \end{align*}
+      \end{frame}
 
+      \begin{frame}
+        \frametitle{}
+        \begin{gather*}
+          \p{h}
+        \end{gather*}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Example Systems}
+        1D model with \(h_b\) constant, \(e_x = e_y = 0\), and \(e_z = 1\) \\
+        Constant System
+        \begin{align*}
+          \begin{bmatrix}
+            h \\
+            h u_m
+          \end{bmatrix}_t +
+          \begin{bmatrix}
+            h u_m \\
+            h u_m^2 + \frac{1}{2} g h^2
+          \end{bmatrix} =
+          -\frac{\nu}{\lambda}
+          \begin{bmatrix}
+            0 \\
+            u_m
+          \end{bmatrix}
+        \end{align*}
+
+        Linear System, \(s = \alpha_1\)
+        \begin{align*}
+          \begin{bmatrix}
+            h \\
+            hu_m \\
+            hs
+          \end{bmatrix}_t +
+          \begin{bmatrix}
+            h u_m \\
+            h u_m^2 + \frac{1}{2} gh^2 + \frac{1}{3}hs^2 \\
+            2 h u_m s
+          \end{bmatrix} = Q
+          \begin{bmatrix}
+            h \\
+            hu_m \\
+            hs
+          \end{bmatrix}_x - P
+        \end{align*}
+        \begin{align*}
+          Q =
+          \begin{bmatrix}
+            0 & 0 & 0 \\
+            0 & 0 & 0 \\
+            0 & 0 & u_m
+          \end{bmatrix} \quad
+          P = \frac{\nu}{\lambda}
+          \begin{bmatrix}
+            0 \\
+            u_m + s \\
+            3(u_m + s + 4\frac{\lambda}{h}s)
+          \end{bmatrix}
+        \end{align*}
       \end{frame}
 
     \subsection{Numerical Methods}
@@ -545,7 +889,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             h\kappa
           \end{bmatrix}_x - P
         \end{align*}
-        
+
 
       \end{frame}
 
