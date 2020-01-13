@@ -772,9 +772,53 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \end{frame}
 
       \begin{frame}
-        \frametitle{}
+        \frametitle{Constant Moments}
+        \small
         \begin{gather*}
-          \p{h}
+          \p{h u_m}_t
+          + \p{h\p{u_m^2 + \sum*{j = 1}{N}{\frac{\alpha_j^2}{2j + 1}}} + \frac{1}{2}g e_z h^2}_x \\
+          + \p{h\p{u_m v_m + \sum*{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}_y
+          = -\frac{\nu}{\lambda} \p{u_m + \sum*{j = 1}{N}{\alpha_j}} + hg\p{e_x - e_z\p{h_b}_x} \\
+          \p{h v_m}_t
+          + \p{h\p{v_m^2 + \sum*{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}} + \frac{1}{2}g e_z h^2}_y \\
+          + \p{h\p{u_m v_m + \sum*{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}_x
+          = -\frac{\nu}{\lambda} \p{v_m + \sum*{j = 1}{N}{\beta_j}} + hg\p{e_y - e_z\p{h_b}_y}
+        \end{gather*}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Higher Order Moments}
+        Moment Equation
+        \begin{gather*}
+          \dintt{0}{1}{\phi_i \p{\p{h\tilde{u}}_t + \p{h\tilde{u}^2 + \frac{1}{2}g e_z h^2}_x
+            + \p{h\tilde{u}\tilde{v}}_y
+            + \p{h\tilde{u}\omega - \frac{1}{\rho} \tilde{\sigma}_{xz}}_{\zeta}}}{\zeta} \\
+          = \dintt{0}{1}{\phi_i \p{gh \p{e_x - e_z \p{h_b}_x}}}{\zeta}
+        \end{gather*}
+        % \footnotesize
+        Simplified gives
+        \begin{gather*}
+          \p{h\alpha_i}_t + \p{2 h u_m \alpha_i + h\sum*{j,k=1}{N}{A_{ijk}\alpha_j \alpha_k}}_x \\
+          + \p{h u_m \beta_i + h v_m \alpha_i + h\sum*{j,k=1}{N}{A_{ijk}\alpha_j \beta_k}}_y \\
+          = u_m D_i - \sum*{j,k=1}{N}{B_{ijk}D_j \alpha_k} - \p{2i + 1} \frac{\nu}{\lambda} \p{u_m + \sum*{j=1}{N}{\p{1 + \frac{\lambda}{h}C_{ij}}\alpha_j}}
+          % A_{ijk} = \p{2i + 1} \dintt{0}{1}{\phi_i \phi_j \phi_k}{\zeta} \\
+          % B_{ijk} = \p{2i + 1} \dintt{0}{1}{\phi_i' \p{\dintt{0}{\zeta}{\phi_j}{\hat{\zeta}}} \phi_k}{\zeta} \\
+          % C_{ij} = \dintt{0}{1}{\phi_i' \phi_j'}{\zeta} \\
+          % D_i = \p{h \alpha_i}_x + \p{h \beta_i}_y
+        \end{gather*}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Higher Order Moments}
+        \footnotesize
+        \begin{gather*}
+          \p{h\beta_i}_t + \p{h u_m \beta_i + h v_m \alpha_i + h\sum*{j,k=1}{N}{A_{ijk}\alpha_j \beta_k}}_x
+          + \p{2 h v_m \beta_i + h\sum*{j,k=1}{N}{A_{ijk}\beta_j \beta_k}}_y \\
+          = v_m D_i - \sum*{j,k=1}{N}{B_{ijk}D_j \beta_k} - \p{2i + 1} \frac{\nu}{\lambda} \p{v_m + \sum*{j=1}{N}{\p{1 + \frac{\lambda}{h}C_{ij}}\beta_j}} \\
+          A_{ijk} = \p{2i + 1} \dintt{0}{1}{\phi_i \phi_j \phi_k}{\zeta} \\
+          B_{ijk} = \p{2i + 1} \dintt{0}{1}{\phi_i' \p{\dintt{0}{\zeta}{\phi_j}{\hat{\zeta}}} \phi_k}{\zeta} \\
+          C_{ij} = \dintt{0}{1}{\phi_i' \phi_j'}{\zeta} \\
+          D_i = \p{h \alpha_i}_x + \p{h \beta_i}_y
         \end{gather*}
       \end{frame}
 
@@ -861,7 +905,12 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \end{frame}
 
     \subsection{Results}
+      \begin{frame}
+        \frametitle{}
 
+
+
+      \end{frame}
 
     \subsection{Future Work}
       % higher moments
