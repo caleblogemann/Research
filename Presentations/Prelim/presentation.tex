@@ -78,7 +78,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 \medskip
 \textit{logemann@iastate.edu}} % Your email address
 
-\date{May 13, 2019} % Date, can be changed to a custom date
+\date{January 14, 2019} % Date, can be changed to a custom date
 
 \begin{document}
   \begin{frame}
@@ -124,6 +124,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           q_t + \p{q^2 - q^3}_x = - \p{q^3 q_{xxx}}_x
         \end{gather*}
       \end{frame}
+
     \subsection{Numerical Methods}
       % IMEX
       % Convection DG
@@ -149,9 +150,29 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
               F(q) &= -\p{q^2 - q^3}_x  \\
               G(q) &= \p{q^3 q_{xxx}}_x
             \end{align*}
-
         \end{itemize}
       \end{frame}
+
+      \begin{frame}
+        \frametitle{Notation}
+        \begin{itemize}
+          \item Partition the domain, \(\br{a, b}\) as
+            \[
+              a = x_{1/2} < \cdots < x_{j-1/2} < x_{j+1/2} < \cdots < x_{N + 1/2} = b
+            \]
+
+          \item \(I_j = \br{x_{j-1/2}, x_{j+1/2}}\)
+          \item \(x_j = \frac{x_{j+1/2} + x_{j-1/2}}{2}\)
+          \item \(\Delta x_j = x_{j+1/2} - x_{j-1/2}\)
+          \item \(\Delta x_j = \Delta x\) for all \(j\).
+        \end{itemize}
+        % \vspace{0.5in}
+        \begin{center}
+          \includegraphics[scale=0.35]{Figures/DG_Cells.pdf}
+        \end{center}
+      \end{frame}
+
+
 
       \begin{frame}
         \frametitle{Convection}
@@ -168,20 +189,6 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
               \dintt*{\Omega}{}{F(q) v - f(q) v_x}{x} + \eval{\hat{f}v}{\partial\Omega} = 0
             \]
             for all test functions \(v\)
-        \end{itemize}
-      \end{frame}
-
-      \begin{frame}
-        \frametitle{Notation}
-        \begin{itemize}
-          \item Partition the domain, \(\br{a, b}\) as
-            \[
-              a = x_{1/2} < \cdots < x_{j-1/2} < x_{j+1/2} < \cdots < x_{N + 1/2} = b
-            \]
-
-          \item \(I_j = \br{x_{j-1/2}, x_{j+1/2}}\)
-          \item \(x_j = \frac{x_{j+1/2} + x_{j-1/2}}{2}\).
-            \includegraphics[scale=0.35]{Figures/Cells.pdf}
         \end{itemize}
       \end{frame}
 
@@ -346,11 +353,9 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
               \tilde{G}(q, u) &= \p{q^3 u_{xxx}}_x
             \end{align*}
             \begin{gather*}
-              u_0 = q^n  \qquad u_i^0 = u_{i-1} \\
+              u_0 = q^n \qquad u_i^0 = u_{i-1} \\
               u_i^j - a_{ii} \Delta t \tilde{G}(u_i^{j-1}, u_i^j) = b
             \end{gather*}
-
-          \item Number of picard iterations equals order in time and space
         \end{itemize}
       \end{frame}
 
@@ -385,6 +390,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           CFL = 0.9, 0.2, 0.1 respectively.}\label{tab:convergence_results}
         \end{table}}
       \end{frame}
+
       \begin{frame}
         \frametitle{Wave Structure with Nonlinear Hyper Diffusion}
         \[
@@ -512,6 +518,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
       \begin{frame}
         \frametitle{Nondimensionalization}
+        Nondimensional Equations
         \begin{gather*}
           \hat{u}_{\hat{x}} + \hat{v}_{\hat{y}} + \hat{w}_{\hat{z}} = 0 \\
           \varepsilon F^2
@@ -632,8 +639,8 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \]
         Solve for vertical velocity, \(w\),
         \begin{gather*}
-          \tilde{w}(t, x, y, \zeta') = -\p{h\dintt{0}{\zeta'}{\tilde{u}}{\zeta}}_x - \p{h\dintt{0}{\zeta'}{\tilde{v}}{\zeta}}_y \\
-          + \p{\zeta' h + h_b}_x \tilde{u}(t, x, y, \zeta') + \p{\zeta' h + h_b}_y \tilde{v}(t, x, y, \zeta')
+          \tilde{w}(t, x, y, \zeta) = -\p{h\dintt{0}{\zeta}{\tilde{u}}{\zeta'}}_x - \p{h\dintt{0}{\zeta}{\tilde{v}}{\zeta'}}_y \\
+          + \p{\zeta h + h_b}_x \tilde{u}(t, x, y, \zeta) + \p{\zeta h + h_b}_y \tilde{v}(t, x, y, \zeta)
         \end{gather*}
 
         Depth averaged equation
@@ -734,6 +741,30 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \end{frame}
 
       \begin{frame}
+        \frametitle{Mapped Reference System}
+        \small
+        \begin{gather*}
+          h_t + \p{hu_m}_x + \p{hv_m}_y = 0 \\
+          \p{h\tilde{u}}_t + \p{h\tilde{u}^2 + \frac{1}{2}g e_z h^2}_x
+            + \p{h\tilde{u}\tilde{v}}_y
+            + \p{h\tilde{u}\omega - \frac{\nu}{h} \tilde{u}_{\zeta}}_{\zeta}
+          = gh \p{e_x - e_z \p{h_b}_x} \\
+          \p{h\tilde{v}}_t + \p{h\tilde{u}\tilde{v}}_x
+            + \p{h\tilde{v}^2 + \frac{1}{2}g e_z h^2}_y
+            + \p{h\tilde{v}\omega - \frac{\nu}{h} \tilde{v}_{\zeta}}_{\zeta}
+          = gh \p{e_x - e_z \p{h_b}_y}
+        \end{gather*}
+        Boundary Conditions
+        \[
+          \eval{\tilde{u}_{\zeta}}{\zeta = 1} = \eval{\tilde{v}_{\zeta}}{\zeta = 1} = 0
+        \]
+        and
+        \[
+          \eval{\tilde{u} - \frac{\lambda}{h} \tilde{u}_{\zeta}}{\zeta = 0} = \eval{\tilde{v} - \frac{\lambda}{h}\tilde{v}_{\zeta}}{\zeta = 0} = 0
+        \]
+      \end{frame}
+
+      \begin{frame}
         \frametitle{Moment Closure}
         Depth Averaged Momentum Equations
         \begin{gather*}
@@ -746,7 +777,6 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           + \frac{\nu}{\lambda} \eval{v}{\zeta = 0}
           = hg\p{e_x - e_z \p{h_b}_y} \\
         \end{gather*}
-
       \end{frame}
 
       \begin{frame}
@@ -834,7 +864,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           \begin{bmatrix}
             h u_m \\
             h u_m^2 + \frac{1}{2} g h^2
-          \end{bmatrix} =
+          \end{bmatrix}_x =
           -\frac{\nu}{\lambda}
           \begin{bmatrix}
             0 \\
@@ -842,7 +872,8 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           \end{bmatrix}
         \end{align*}
 
-        Linear System, \(s = \alpha_1\)
+
+        Linear System, \(\tilde{u} = u_m + s\phi_1\), \(s = \alpha_1\)
         \begin{align*}
           \begin{bmatrix}
             h \\
@@ -853,7 +884,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             h u_m \\
             h u_m^2 + \frac{1}{2} gh^2 + \frac{1}{3}hs^2 \\
             2 h u_m s
-          \end{bmatrix} = Q
+          \end{bmatrix}_x = Q
           \begin{bmatrix}
             h \\
             hu_m \\
@@ -878,12 +909,90 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
     \subsection{Numerical Methods}
       \begin{frame}
+        \frametitle{Numerical Methods}
+        Model Equation
+        \[
+          \v{q}_t + \v{f}\p{\v{q}}_x = Q(\v{q}) \v{q}_x - \v{P}(\v{q}) \quad
+          \text{for } \p{x, t} \in \br{a, b} \times \br{0, T}
+        \]
+
+        Weak Form, find \(\v{q}\) such that
+        \[
+          \dintt{a}{b}{\v{q}_t v}{x} + \dintt{a}{b}{\v{f}\p{\v{q}}_x v}{x} = \dintt{a}{b}{Q(\v{q})\v{q}_x v}{x} - \dintt{a}{b}{\v{P}(\v{q}) v}{x}
+        \]
+        for all \(v \in L^2(\br{a, b} \times \br{0, T})\)
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Notation}
+        \begin{itemize}
+          \item Partition the domain, \(\br{a, b}\) as
+            \[
+              a = x_{1/2} < \cdots < x_{j-1/2} < x_{j+1/2} < \cdots < x_{N + 1/2} = b
+            \]
+
+          \item \(I_j = \br{x_{j-1/2}, x_{j+1/2}}\)
+          \item \(x_j = \frac{x_{j+1/2} + x_{j-1/2}}{2}\)
+          \item \(\Delta x_j = x_{j+1/2} - x_{j-1/2}\)
+          \item \(\Delta x_j = \Delta x\) for all \(j\).
+        \end{itemize}
+        % \vspace{0.5in}
+        \begin{center}
+          \includegraphics[scale=0.35]{Figures/DG_Cells.pdf}
+        \end{center}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Discontinuous Galerkin Space}
+        Finite Dimensional DG Space
+        \[
+          V^k = \set{v \in L^2(\br{a, b}) \middle| \eval{v}{I_j} \in P^k(I_j)}
+        \]
+        Basis for \(V^k\)
+        \[
+          \set{\phi_j^{\ell}} \text{ where } \eval{\phi_j^{\ell}(x)}{I_j} = \phi^{\ell}(\xi_j(x)) \text{ and } \eval{\phi_j^{\ell}(x)}{\bar{I_j}} = 0
+        \]
+        for \(j = 1, \ldots, N\) and \(\ell = 1, \ldots k\).
+
+        Legendre Polynomials
+        \[
+          \phi^k \in P^k(\br{-1, 1}) \text{ with } \frac{1}{2}\dintt{-1}{1}{\phi^k(\xi) \phi^{\ell}(\xi)}{\xi} = \delta_{k\ell}
+        \]
+        and
+        \[
+          \xi_j(x) = \frac{2}{\Delta x_j} \p{x - x_j}
+        \]
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Numerical Methods}
+        Find \(\v{q}_h \in V^k\) such that
+        \begin{align*}
+          \dintt{I_j}{}{\p{\v{q}_h}_t \phi^{\ell}_j(x)}{x} &= \dintt{I_j}{}{\v{f}\p{\v{q}_h}_x \phi^{\ell}_j}{x} \\
+          &- F_{j+1/2}\phi^{\ell}_j(x_{j+1/2}) + F_{j-1/2}\phi^{\ell}_j(x_{j-1/2}) \\
+          &+ \dintt{I_j}{}{Q(\v{q}_h)\p{\v{q}_h}_x \phi^{\ell}_j}{x} - \dintt{I_j}{}{\v{P}(\v{q}_h) \phi^{\ell}_j}{x}
+        \end{align*}
+        for all \(\phi^l_j\).
+
+        Local Lax-Friedrichs Flux
+        \begin{align*}
+          \v{q}_h^+ &= \lim[x \to x_{j+1/2}^+]{\v{q}_h(x)} \\
+          \v{q}_h^- &= \lim[x \to x_{j+1/2}^-]{\v{q}_h(x)} \\
+          \lambda &= \max[q \in \br{\v{q}_h^-, \v{q}_h^+}]{\rho(\v{f}'\p{\v{q}} - Q(\v{q}))} \\
+          F_{j+1/2} &= \frac{1}{2}\p{\v{f}\p{\v{q}_h^+} + \v{f}\p{\v{q}_h^-}} - \frac{1}{2}\lambda\p{\v{q}_h^+ - \v{q}_h^-}
+        \end{align*}
+      \end{frame}
+
+      \begin{frame}
         \frametitle{Nonconservative Flux}
-
+        Need to evaluate
         \begin{gather*}
-          \dintt{}{}{Q \v{q}_x \phi}{x}
+          \dintt{}{I_j}{Q \v{q}_x \phi^{\ell}_j}{x}
         \end{gather*}
-
+        \[
+          \eval{\v{q}}{I_j} = \sum{\ell = 1}{k}{Q_j^{\ell} \phi_j^{\ell}(x)}, \quad \eval{\v{q}_x}{I_j} = \sum{\ell = 1}{k}{Q_x^{\ell} \phi_j^{\ell}(x)}
+        \]
+        where
         \begin{gather*}
           \begin{bmatrix}
             Q_x^1 \\
@@ -901,22 +1010,45 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             \Delta Q^5
           \end{bmatrix}
         \end{gather*}
-
+        \[
+          \Delta Q^{\ell} = Q_{i+1}^{\ell} - Q_{i-1}^{\ell}
+        \]
       \end{frame}
 
     \subsection{Results}
       \begin{frame}
-        \frametitle{}
+        \frametitle{Inviscid Example}
+        \begin{align*}
+          x &\in \br{-1, 1} \quad t \in \br{0, 2.0} \\
+          h(t=0, x) &= 1 + e^{3 \cos{\pi \p{x + 0.5}} - 4} \\
+          \tilde{u}(t=0, x) &=
+          \begin{cases}
+            0.25 & \text{constant} \\
+            0.5 \zeta & \text{linear}
+          \end{cases} \\
+          u_m &= 0.25 \\
+          s &= -0.25
+        \end{align*}
+        \includegraphics[scale=0.2]{Figures/h_0.pdf}
+        \includegraphics[scale=0.2]{Figures/velocity_profile_-0_4_0.pdf}
+        \includegraphics[scale=0.2]{Figures/velocity_profile_0_4_0.pdf}
+      \end{frame}
 
-
-
+      \begin{frame}
+        \frametitle{Inviscid Example}
+        \includegraphics[scale=0.2]{Figures/h_10.pdf}
+        \includegraphics[scale=0.2]{Figures/u_10.pdf}
+        \includegraphics[scale=0.2]{Figures/s_10.pdf}
+        \includegraphics[scale=0.2]{Figures/velocity_profile_-0_4_10.pdf}
+        \includegraphics[scale=0.2]{Figures/velocity_profile_0_4_10.pdf}
       \end{frame}
 
     \subsection{Future Work}
       % higher moments
       \begin{frame}
-        \frametitle{Higer Momemt Equations}
-        Quadratic Vertical Profile
+        \frametitle{Higher Moment Equations}
+        1 dimensional with \(h_b\) constant, \(e_x = e_y = 0\), and \(e_z = 1\)
+        Quadratic Vertical Profile, \(\tilde{u} = u_m + s \phi_1 + \kappa \phi_2\)
         \begin{align*}
           \begin{bmatrix}
             h \\
@@ -938,14 +1070,56 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             h\kappa
           \end{bmatrix}_x - P
         \end{align*}
-
-
+        \begin{gather*}
+          Q =
+          \begin{bmatrix}
+            0 & 0 & 0 & 0 \\
+            0 & 0 & 0 & 0 \\
+            0 & 0 & u_m - \frac{\kappa}{5} & \frac{s}{5} \\
+            0 & 0 & s & u_m + \frac{\kappa}{7} \\
+          \end{bmatrix} \quad
+          P = \frac{\nu}{\lambda}
+          \begin{bmatrix}
+            0 \\
+            u_m + s + \kappa \\
+            3\p{u_m + s + \kappa + 4 \frac{\lambda}{h}s} \\
+            5\p{u_m + s + \kappa + 12 \frac{\lambda}{h}\kappa}
+          \end{bmatrix}
+        \end{gather*}
       \end{frame}
 
-      % two dimension
-      % icosahedral mesh
-      % slope limiters
-      % positivity preserving limiters
+      \begin{frame}
+        \frametitle{Future Work}
+        \begin{itemize}
+          \item Higher Order Numerical Methods
+          \item Slope Limiters
+          \item Two Dimensional Meshes
+          \item Icosahedral Spherical Mesh
+          \item Positivity Preserving Limiters
+        \end{itemize}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Icosahedral Mesh}
+        \includegraphics[scale=0.3]{Figures/icosahedral_mesh.pdf}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Spherical Test Cases}
+        \centering
+        \includegraphics[scale=2.6]{Figures/mountain_test_problem.jpg}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Spherical Test Cases}
+        \centering
+        \includegraphics[scale=2.0]{Figures/rossby_test_case.jpg}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{Spherical Test Cases}
+        \includegraphics[scale=0.5]{Figures/cubed_sphere_vorticity.png}
+      \end{frame}
 
     \begin{frame}[allowframebreaks]
       \frametitle{Bibliography}
