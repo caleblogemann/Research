@@ -724,19 +724,19 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \frametitle{Boundary Conditions}
         Stree Free Condition at surface
         \[
-          \eval{u_z}{z = h_s} = \eval{v_z}{z = h_s} = 0
+          0 = \eval{u_z}{z = h_s} \qquad 0 = \eval{v_z}{z = h_s}
         \]
         Mixed Slip Condition at bottom topography
         \[
-          \eval{u - \frac{\lambda}{\mu}\sigma_{xz}}{z = h_b} = \eval{v - \frac{\lambda}{\mu}\sigma_{yz}}{z = h_b} = 0
+          0 = \eval{u - \frac{\lambda}{\mu}\sigma_{xz}}{z = h_b} \qquad 0 = \eval{v - \frac{\lambda}{\mu}\sigma_{yz}}{z = h_b}
         \]
         Mapped with Newtonian Stress
         \[
-          \eval{\tilde{u}_{\zeta}}{\zeta = 1} = \eval{\tilde{v}_{\zeta}}{\zeta = 1} = 0
+          0 = \eval{\tilde{u}_{\zeta}}{\zeta = 1} \qquad 0 = \eval{\tilde{v}_{\zeta}}{\zeta = 1}
         \]
         and
         \[
-          \eval{\tilde{u} - \frac{\lambda}{h} \tilde{u}_{\zeta}}{\zeta = 0} = \eval{\tilde{v} - \frac{\lambda}{h}\tilde{v}_{\zeta}}{\zeta = 0} = 0
+          0 = \eval{\tilde{u} - \frac{\lambda}{h} \tilde{u}_{\zeta}}{\zeta = 0} \qquad 0 = \eval{\tilde{v} - \frac{\lambda}{h}\tilde{v}_{\zeta}}{\zeta = 0}
         \]
       \end{frame}
 
@@ -756,11 +756,11 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \end{gather*}
         Boundary Conditions
         \[
-          \eval{\tilde{u}_{\zeta}}{\zeta = 1} = \eval{\tilde{v}_{\zeta}}{\zeta = 1} = 0
+          0 = \eval{\tilde{u}_{\zeta}}{\zeta = 1} \qquad 0 = \eval{\tilde{v}_{\zeta}}{\zeta = 1}
         \]
         and
         \[
-          \eval{\tilde{u} - \frac{\lambda}{h} \tilde{u}_{\zeta}}{\zeta = 0} = \eval{\tilde{v} - \frac{\lambda}{h}\tilde{v}_{\zeta}}{\zeta = 0} = 0
+          0 = \eval{\tilde{u} - \frac{\lambda}{h} \tilde{u}_{\zeta}}{\zeta = 0} \qquad 0 = \eval{\tilde{v} - \frac{\lambda}{h}\tilde{v}_{\zeta}}{\zeta = 0}
         \]
       \end{frame}
 
@@ -871,7 +871,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             u_m
           \end{bmatrix}
         \end{align*}
-
+        Flux Jacobian Eigenvalues, \(u_m \pm \sqrt{gh}\)
 
         Linear System, \(\tilde{u} = u_m + s\phi_1\), \(s = \alpha_1\)
         \begin{align*}
@@ -905,6 +905,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             3(u_m + s + 4\frac{\lambda}{h}s)
           \end{bmatrix}
         \end{align*}
+        Flux Jacobian Eigenvalues, \(u_m \pm \sqrt{gh + s^2}, u_m\)
       \end{frame}
 
     \subsection{Numerical Methods}
@@ -972,14 +973,14 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           &- F_{j+1/2}\phi^{\ell}_j(x_{j+1/2}) + F_{j-1/2}\phi^{\ell}_j(x_{j-1/2}) \\
           &+ \dintt{I_j}{}{Q(\v{q}_h)\p{\v{q}_h}_x \phi^{\ell}_j}{x} - \dintt{I_j}{}{\v{P}(\v{q}_h) \phi^{\ell}_j}{x}
         \end{align*}
-        for all \(\phi^l_j\).
+        for all \(\phi^{\ell}_j\).
 
         Local Lax-Friedrichs Flux
         \begin{align*}
           \v{q}_h^+ &= \lim[x \to x_{j+1/2}^+]{\v{q}_h(x)} \\
           \v{q}_h^- &= \lim[x \to x_{j+1/2}^-]{\v{q}_h(x)} \\
-          \lambda &= \max[q \in \br{\v{q}_h^-, \v{q}_h^+}]{\rho(\v{f}'\p{\v{q}} - Q(\v{q}))} \\
-          F_{j+1/2} &= \frac{1}{2}\p{\v{f}\p{\v{q}_h^+} + \v{f}\p{\v{q}_h^-}} - \frac{1}{2}\lambda\p{\v{q}_h^+ - \v{q}_h^-}
+          a &= \max[q \in \br{\v{q}_h^-, \v{q}_h^+}]{\rho(\v{f}'\p{\v{q}} - Q(\v{q}))} \\
+          F_{j+1/2} &= \frac{1}{2}\p{\v{f}\p{\v{q}_h^+} + \v{f}\p{\v{q}_h^-}} - \frac{1}{2}a\p{\v{q}_h^+ - \v{q}_h^-}
         \end{align*}
       \end{frame}
 
@@ -1021,7 +1022,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \begin{align*}
           x &\in \br{-1, 1} \quad t \in \br{0, 2.0} \\
           h(t=0, x) &= 1 + e^{3 \cos{\pi \p{x + 0.5}} - 4} \\
-          \tilde{u}(t=0, x) &=
+          \tilde{u}(t=0, x, \zeta) &=
           \begin{cases}
             0.25 & \text{constant} \\
             0.5 \zeta & \text{linear}
@@ -1029,18 +1030,20 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           u_m &= 0.25 \\
           s &= -0.25
         \end{align*}
-        \includegraphics[scale=0.2]{Figures/h_0.pdf}
-        \includegraphics[scale=0.2]{Figures/velocity_profile_-0_4_0.pdf}
-        \includegraphics[scale=0.2]{Figures/velocity_profile_0_4_0.pdf}
+        \centering
+        \includegraphics[scale=0.3]{Figures/h_0.pdf}
+        % \includegraphics[scale=0.2]{Figures/velocity_profile_-0_4_0.pdf}
+        \includegraphics[scale=0.3]{Figures/velocity_profile_0_4_0.pdf}
       \end{frame}
 
       \begin{frame}
         \frametitle{Inviscid Example}
-        \includegraphics[scale=0.2]{Figures/h_10.pdf}
-        \includegraphics[scale=0.2]{Figures/u_10.pdf}
-        \includegraphics[scale=0.2]{Figures/s_10.pdf}
-        \includegraphics[scale=0.2]{Figures/velocity_profile_-0_4_10.pdf}
-        \includegraphics[scale=0.2]{Figures/velocity_profile_0_4_10.pdf}
+        \centering
+        \includegraphics[scale=0.3]{Figures/h_10.pdf}
+        \includegraphics[scale=0.3]{Figures/u_10.pdf}
+        % \includegraphics[scale=0.2]{Figures/s_10.pdf}
+        \includegraphics[scale=0.3]{Figures/velocity_profile_-0_4.pdf}
+        \includegraphics[scale=0.3]{Figures/velocity_profile_0_4.pdf}
       \end{frame}
 
     \subsection{Future Work}
@@ -1086,6 +1089,14 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             5\p{u_m + s + \kappa + 12 \frac{\lambda}{h}\kappa}
           \end{bmatrix}
         \end{gather*}
+        Flux Jacobian Eigenvalues, \(u_m \pm c \sqrt{gh}\)
+        \begin{gather*}
+          c^4
+          - \frac{10 \kappa}{7} c^3
+          - \p{1 + \frac{6\kappa^2}{35} + \frac{6s^2}{5}}c^2 \\
+          + \p{\frac{22\kappa^3}{35} - \frac{6\kappa s^2}{35} + \frac{10\kappa}{7}} c
+          - \frac{\kappa^4}{35} - \frac{6\kappa^2 s^2}{35} - \frac{3\kappa^2}{7} + \frac{s^4}{5} + \frac{s^2}{5} = 0
+        \end{gather*}
       \end{frame}
 
       \begin{frame}
@@ -1102,6 +1113,8 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \begin{frame}
         \frametitle{Icosahedral Mesh}
         \includegraphics[scale=0.3]{Figures/icosahedral_mesh.pdf}
+        Subdivide each edge
+        Project onto sphere
       \end{frame}
 
       \begin{frame}
@@ -1118,7 +1131,8 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
       \begin{frame}
         \frametitle{Spherical Test Cases}
-        \includegraphics[scale=0.5]{Figures/cubed_sphere_vorticity.png}
+        \centering
+        \includegraphics[scale=0.6]{Figures/cubed_sphere_vorticity.png}
       \end{frame}
 
     \begin{frame}[allowframebreaks]
