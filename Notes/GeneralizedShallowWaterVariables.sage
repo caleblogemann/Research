@@ -1,7 +1,7 @@
 def set_generalized_shallow_water_variables(num_moments):
-    g = var("g")
+    g = var("g", domain="positive")
     # primitive variables
-    h = var("h")
+    h = var("h", domain="positive")
     u = var("u")
     s = var("s")
     k = var("k")
@@ -42,8 +42,28 @@ def set_generalized_shallow_water_variables(num_moments):
         ]
     )
 
+    Q_primitive_0 = matrix([[0, 0], [0, 0]])
+    Q_primitive_1 = matrix([[0, 0, 0], [0, 0, 0], [0, 0, u]])
+    Q_primitive_2 = matrix(
+        [
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, u - 1 / 5 * k, 1 / 5 * s],
+            [0, 0, s, u + 1 / 7 * k],
+        ]
+    )
+    Q_primitive_3 = matrix(
+        [
+            [0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0],
+            [0, 0, u - 1 / 5 * k, 1 / 5 * s - 3 / 35 * m, 3 / 35 * k],
+            [0, 0, s - 3 / 7 * m, u + 1 / 7 * k, 2 / 7 * s + 1 / 21 * m],
+            [0, 0, 6 / 5 * k, 4 / 5 * s + 2 / 15 * m, u + 1 / 5 * k],
+        ]
+    )
+
     # conserved variables
-    q_1 = var("q_1")
+    q_1 = var("q_1", domain="positive")
     q_2 = var("q_2")
     q_3 = var("q_3")
     q_4 = var("q_4")
@@ -55,7 +75,7 @@ def set_generalized_shallow_water_variables(num_moments):
     conserved_3 = vector([q_1, q_2, q_3, q_4, q_5])
 
     # transform variables
-    z_1 = var("z_1")
+    z_1 = var("z_1", domain="positive")
     z_2 = var("z_2")
     z_3 = var("z_3")
     z_4 = var("z_4")
@@ -65,43 +85,38 @@ def set_generalized_shallow_water_variables(num_moments):
     transform_2 = vector([z_1, z_2, z_3, z_4])
     transform_3 = vector([z_1, z_2, z_3, z_4, z_5])
 
-    global primitive, p, conserved, q, transform, z, flux_primitive, f_p
+    global primitive, conserved, transform, flux_primitive, Q_primitive
     if num_moments == 0:
         primitive = primitive_0
-        p = primitive
         conserved = conserved_0
-        q = conserved
         transform = transform_0
-        z = transform
         flux_primitive = flux_primitive_0
-        f_p = flux_primitive
+        Q_primitive = Q_primitive_0
     elif num_moments == 1:
         primitive = primitive_1
-        p = primitive
         conserved = conserved_1
-        q = conserved
         transform = transform_1
-        z = transform
         flux_primitive = flux_primitive_1
-        f_p = flux_primitive
+        Q_primitive = Q_primitive_1
     elif num_moments == 2:
         primitive = primitive_2
-        p = primitive
         conserved = conserved_2
-        q = conserved
         transform = transform_2
-        z = transform
         flux_primitive = flux_primitive_2
-        f_p = flux_primitive
+        Q_primitive = Q_primitive_2
     elif num_moments == 3:
         primitive = primitive_3
-        p = primitive
         conserved = conserved_3
-        q = conserved
         transform = transform_3
-        z = transform
         flux_primitive = flux_primitive_3
-        f_p = flux_primitive
+        Q_primitive = Q_primitive_3
+
+    global p, q, z, f_p, Q_p
+    p = primitive
+    q = conserved
+    z = transform
+    f_p = flux_primitive
+    Q_p = Q_primitive
 
     # substitution dictionaries
     global p_to_q, p_to_z, q_to_p, q_to_z, z_to_p, z_to_q
@@ -205,10 +220,21 @@ def set_generalized_shallow_water_variables(num_moments):
     flux_transform_jacobian = jacobian(f_z, z)
     f_z_j = flux_transform_jacobian
 
+    # Nonconserved matrix
+    global Q_q, Q_z
+    Q_q = Q_p.subs(p_to_q)
+    Q_z = Q_p.subs(p_to_z)
+
+    # Quasilinear Matrices
+    global A_p, A_q, A_z
+    A_q = f_q_j - Q_q
+    A_p = A_q.subs(q_to_p)
+    A_z = A_q.subs(q_to_z)
+
     # Riemann Problem
     global p_to_P_i, P_i, p_to_P_im1, P_im1
     # P_i = [H_i, U_i]
-    H_i = var("H_i")
+    H_i = var("H_i", domain="positive")
     U_i = var("U_i")
     S_i = var("S_i")
     K_i = var("K_i")
@@ -216,7 +242,7 @@ def set_generalized_shallow_water_variables(num_moments):
     p_to_P_i = {h: H_i, u: U_i, s: S_i, k: K_i, m: M_i}
     P_i = p.subs(p_to_P_i)
     # P_im1 = [H_im1, U_im1]
-    H_im1 = var("H_im1")
+    H_im1 = var("H_im1", domain="positive")
     U_im1 = var("U_im1")
     S_im1 = var("S_im1")
     K_im1 = var("K_im1")
@@ -225,7 +251,7 @@ def set_generalized_shallow_water_variables(num_moments):
     P_im1 = p.subs(p_to_P_im1)
     global q_to_Q_i, Q_i, q_to_Q_im1, Q_im1
     # Q_i = [Q_1_i, Q_2_i]
-    Q_1_i = var("Q_1_i")
+    Q_1_i = var("Q_1_i", domain="positive")
     Q_2_i = var("Q_2_i")
     Q_3_i = var("Q_3_i")
     Q_4_i = var("Q_4_i")
@@ -233,7 +259,7 @@ def set_generalized_shallow_water_variables(num_moments):
     q_to_Q_i = {q_1: Q_1_i, q_2: Q_2_i, q_3: Q_3_i, q_4: Q_4_i, q_5: Q_5_i}
     Q_i = q.subs(q_to_Q_i)
     # Q_im1 = [Q_1_im1, Q_2_im1]
-    Q_1_im1 = var("Q_1_im1")
+    Q_1_im1 = var("Q_1_im1", domain="positive")
     Q_2_im1 = var("Q_2_im1")
     Q_3_im1 = var("Q_3_im1")
     Q_4_im1 = var("Q_4_im1")
@@ -242,7 +268,7 @@ def set_generalized_shallow_water_variables(num_moments):
     Q_im1 = q.subs(q_to_Q_im1)
     global z_to_Z_i, Z_i, z_to_Z_im1, Z_im1
     # Z_i = [Z_1_i, Z_2_i]
-    Z_1_i = var("Z_1_i")
+    Z_1_i = var("Z_1_i", domain="positive")
     Z_2_i = var("Z_2_i")
     Z_3_i = var("Z_3_i")
     Z_4_i = var("Z_4_i")
@@ -250,7 +276,7 @@ def set_generalized_shallow_water_variables(num_moments):
     z_to_Z_i = {z_1: Z_1_i, z_2: Z_2_i, z_3: Z_3_i, z_4: Z_4_i, z_5: Z_5_i}
     Z_i = z.subs(z_to_Z_i)
     # Z_im1 = [Z_1_im1, Z_2_im1]
-    Z_1_im1 = var("Z_1_im1")
+    Z_1_im1 = var("Z_1_im1", domain="positive")
     Z_2_im1 = var("Z_2_im1")
     Z_3_im1 = var("Z_3_im1")
     Z_4_im1 = var("Z_4_im1")
