@@ -1,0 +1,90 @@
+\documentclass{article}
+\usepackage[letterpaper, margin=2cm]{geometry}
+\usepackage{Notes}
+
+\begin{document}
+  \begin{center}
+    \textbf{\Large{Nonconservative Products}} \\
+  \end{center}
+
+  \section{Definition}
+    Consider the nonconservative product
+    \[
+      g(\v{q}) \d{\v{q}}{x},
+    \]
+    where \(g(\v{q}): \RR^p \to \RR^p \times \RR^p\) is continuous, but \(\v{q}\) is
+    possibly discontinuous.
+    In this case, the product is traditionally not well-defined at the discontinuities
+    of \(\v{q}\).
+    In order to define this product for discontinuous functions, \(\v{q}\), it is
+    possible to regularize \(\v{q}\) with a path \(\phi \) at discontinuities according
+    to the theory laid out by Dal Maso, Le Floch, and Murat.
+    To this end consider Lipschitz continuous paths,
+    \(\v{\psi}:\br{0, 1} \times \RR^p \times \RR^p \to \RR^p \), that satisfy the
+    following properties.
+    \begin{enumerate}
+      \item \(\forall \v{q}_L, \v{q}_R \in \RR^p\),
+        \(\v{\psi}(0, \v{q}_L, \v{q}_R) = \v{q}_L\) and
+        \(\v{\psi}(1, \v{q}_L, \v{q}_R) = \v{q}_R\)
+      \item \(\exists k > 0\), \(\forall \v{q}_L, \v{q}_R \in \RR^p\),
+        \(\forall s \in \br{0, 1}\), \(\abs{\pd{\v{\psi}}{s}(s, \v{q}_L, \v{q}_R)}
+        \le k \abs{\v{q}_L - \v{q}_R}\) elementwise
+      \item \(\exists k > 0\), \(\forall \v{q}_L, \v{q}_R, \v{u}_L, \v{u}_R \in \RR^p\),
+        \(\forall s \in \br{0, 1}\), elementwise
+        \[
+          \abs{\pd{\v{\psi}}{s}(s, \v{q}_L, \v{q}_R) - \pd{\v{\psi}}{s}(s, \v{u}_L, \v{u}_R)}
+          \le k \p{\abs{\v{q}_L - \v{u}_L} + \abs{\v{q}_R - \v{u}_R}}
+        \]
+    \end{enumerate}
+    Once we have these paths, \(\v{\psi} \), we can define the nonconservative product.
+
+    Let \(\v{q}:\br{a, b} \to \RR^p\) be a function of bounded variation, let
+    \(g: \RR^p \to \RR^p \times \RR^p \) be a continuous function, and let \(\v{\psi} \)
+    satisfy the properties given above.
+    Then there exists a unique real-valued bounded Borel measure \(\mu \) on
+    \(\br{a, b}\) characterized by the two following properties.
+    \begin{enumerate}
+      \item If \(q\) is continuous on a Borel set \(B \subset \br{a, b}\), then
+        \[
+          \mu(B) = \dintt{B}{}{g(\v{q}) \d{\v{q}}{x}}{x}
+        \]
+      \item If \(q\) is discontinuous at a point \(x_0 \in \br{a, b}\), then
+        \[
+          \mu({x_0}) = \dintt{0}{1}{g(\psi(s; q(x_0^-), q(x_0^+))) \pd{\psi}{s}(s; q(x_0^-), q(x_0^+))}{s}
+        \]
+    \end{enumerate}
+    By definition, this measure \(\mu \) is the nonconservative product \(g(q) \d{q}{x}\)
+    and will be denoted by
+    \[
+      \mu = \br[\psi]{g(q) \d{q}{x}}
+    \]
+
+     In higher dimensions the paths, \(\v{\psi}\) must also have the property that
+     \begin{enumerate}
+       \item[4.] \(\v{\psi}(s, \v{q}_L, \v{q}_R) = \v{\psi}(1 - s, \v{q}_L, \v{q}_R)\)
+     \end{enumerate}
+     This is given in Rhebergen, but I haven't found any references
+
+  \section{Weak Solutions}
+    A function \(\v{q}\) of bounded variation is a weak solution to
+    \[
+      \v{q}_t + g(\v{q}) \v{q}_x = 0
+    \]
+    if
+    \[
+      \v{q}_t + \br[\phi]{g(\v{q}) \v{q}_x} = 0
+    \]
+    as a bounded Borel measure on \(\RR \times \RR_+\).
+
+    This is equivalent to finding \(\v{q}\) that satisfies,
+    \[
+      \dintt{\RR_+}{}{\dintt{\RR}{}{\psi_t(t, x) \v{q}(t, x)}{x}}{t}
+      + \dintt{\RR_+}{}{\dint{\RR}{}{\psi(t, \cdot) \br[\phi]{g(\v{q}(t, \cdot)) \v{q}(t, \cdot)_x}}}{t}
+      = \v{0}
+    \]
+    for all functions \(\psi \in C^{\infty}_0\p{\RR_t \times \RR}\).
+
+  \section{DG Weak Formulation}
+
+
+\end{document}
