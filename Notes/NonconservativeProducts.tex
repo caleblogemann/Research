@@ -59,32 +59,102 @@
       \mu = \br[\psi]{g(q) \d{q}{x}}
     \]
 
-     In higher dimensions the paths, \(\v{\psi}\) must also have the property that
-     \begin{enumerate}
-       \item[4.] \(\v{\psi}(s, \v{q}_L, \v{q}_R) = \v{\psi}(1 - s, \v{q}_L, \v{q}_R)\)
-     \end{enumerate}
-     This is given in Rhebergen, but I haven't found any references
+    \noindent In higher dimensions the paths, \(\v{\psi}\) must also have the property that
+    \begin{enumerate}
+      \item[4.] \(\v{\psi}(s, \v{q}_L, \v{q}_R) = \v{\psi}(1 - s, \v{q}_L, \v{q}_R)\)
+    \end{enumerate}
+    Then the following Thereom can be given in spacetime
+    Let \(\v{q}: \Omega \to \RR^m\) be a bounded function of bounded variation defined
+    on an open subset \(\Omega \) of \(\RR^{n+1}\) and \(\v{t}: \RR^m \to \RR^m\) be
+    a locally bounded Borel function.
+    Then there existsa unique family of real-valued bounded Borel measures \(\mu_i\)
+    on \(\Omega \), \(i = 1, 2, \ldots, m\) such that
+    \begin{enumerate}
+      \item if \(B\) is a continuous Borel subset of \(\Omega \), then
+        \[
+          \mu_i(B) = \dintt{B}{}{t_{ik}(q) \v{q}_{x_k}}{\lambda}
+        \]
+        where \(\lambda \) is the Borel measure;
+
+      \item if \(B\) is a discontinuous subset of \(\Omega \) of approximate jump, then
+        \[
+          \mu_i(B) = \dintt{B}{}{\dintt{0}{1}{t_{ik}(\v{\psi}(s, \v{q}^L, \v{q}^R))
+            \pd{\v{\psi}}{s}(s, \v{q}^L, \v{q}^R)}{s} \v{n}_k^L}{H^n}
+        \]
+        with \(\v{q}^L\) and \(\v{q}^R\) the left and right traces at the discontinuity,
+        where \(H^n\) is the n-dimensional Hausdorf measure and where we choose
+        \(\v{n}^L\) the outward normal with respect to the left state,
+
+      \item if \(B\) is an irregular Borel subset of \(\Omega \), then \(\mu_i(B) = 0\)
+    \end{enumerate}
+    \noindent This is given in Rhebergen without proof, but I haven't found any outside
+    original references for this Theorem.
+    Mostly this reflects the one dimensional theorem, but I don't understand the
+    appearance of the outward facing normal.
+    It appears to have been an arbitrary choice between \(\v{n}^L\) and \(\v{n}^R\).
+    Also I am not sure why it is necessary at all.
 
   \section{Weak Solutions}
     A function \(\v{q}\) of bounded variation is a weak solution to
-    \[
+    \begin{gather}
       \v{q}_t + g(\v{q}) \v{q}_x = 0
-    \]
+    \end{gather}
     if
-    \[
+    \begin{gather}
       \v{q}_t + \br[\phi]{g(\v{q}) \v{q}_x} = 0
-    \]
+    \end{gather}
     as a bounded Borel measure on \(\RR \times \RR_+\).
-
     This is equivalent to finding \(\v{q}\) that satisfies,
-    \[
-      \dintt{\RR_+}{}{\dintt{\RR}{}{\psi_t(t, x) \v{q}(t, x)}{x}}{t}
-      + \dintt{\RR_+}{}{\dint{\RR}{}{\psi(t, \cdot) \br[\phi]{g(\v{q}(t, \cdot)) \v{q}(t, \cdot)_x}}}{t}
+    \begin{gather}
+      \dintt{\RR_+}{}{\dintt{\RR}{}{v_t(t, x) \v{q}(t, x)}{x}}{t}
+      + \dintt{\RR_+}{}{\dint{\RR}{}{v(t, \cdot) \br[\psi]{g(\v{q}(t, \cdot)) \v{q}_x(t, \cdot)}}}{t}
       = \v{0}
-    \]
-    for all functions \(\psi \in C^{\infty}_0\p{\RR_t \times \RR}\).
+    \end{gather}
+    for all functions \(v \in C^{\infty}_0\p{\RR_t \times \RR}\).
 
   \section{DG Weak Formulation}
 
+  \subsection{Rhebergen Weak Formulation}
+    Find \(\v{q} \in V_h\) such that for all \(\v{v} \in V_h\),
+    \begin{gather}
+      \sum{j}{}{\dintt{K_j}{}{\v{v}^T \v{q}_t - \v{v}^T_x \v{f}(\v{q})
+        + \v{v}^T g(\v{q}) \v{q}_x}{x}}
+      + \sum{S}{}{\dintt{S}{}{\p{\v{v}^L - \v{v}^R}^T \hat{\v{P}}^{nc}}{S}} \\
+      + \sum{S}{}{\dintt{S}{}{\frac{1}{2}\p{\v{v}^R + \v{v}^L}^T
+        \dintt{0}{1}{g\p{\v{\psi}\p{\tau, \v{q}^L, \v{q}^R}}
+        \pd{\v{\psi}}{\tau}(\tau, \v{q}^L, \v{q}^R)}{\tau}}{S}}
+    \end{gather}
+    where \(\hat{\v{P}}^{nc}\) is the nonconservative numerical flux, if symmetrical
+    wave speeds are assumed, then the Rusanov or Local Lax Friedrichs flux can be used,
+    otherwise the nonconservative product will affect the numerical flux.
+
+  \subsection{Pure Nonconservative DG Formulation}
+    Consider the 1D nonconservative equation shown below,
+    \[
+      \v{q}_t + g(\v{q}) \v{q}_x = \v{0} \qquad x \in \br{a, b}, 0 < t < T
+    \]
+    Let \(\set{K_j}\) be a mesh of the domain \(\br{a, b}\).
+    Also denote the DG space as
+    \[
+      V_h = \set{v \in L^1\p{\br{a, b}} \big| \eval{v}{K_j} \in \PP^M(K_j)}
+    \]
+    Now the semi discrete DG formulation for this problem becomes finding
+    \(\v{q}_h \in V_h\) for all \(v_h \in V_h\) that satisfies
+    \begin{gather}
+      \dintt{a}{b}{v_h \v{q}_{h,t}}{x} + \dintt{a}{b}{v_h \br[\psi]{g(\v{q}_h)\v{q}_{h,x}}}{x} = \v{0} \\
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t}}{x}}
+      + \sum{j}{}{\dintt{K_j}{}{v_h g(\v{q}_h) \v{q}_{h,x}}{x}}
+      + \sum{I}{}{\hat{v}_h \dintt{0}{1}{g(\psi(s, \v{q}_h^L, \v{q}_h^R)) \pd{\psi}{s}(s, \v{q}_h^L, \v{q}_h^R)}{s}}
+      = 0
+    \end{gather}
+
+    Consider the case where there exists a function \(\v{f}\p{\v{q}_h}\) such that
+    \(\v{f}'\p{\v{q}_h} = g(\v{q})\).
+    \begin{gather}
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t}}{x}}
+      + \sum{j}{}{\dintt{K_j}{}{v_h g(\v{q}_h) \v{q}_{h,x}}{x}}
+      + \sum{I}{}{\hat{v}_h \dintt{0}{1}{g(\psi(s, \v{q}_h^L, \v{q}_h^R)) \pd{\psi}{s}(s, \v{q}_h^L, \v{q}_h^R)}{s}}
+      = 0
+    \end{gather}
 
 \end{document}
