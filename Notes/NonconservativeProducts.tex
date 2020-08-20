@@ -41,23 +41,33 @@
     Let \(\v{q}:\br{a, b} \to \RR^p\) be a function of bounded variation, let
     \(g: \RR^p \to \RR^p \times \RR^p \) be a continuous function, and let \(\v{\psi} \)
     satisfy the properties given above.
-    Then there exists a unique real-valued bounded Borel measure \(\mu \) on
+    Then there exists a unique real-valued bounded Borel measure \(\v{\mu}\) on
     \(\br{a, b}\) characterized by the two following properties.
     \begin{enumerate}
       \item If \(q\) is continuous on a Borel set \(B \subset \br{a, b}\), then
         \[
-          \mu(B) = \dintt{B}{}{g(\v{q}) \d{\v{q}}{x}}{x}
+          \v{\mu}(B) = \dintt{B}{}{g(\v{q}) \d{\v{q}}{x}}{x}
         \]
       \item If \(q\) is discontinuous at a point \(x_0 \in \br{a, b}\), then
         \[
-          \mu({x_0}) = \dintt{0}{1}{g(\psi(s; q(x_0^-), q(x_0^+))) \pd{\psi}{s}(s; q(x_0^-), q(x_0^+))}{s}
+          \v{\mu}({x_0}) = \dintt{0}{1}{g(\v{\psi}(s; \v{q}(x_0^-), \v{q}(x_0^+))) \pd{\v{\psi}}{s}(s; \v{q}(x_0^-), \v{q}(x_0^+))}{s}
         \]
     \end{enumerate}
-    By definition, this measure \(\mu \) is the nonconservative product \(g(q) \d{q}{x}\)
+    By definition, this measure \(\v{\mu}\) is the nonconservative product \(g(\v{q}) \d{\v{q}}{x}\)
     and will be denoted by
     \[
-      \mu = \br[\psi]{g(q) \d{q}{x}}
+      \v{\mu} = \br[\v{\psi}]{g(\v{q}) \d{\v{q}}{x}}
     \]
+
+    Note that if there exists a function \(\v{f}\p{\v{q}}\) such that
+    \(\v{f}'\p{\v{q}} = g(\v{q})\), then
+    \begin{gather}
+      \dintt{0}{1}{g(\v{\psi}(s; \v{q}(x_0^-), \v{q}(x_0^+))) \pd{\v{\psi}}{s}(s; \v{q}(x_0^-), \v{q}(x_0^+))}{s}
+      = \v{f}\p{\v{q}(x_0^+)} - \v{f}\p{\v{q}(x_0^-)}
+    \end{gather}
+    for any path \(\v{\psi}\) that satisfies the conditions 1 - 3.
+
+  \subsection{Higher Dimensions}
 
     \noindent In higher dimensions the paths, \(\v{\psi}\) must also have the property that
     \begin{enumerate}
@@ -128,15 +138,54 @@
     wave speeds are assumed, then the Rusanov or Local Lax Friedrichs flux can be used,
     otherwise the nonconservative product will affect the numerical flux.
 
-  \subsection{Pure Nonconservative DG Formulation}
-    Consider the 1D nonconservative equation shown below,
-    \[
-      \v{q}_t + g(\v{q}) \v{q}_x = \v{0} \qquad x \in \br{a, b}, 0 < t < T
-    \]
+  \subsection{Standard Hyperbolic Conservation Law DG Formulation}
     Let \(\set{K_j}\) be a mesh of the domain \(\br{a, b}\).
     Also denote the DG space as
     \[
       V_h = \set{v \in L^1\p{\br{a, b}} \big| \eval{v}{K_j} \in \PP^M(K_j)}
+    \]
+    Consider the hyperbolic conservation law given below with the corresponding
+    classical and semi discrete weak solutions.
+    \begin{gather}
+      \v{q}_t + \v{f}\p{\v{q}}_x = 0 \\
+      \dintt{a}{b}{v \v{q}_t - v_x \v{f}\p{\v{q}}}{x} = 0
+    \end{gather}
+    The DG formulation requires finding \(\v{q}_h \in V_h\) for all \(v_h \in V_h\) such
+    that
+    \begin{gather}
+      \dintt{a}{b}{v_h \v{q}_{h,t} + v_h \v{f}\p{\v{q}_h}_x}{x} = 0 \\
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t} + v_h \v{f}\p{\v{q}_h}_x}{x}} = 0 \\
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t}}{x}}
+      + \sum{j}{}{\dintt{K_j}{}{v_h \v{f}\p{\v{q}_h}_x}{x}} = 0 \\
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t}}{x}}
+      + \sum{j}{}{\eval*{\hat{v}_h \hat{f}\p{\v{q}_h}}{x_{j-1/2}}{x_{j+1/2}}
+        - \dintt{K_j}{}{v_{h,x} \v{f}\p{\v{q}_h}}{x}} = 0
+    \end{gather}
+    Usually the value of \(\hat{v}_h\) is the interior value of the test function on
+    the element integral that is being integrated by parts.
+    That is
+    \begin{gather}
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t}}{x}}
+      + \sum{j}{}{v_h\p{x_{j+1/2}^-} \hat{f}_{j+1/2} - v_h\p{x_{j-1/2}^+} \hat{f}_{j-1/2}
+        - \dintt{K_j}{}{v_{h,x} \v{f}\p{\v{q}_h}}{x}} = 0 \\
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t}}{x}}
+      + \sum{I_j}{}{\p{v_h\p{x^-} - v_h\p{x^+}} \hat{f}}
+        - \sum{j}{}{\dintt{K_j}{}{v_{h,x} \v{f}\p{\v{q}_h}}{x}} = 0
+    \end{gather}
+    Using these values for the test functions at the interfaces and then grouping the
+    interfaces together reveals jump terms in the test functions at the interfaces.
+
+    I see that if the value of the test functions had a single value at the interfaces
+    like the numerical fluxes, \(\hat{f}\), then when combining the values at each
+    interface the terms would cancel out.
+    Does choosing the interior value for the test functions just make sure that those
+    interface terms don't cancel out, or what is the theoretical reason for the values
+    of the test functions at the interfaces.
+
+  \subsection{Pure Nonconservative DG Formulation}
+    Consider the 1D nonconservative equation shown below,
+    \[
+      \v{q}_t + g(\v{q}) \v{q}_x = \v{0} \qquad x \in \br{a, b}, 0 < t < T
     \]
     Now the semi discrete DG formulation for this problem becomes finding
     \(\v{q}_h \in V_h\) for all \(v_h \in V_h\) that satisfies
@@ -152,9 +201,47 @@
     \(\v{f}'\p{\v{q}_h} = g(\v{q})\).
     \begin{gather}
       \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t}}{x}}
-      + \sum{j}{}{\dintt{K_j}{}{v_h g(\v{q}_h) \v{q}_{h,x}}{x}}
-      + \sum{I}{}{\hat{v}_h \dintt{0}{1}{g(\psi(s, \v{q}_h^L, \v{q}_h^R)) \pd{\psi}{s}(s, \v{q}_h^L, \v{q}_h^R)}{s}}
+      + \sum{j}{}{\dintt{K_j}{}{v_h \v{f}\p{\v{q}_h}_x}{x}}
+      + \sum{I}{}{\hat{v}_h \dintt{0}{1}{f'(\psi(s, \v{q}_h^L, \v{q}_h^R)) \pd{\psi}{s}(s, \v{q}_h^L, \v{q}_h^R)}{s}}
+      = 0 \\
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t}}{x}}
+      + \sum{j}{}{\dintt{K_j}{}{v_h \v{f}\p{\v{q}_h}_x}{x}}
+      + \sum{I}{}{\hat{v}_h \p{\v{f}\p{\v{q}_h^R} - \v{f}\p{\v{q}_h^L}}}
+      = 0 \\
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t}}{x}}
+      - \sum{j}{}{\dintt{K_j}{}{v_{h,x} \v{f}\p{\v{q}_h}}{x}}
+      + \sum{I}{}{v_h^L \v{f}\p{\v{q}_h^L} - v_h^R \v{f}\p{\v{q}_h^R}}
+      + \sum{I}{}{\hat{v}_h \p{\v{f}\p{\v{q}_h^R} - \v{f}\p{\v{q}_h^L}}}
+      = 0 \\
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_{h,t}}{x}}
+      - \sum{j}{}{\dintt{K_j}{}{v_{h,x} \v{f}\p{\v{q}_h}}{x}}
+      + \sum{I}{}{\p{\hat{v} - v_h^R} \v{f}\p{\v{q}_h^R}
+      + \p{v_h^L - \hat{v}} \v{f}\p{\v{q}_h^L}}
       = 0
     \end{gather}
-
+    Now we want to choose \(\hat{v}\) such that this is equivalent to the traditional
+    DG formulation.
+    However we don't have any numerical flux terms so instead we want the interface terms
+    to look like
+    \(\p{v_h^L - v_h^R} \frac{1}{2} \p{\v{f}\p{\v{q}_h^R} + \v{f}\p{\v{q}_h^L}}\).
+    At least this is what Rhebergen does and then replaces the flux average with the
+    numerical flux.
+    \begin{gather}
+      \p{\hat{v} - v_h^R} \v{f}\p{\v{q}_h^R} + \p{v_h^L - \hat{v}} \v{f}\p{\v{q}_h^L}
+      = \p{v_h^L - v_h^R} \frac{1}{2} \p{\v{f}\p{\v{q}_h^R} + \v{f}\p{\v{q}_h^L}} \\
+      \p{\hat{v} - v_h^R} \v{f}\p{\v{q}_h^R} + \p{v_h^L - \hat{v}} \v{f}\p{\v{q}_h^L}
+      = \frac{1}{2} \p{v_h^L - v_h^R} \v{f}\p{\v{q}_h^R} + \frac{1}{2} \p{v_h^L - v_h^R} \v{f}\p{\v{q}_h^L} \\
+      \p{\hat{v} - v_h^R} = \frac{1}{2} \p{v_h^L - v_h^R} \\
+      \hat{v} = \frac{1}{2} \p{v_h^L + v_h^R} \\
+      \p{v_h^L - \hat{v}} = \frac{1}{2} \p{v_h^L - v_h^R} \\
+      -\hat{v} = \frac{1}{2} \p{- v_h^L - v_h^R} \\
+      \hat{v} = \frac{1}{2} \p{v_h^L + v_h^R} \\
+    \end{gather}
+    We see that the appropriate numerical flux for the test function when multiplying
+    the nonconservative product at the interface should be the average value.
+    This agrees with the results given in Rhebergen.
+    My one question about this is the swap from the average value of \(f\) to the
+    numerical flux of \(f\).
+    I am tempted to use the numerical flux of \(f\) when integrating by parts, but then
+    in order to agree with the traditional method \(\hat{v}\) should be zero.
 \end{document}
