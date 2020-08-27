@@ -65,7 +65,7 @@
       \dintt{0}{1}{g(\v{\psi}(s; \v{q}(x_0^-), \v{q}(x_0^+))) \pd{\v{\psi}}{s}(s; \v{q}(x_0^-), \v{q}(x_0^+))}{s}
       = \v{f}\p{\v{q}(x_0^+)} - \v{f}\p{\v{q}(x_0^-)}
     \end{gather}
-    for any path \(\v{\psi}\) that satisfies the conditions 1 - 3.
+    for any path \(\v{\psi}\) that satisfies the conditions 1 -- 3.
 
   \subsection{Higher Dimensions}
 
@@ -244,4 +244,64 @@
     numerical flux of \(f\).
     I am tempted to use the numerical flux of \(f\) when integrating by parts, but then
     in order to agree with the traditional method \(\hat{v}\) should be zero.
+
+  \subsection{DG Formulation}
+    Consider the 1D PDE below with a conservative and nonconservative term,
+    \begin{gather}
+      \v{q}_t + \v{f}\p{\v{q}}_x + g\p{\v{q}} \v{q}_x = \v{s}\p{\v{q}}
+      \qquad x \in \br{a, b}, 0 < t < T \\
+    \end{gather}
+    The semi discrete DG formulation is finding \(\v{q}_h \in V_h\) for all
+    \(v_h \in V_h\) such that
+    \begin{gather}
+      \dintt{a}{b}{v_h \v{q}_t}{x} + \dintt{a}{b}{v_h \v{f}\p{\v{q}}_x}{x} +
+        \dint{a}{b}{v_h \br[\v{\psi}]{g\p{\v{q}} \v{q}_x}}
+        = \dintt{a}{b}{v_h\v{s}\p{\v{q}}}{x} \\
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_t}{x}}
+        + \sum{j}{}{\dintt{K_j}{}{v_{h} \v{f}\p{\v{q}}}{x}}
+        + \sum{j}{}{\dintt{K_j}{}{v_h g\p{\v{q}} \v{q}_x}{x}} \\
+        + \sum{I}{}{\hat{v}_h \dintt{0}{1}{g\p{\v{\psi}\p{s, \v{q}^L_h, \v{q}^R_h}}
+          \pd{\v{\psi}}{s}\p{s, \v{q}^L_h, \v{q}^R_h}}{s}}
+        = \dintt{a}{b}{v_h\v{s}\p{\v{q}}}{x} \\
+      \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_t}{x}}
+        - \sum{j}{}{\dintt{K_j}{}{v_{h,x} \v{f}\p{\v{q}}}{x}}
+        + \sum{I}{}{\p{v_h^L - v_h^R} \hat{\v{f}}}
+        + \sum{j}{}{\dintt{K_j}{}{v_h g\p{\v{q}} \v{q}_x}{x}} \\
+        + \sum{I}{}{\hat{v}_h \dintt{0}{1}{g\p{\v{\psi}\p{s, \v{q}^L_h, \v{q}^R_h}}
+          \pd{\v{\psi}}{s}\p{s, \v{q}^L_h, \v{q}^R_h}}{s}}
+        = \dintt{a}{b}{v_h\v{s}\p{\v{q}}}{x}
+    \end{gather}
+    As shown earlier if we choose \(\hat{v}_h = \frac{1}{2}\p{v_h^R + v_h^L}\), then
+    in the case where there exists \(\v{h}\) such that \(\v{h}' = g\), then this formulation
+    will reduce to the standard DG formulation of the conservative PDE
+    \(\v{q}_t + \p{\v{f}\p{\v{q}} + \v{h}\p{\v{q}}}_x = \v{s}\p{\v{q}}\).
+
+    Consider the case where \(v_h = \phi_i^k\), that is the kth order basis function on
+    the element \(K_i\).
+    In order to consider all of the basis functions on a cell \(K_i\), I will use the
+    test function \(\v{\phi}_i^T\).
+    Let \(\v{\phi}\) be the vector of basis functions on the canonical element
+    \(\br{-1,1}\) and let \(c_i\) be the linear transformation from
+    \(K_i \to \br{-1, 1}\), then \(\v{\phi}_i(x) = \v{\phi}(c_i(x))\)
+    \begin{gather}
+      \dintt{a}{b}{\v{q}_t \v{\phi}_i^T}{x}
+        + \dintt{a}{b}{\v{f}\p{\v{q}}_x \v{\phi}_i^T}{x}
+        + \dint{a}{b}{\br[\v{\psi}]{g\p{\v{q}} \v{q}_x} \v{\phi}_i^T}
+        = \dintt{a}{b}{\v{s}\p{\v{q}} \v{\phi}_i^T}{x} \\
+      \dintt{K_i}{}{\v{q}_t \v{\phi}_i^T}{x}
+        + \dintt{K_i}{}{\v{f}\p{\v{q}}_x \v{\phi}_i^T}{x}
+        + \dint{K_i}{}{\br[\v{\psi}]{g\p{\v{q}} \v{q}_x} \v{\phi}_i^T}
+        = \dintt{K_i}{}{\v{s}\p{\v{q}} \v{\phi}_i^T}{x}
+      \intertext{The value of \(\v{q}\) restricted to cell \(K_i\) can be expressed as
+        an expansion of coefficients over the basis functions, that is
+        \(\eval{\v{q}(x, t)}{K_i} = Q_i(t) \v{\phi}_i(x)\)}
+      \dintt{K_i}{}{Q_i' \v{\phi}_i \v{\phi}_i^T}{x}
+        + \dintt{K_i}{}{\v{f}\p{Q_i \v{\phi}_i}_x \v{\phi}_i^T}{x}
+        + \dint{K_i}{}{\br[\v{\psi}]{g\p{Q_i \v{\phi}_i} Q_i \v{\phi}_{i,x}} \v{\phi}_i^T}
+        = \dintt{K_i}{}{\v{s}\p{Q_i \v{\phi}_i} \v{\phi}_i^T}{x} \\
+      \dintt{K_i}{}{Q_i' \v{\phi}_i \v{\phi}_i^T}{x}
+        + \dintt{K_i}{}{\v{f}\p{Q_i \v{\phi}_i}_x \v{\phi}_i^T}{x}
+        + \dint{K_i}{}{\br[\v{\psi}]{g\p{Q_i \v{\phi}_i} Q_i \v{\phi}_{i,x}} \v{\phi}_i^T}
+        = \dintt{K_i}{}{\v{s}\p{Q_i \v{\phi}_i} \v{\phi}_i^T}{x} \\
+    \end{gather}
 \end{document}
