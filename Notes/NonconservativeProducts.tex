@@ -290,18 +290,92 @@
         = \dintt{a}{b}{\v{s}\p{\v{q}} \v{\phi}_i^T}{x} \\
       \dintt{K_i}{}{\v{q}_t \v{\phi}_i^T}{x}
         + \dintt{K_i}{}{\v{f}\p{\v{q}}_x \v{\phi}_i^T}{x}
-        + \dint{K_i}{}{\br[\v{\psi}]{g\p{\v{q}} \v{q}_x} \v{\phi}_i^T}
+        + \dintt{K_i}{}{g\p{\v{q}} \v{q}_x \v{\phi}_i^T}{x}
+        + \dintt{0}{1}{g(\v{\psi}(s, \v{q}_{i-1/2}^-, \v{q}_{i-1/2}^+))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i-1/2}^-, \v{q}_{i-1/2}^+)}{s} \,
+          \hat{\v{\phi}}^T_{i-1/2} \\
+        + \dintt{0}{1}{g(\v{\psi}(s, \v{q}_{i+1/2}^-, \v{q}_{i+1/2}^+))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i+1/2}^-, \v{q}_{i+1/2}^+)}{s} \,
+          \hat{\v{\phi}}^T_{i+1/2}
         = \dintt{K_i}{}{\v{s}\p{\v{q}} \v{\phi}_i^T}{x}
       \intertext{The value of \(\v{q}\) restricted to cell \(K_i\) can be expressed as
         an expansion of coefficients over the basis functions, that is
         \(\eval{\v{q}(x, t)}{K_i} = Q_i(t) \v{\phi}_i(x)\)}
       \dintt{K_i}{}{Q_i' \v{\phi}_i \v{\phi}_i^T}{x}
         + \dintt{K_i}{}{\v{f}\p{Q_i \v{\phi}_i}_x \v{\phi}_i^T}{x}
-        + \dint{K_i}{}{\br[\v{\psi}]{g\p{Q_i \v{\phi}_i} Q_i \v{\phi}_{i,x}} \v{\phi}_i^T}
-        = \dintt{K_i}{}{\v{s}\p{Q_i \v{\phi}_i} \v{\phi}_i^T}{x} \\
+        + \dintt{K_i}{}{g\p{Q_i \v{\phi}_i} Q_i \v{\phi}_{i,x} \v{\phi}_i^T}{x} \\
+        + \dintt{0}{1}{g(\v{\psi}(s, Q_{i-1} \v{\phi}(1), Q_i \v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i-1/2}^-, \v{q}_{i-1/2}^+)}{s} \,
+          \hat{\v{\phi}}^T_{i-1/2} \\
+        + \dintt{0}{1}{g(\v{\psi}(s, Q_i \v{\phi}(1), Q_{i+1}\v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i+1/2}^-, \v{q}_{i+1/2}^+)}{s} \,
+          \hat{\v{\phi}}^T_{i+1/2}
+        = \dintt{K_i}{}{\v{s}\p{Q_i \v{\phi}_1} \v{\phi}_i^T}{x}
+      \intertext{Integrate by Parts}
       \dintt{K_i}{}{Q_i' \v{\phi}_i \v{\phi}_i^T}{x}
-        + \dintt{K_i}{}{\v{f}\p{Q_i \v{\phi}_i}_x \v{\phi}_i^T}{x}
-        + \dint{K_i}{}{\br[\v{\psi}]{g\p{Q_i \v{\phi}_i} Q_i \v{\phi}_{i,x}} \v{\phi}_i^T}
-        = \dintt{K_i}{}{\v{s}\p{Q_i \v{\phi}_i} \v{\phi}_i^T}{x} \\
+        - \dintt{K_i}{}{\v{f}\p{Q_i \v{\phi}_i} \v{\phi}_{i,x}^T}{x}
+        + \hat{\v{f}}_{i+1/2}\v{\phi}^T(1) - \hat{\v{f}}_{i-1/2}\v{\phi}^T(-1)
+        + \dintt{K_i}{}{g\p{Q_i \v{\phi}_i} Q_i \v{\phi}_{i,x} \v{\phi}_i^T}{x} \\
+        + \dintt{0}{1}{g(\v{\psi}(s, Q_{i-1} \v{\phi}(1), Q_i \v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i-1/2}^-, \v{q}_{i-1/2}^+)}{s} \,
+          \hat{\v{\phi}}^T_{i-1/2} \\
+        + \dintt{0}{1}{g(\v{\psi}(s, Q_i \v{\phi}(1), Q_{i+1}\v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i+1/2}^-, \v{q}_{i+1/2}^+)}{s} \,
+          \hat{\v{\phi}}^T_{i+1/2}
+        = \dintt{K_i}{}{\v{s}\p{Q_i \v{\phi}_1} \v{\phi}_i^T}{x}
+      \intertext{Change to canonical basis with linear transformation, and rearrange equation}
+      \dintt{K_i}{}{Q_i' \v{\phi}(c_i(x)) \v{\phi}^T(c_i(x))}{x}
+        = \dintt{K_i}{}{\v{f}\p{Q_i \v{\phi}(c_i(x))} \partial_x \v{\phi}^T(c_i(x))}{x}
+        - \p{\hat{\v{f}}_{i+1/2}\v{\phi}^T(1) - \hat{\v{f}}_{i-1/2}\v{\phi}^T(-1)} \\
+        - \dintt{K_i}{}{g\p{Q_i \v{\phi}_i} Q_i \partial_x \v{\phi}(c_i(x)) \v{\phi}^T(c_i(x))}{x}
+        - \dintt{0}{1}{g(\v{\psi}(s, Q_{i-1} \v{\phi}(1), Q_i \v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i-1/2}^-, \v{q}_{i-1/2}^+)}{s} \,
+          \hat{\v{\phi}}^T_{i-1/2} \\
+        - \dintt{0}{1}{g(\v{\psi}(s, Q_i \v{\phi}(1), Q_{i+1}\v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i+1/2}^-, \v{q}_{i+1/2}^+)}{s} \,
+          \hat{\v{\phi}}^T_{i+1/2}
+        + \dintt{K_i}{}{\v{s}\p{Q_i \v{\phi}(c_i(x))} \v{\phi}^T(c_i(x))}{x}
+      \intertext{Convert integrals to canonical element, denote
+        \(c_i^{-1}(\xi) = b_i(\xi)\) and \(m_i = \pd{b_i}{\xi}\).
+        Performing two operations,
+        \(\partial_x \v{\phi}(c_i(x)) = \v{\phi}_{\xi}(c_i(x)) c_i'(x) = \frac{1}{m_i} \v{\phi}(c_i(x))\)
+        and transforming integrals from \(K_i\) to \(\br{-1, 1}\) results in
+        \(x = b_i(\xi)\) or \(c_i(x) = \xi\) and multiply by measure \(m_i\).}
+      \dintt{-1}{1}{Q_i' \v{\phi}(\xi) \v{\phi}^T(\xi) m_i}{\xi}
+        = \dintt{-1}{1}{\v{f}\p{Q_i \v{\phi}(\xi)} \frac{1}{m_i} \v{\phi}_{\xi}^T(\xi) m_i}{\xi}
+        - \p{\hat{\v{f}}_{i+1/2}\v{\phi}^T(1) - \hat{\v{f}}_{i-1/2}\v{\phi}^T(-1)} \\
+        - \dintt{-1}{1}{g\p{Q_i \v{\phi}_i} Q_i \frac{1}{m_i} \v{\phi}_{\xi}(\xi) \v{\phi}^T(\xi) m_i}{\xi}
+        - \dintt{0}{1}{g(\v{\psi}(s, Q_{i-1} \v{\phi}(1), Q_i \v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i-1/2}^-, \v{q}_{i-1/2}^+)}{s} \,
+          \hat{\v{\phi}}^T_{i-1/2} \\
+        - \dintt{0}{1}{g(\v{\psi}(s, Q_i \v{\phi}(1), Q_{i+1}\v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i+1/2}^-, \v{q}_{i+1/2}^+)}{s} \,
+          \hat{\v{\phi}}^T_{i+1/2}
+        + \dintt{-1}{1}{\v{s}\p{Q_i \v{\phi}(\xi)} \v{\phi}^T(\xi) m_i}{\xi}
+      \intertext{Simplify, note that as before \(\hat{\v{\phi}}\) is the interface
+        average, so in this case it results in half the interior value.}
+      m_i Q_i' \dintt{-1}{1}{\v{\phi}(\xi) \v{\phi}^T(\xi)}{\xi}
+        = \dintt{-1}{1}{\v{f}\p{Q_i \v{\phi}(\xi)} \v{\phi}_{\xi}^T(\xi)}{\xi}
+        - \p{\hat{\v{f}}_{i+1/2}\v{\phi}^T(1) - \hat{\v{f}}_{i-1/2}\v{\phi}^T(-1)} \\
+        - \dintt{-1}{1}{g\p{Q_i \v{\phi}_i} Q_i \v{\phi}_{\xi}(\xi) \v{\phi}^T(\xi)}{\xi}
+        - \frac{1}{2}\dintt{0}{1}{g(\v{\psi}(s, Q_{i-1} \v{\phi}(1), Q_i \v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i-1/2}^-, \v{q}_{i-1/2}^+)}{s} \,
+          \v{\phi}^T(-1) \\
+        - \frac{1}{2}\dintt{0}{1}{g(\v{\psi}(s, Q_i \v{\phi}(1), Q_{i+1}\v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i+1/2}^-, \v{q}_{i+1/2}^+)}{s} \,
+          \v{\phi}^T(1)
+        + m_i \dintt{-1}{1}{\v{s}\p{Q_i \v{\phi}(\xi)} \v{\phi}^T(\xi)}{\xi}
+      \intertext{The integral on the left hand side gives the mass matrix, right
+        multiplying by \(M^{-1}\) and dividing \(m_i\) across gives}
+      Q_i' = \frac{1}{m_i} \dintt{-1}{1}{\v{f}\p{Q_i \v{\phi}(\xi)} \v{\phi}_{\xi}^T(\xi)}{\xi} \, M^{-1}
+        - \frac{1}{m_i} \p{\hat{\v{f}}_{i+1/2}\v{\phi}^T(1) - \hat{\v{f}}_{i-1/2}\v{\phi}^T(-1)} M^{-1} \\
+        - \frac{1}{m_i}\dintt{-1}{1}{g\p{Q_i \v{\phi}_i} Q_i \v{\phi}_{\xi}(\xi) \v{\phi}^T(\xi)}{\xi} M^{-1} \\
+        - \frac{1}{2m_i}\dintt{0}{1}{g(\v{\psi}(s, Q_{i-1} \v{\phi}(1), Q_i \v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i-1/2}^-, \v{q}_{i-1/2}^+)}{s} \,
+          \v{\phi}^T(-1) M^{-1} \\
+        - \frac{1}{2m_i}\dintt{0}{1}{g(\v{\psi}(s, Q_i \v{\phi}(1), Q_{i+1}\v{\phi}(-1)))
+          \pd{\v{\psi}}{s}(s, \v{q}_{i+1/2}^-, \v{q}_{i+1/2}^+)}{s} \,
+          \v{\phi}^T(1) M^{-1}
+        + \dintt{-1}{1}{\v{s}\p{Q_i \v{\phi}(\xi)} \v{\phi}^T(\xi)}{\xi} \, M^{-1}
     \end{gather}
 \end{document}
