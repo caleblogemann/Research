@@ -300,7 +300,8 @@
         + \dint{K_i}{}{\br[\v{\psi}]{g\p{Q_i \v{\phi}_i} Q_i \v{\phi}_{i,x}} \v{\phi}_i^T}
         = \dintt{K_i}{}{\v{s}\p{Q_i \v{\phi}_i} \v{\phi}_i^T}{x} \\
       \dintt{K_i}{}{Q_i' \v{\phi}_i \v{\phi}_i^T}{x}
-        + \dintt{K_i}{}{\v{f}\p{Q_i \v{\phi}_i}_x \v{\phi}_i^T}{x}
+        + \hat{\v{f}}
+        - \dintt{K_i}{}{\v{f}\p{Q_i \v{\phi}_i} \v{\phi}_{i,x}^T}{x}
         + \dint{K_i}{}{\br[\v{\psi}]{g\p{Q_i \v{\phi}_i} Q_i \v{\phi}_{i,x}} \v{\phi}_i^T}
         = \dintt{K_i}{}{\v{s}\p{Q_i \v{\phi}_i} \v{\phi}_i^T}{x} \\
     \end{gather}
