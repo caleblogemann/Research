@@ -1,4 +1,9 @@
-def set_generalized_shallow_water_variables(num_moments):
+# flake8: noqa
+# pylint: skip-file
+load("../Sage/SymbolicVectorMatrix.sage")
+
+
+def set_generalized_shallow_water_variables_1d(num_moments):
     g = var("g", domain="positive")
     # primitive variables
     h = var("h", domain="positive")
@@ -376,3 +381,70 @@ def set_generalized_shallow_water_variables(num_moments):
         Z_5_im1: sqrt(H_im1) * M_im1,
     }
 
+
+def set_generalized_shallow_water_variables_2d(num_moments):
+    g = var("g", domain="positive")
+    # primitive variables
+    h = var("h", domain="positive")
+    u = var("u")
+    v = var("v")
+    alpha = get_vector_variable('alpha', 3)
+    beta = get_vector_variable('beta', 3)
+    primitive_0 = vector([h, u, v])
+    primitive_1 = vector([h, u, v, alpha[0], beta[0]])
+    primitive_2 = vector([h, u, v, alpha[0], beta[0], alpha[1], beta[1]])
+    primitive_3 = vector([h, u, v, alpha[0], beta[0], alpha[1], beta[1], alpha[2], beta[2]])
+
+    # f_p(p)
+    flux_primitive_x_0 = vector([h * u, h * u ^ 2 + 1 / 2 * g * h ^ 2])
+    flux_primitive_x_1 = vector(
+        [h * u, h * u ^ 2 + 1 / 2 * g * h ^ 2 + 1 / 3 * h * alpha[0] ^ 2, 2 * h * u * alpha[0]]
+    )
+    flux_primitive_2 = vector(
+        [
+            h * u,
+            h * u ^ 2 + 1 / 2 * g * h ^ 2 + 1 / 3 * h * alpha[0] ^ 2 + 1 / 5 * h * alpha[1] ^ 2,
+            2 * h * u * alpha[0] + 4 / 5 * h * alpha[0] * alpha[1],
+            2 * h * u * alpha[1] + 2 / 3 * h * alpha[0] ^ 2 + 2 / 7 * h * alpha[1] ^ 2,
+        ]
+    )
+    flux_primitive_3 = vector(
+        [
+            h * u,
+            h * u
+            ^ 2 + 1 / 2 * g * h
+            ^ 2 + 1 / 3 * h * s
+            ^ 2 + 1 / 5 * h * k
+            ^ 2 + 1 / 7 * h * m
+            ^ 2,
+            2 * h * u * s + 4 / 5 * h * s * k + 18 / 35 * h * k * m,
+            2 * h * u * k + 2 / 3 * h * s
+            ^ 2 + 2 / 7 * h * k
+            ^ 2 + 4 / 21 * h * m
+            ^ 2 + 6 / 7 * h * s * m,
+            2 * h * u * m + 6 / 5 * h * s * k + 8 / 15 * h * k * m,
+        ]
+    )
+
+def get_generalized_shallow_water_equations(num_moments):
+    num_eqns = 1 + 2 * num_moments
+    t = var('t')
+    x = var('x')
+    y = var('y')
+    z = var('z')
+    g = var('g')
+    e_x = var('e_x')
+    e_y = var('e_y')
+    e_z = var('e_z')
+    nu = var('nu')
+    lambda_ = var('lambda_')
+    i = var('i', domain='integer')
+    j = var('j', domain='integer')
+    k = var('k', domain='integer')
+    h = function('h', nargs=3)(t, x, y)
+    h_b = function('h_b', nargs=2)(x, y)
+    u = function('u', nargs=3)(t, x, y)
+    v = function('v', nargs=3)(t, x, y)
+    get_symbolic = lambda str_name: function(str_name, nargs=3)(t, x, y)
+    alpha = get_vector_symbolic('alpha', num_moments, get_symbolic)
+    beta = get_vector_symbolic('beta', num_moments, get_symbolic)
