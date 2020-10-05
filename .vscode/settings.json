@@ -1,6 +1,6 @@
 {
-    "python.pythonPath": "/Users/logemann/miniconda3/envs/sage/bin/python",
-    "python.linting.enabled": true,
+    "python.pythonPath": "/Users/caleblogemann/miniconda3/envs/Research/bin/python",
+    "python.linting.enabled": false,
     "files.exclude": {
         "Python": true,
         "ThinFilmPaper": true,
