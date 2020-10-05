@@ -1,3 +1,7 @@
+load("../Sage/SymbolicVectorMatrix.sage")
+load("../Sage/LegendrePolynomials.sage")
+
+
 def set_generalized_shallow_water_variables(num_moments):
     g = var("g", domain="positive")
     # primitive variables
@@ -376,3 +380,328 @@ def set_generalized_shallow_water_variables(num_moments):
         Z_5_im1: sqrt(H_im1) * M_im1,
     }
 
+
+def set_generalized_shallow_water_variables_2d(num_moments):
+    g = var("g", domain="positive")
+    # primitive variables
+    h = var("h", domain="positive")
+    u = var("u")
+    v = var("v")
+    if num_moments > 0:
+        alpha = get_vector_variable("alpha", num_moments)
+        beta = get_vector_variable("beta", num_moments)
+
+    list_ = [h, u, v]
+    for i in range(num_moments):
+        list_.append(alpha[i])
+        list_.append(beta[i])
+
+    global primitive, conserved
+    primitive = vector(list_)
+    conserved = get_vector_variable("q", 3 + 2 * num_moments)
+
+    global p, q
+    p = primitive
+    q = conserved
+
+    # substitution dictionaries
+    global p_to_q, q_to_p
+    p_to_q = {
+        h: q[0],
+        u: q[1] / q[0],
+        v: q[2] / q[0],
+    }
+    q_to_p = {
+        q[0]: h,
+        q[1]: h * u,
+        q[2]: h * v,
+    }
+    for i in range(num_moments):
+        p_to_q[alpha[i]] = q[3 + 2 * i] / q[0]
+        p_to_q[beta[i]] = q[4 + 2 * i] / q[0]
+        q_to_p[q[3 + 2 * i]] = h * alpha[i]
+        q_to_p[q[4 + 2 * i]] = h * beta[i]
+
+    # transformation symbolic expressions
+    global p_q, q_p
+    p_q = vector(p_to_q.values())
+    q_p = vector(q_to_p.values())
+
+    # transformation jacobians
+    global p_q_j, q_p_j
+    p_q_j = jacobian(p_q, q)
+    q_p_j = jacobian(q_p, p)
+
+    # get equations, get f_x_p, f_y_p,
+    get_generalized_shallow_water_equations_2d(num_moments)
+
+    # conserved and transform fluxes
+    global f_x_q, f_y_q
+    f_x_q = f_x_p.subs(p_to_q)
+    f_y_q = f_y_p.subs(p_to_q)
+
+    # flux_jacobians
+    global f_x_p_j, f_x_q_j, f_y_p_j, f_y_q_j
+    f_x_p_j = jacobian(f_x_p, p)
+    f_y_p_j = jacobian(f_y_p, p)
+    f_x_q_j = jacobian(f_x_p, q)
+    f_y_q_j = jacobian(f_y_p, q)
+
+    # Nonconserved matrix
+    global Q_x_q, Q_y_q
+    Q_x_q = Q_x_p.subs(p_to_q)
+    Q_y_q = Q_y_p.subs(p_to_q)
+
+    # Quasilinear Matrices
+    global A_p, A_q, B_p, B_q, A_x_p, A_x_q, A_y_p, A_y_q
+    A_x_q = f_x_q_j - Q_x_q
+    A_y_q = f_y_q_j - Q_y_q
+    # should also be equivalent to f_x_p_j @ p_q_j - Q_x_p
+    A_x_p = A_x_q.subs(q_to_p)
+    # should also be equivalent to f_y_p_j @ p_q_j - Q_y_p
+    A_y_p = A_u_q.subs(q_to_p)
+
+    A_p = A_x_p
+    A_q = A_x_q
+    B_p = B_x_p
+    B_q = B_x_q
+
+
+def get_generalized_shallow_water_equations_2d(n, is_functions=False):
+    # pass in number of moments not counting constant moment
+    # number of moments including constant moment
+    num_moments = n + 1
+    num_eqns = 1 + 2 * num_moments
+    t = var("t")
+    x = var("x")
+    y = var("y")
+    z = var("z")
+    g = var("g")
+    e_x = var("e_x")
+    e_y = var("e_y")
+    e_z = var("e_z")
+    nu = var("nu")
+    lambda_ = var("lambda_")
+    i = var("i", domain="integer")
+    j = var("j", domain="integer")
+    k = var("k", domain="integer")
+    if is_functions:
+        h = function("h", nargs=3)(t, x, y)
+        h_b = function("h_b", nargs=2)(x, y)
+        u = function("u", nargs=3)(t, x, y)
+        v = function("v", nargs=3)(t, x, y)
+        get_symbolic = lambda str_name: function(str_name, nargs=3)(t, x, y)
+        alpha = get_vector_symbolic("alpha", num_moments - 1, get_symbolic)
+        beta = get_vector_symbolic("beta", num_moments - 1, get_symbolic)
+    else:
+        h = var("h", domain="positive")
+        h_b = var("h_b", domain="positive")
+        u = var("u")
+        v = var("v")
+        alpha = get_vector_variable("alpha", num_moments - 1)
+        beta = get_vector_variable("beta", num_moments - 1)
+
+    phi = get_legendre_polynomials_fixed_lower_endpoint(num_moments, 1, 0, 1)
+    A = [
+        [
+            [
+                (2 * i + 1) * (phi[i] * phi[j] * phi[k]).integrate(x, 0, 1)
+                for k in range(num_moments)
+            ]
+            for j in range(num_moments)
+        ]
+        for i in range(num_moments)
+    ]
+    print('B')
+    B = [
+        [
+            [
+                (2 * i + 1)
+                * (
+                    phi[i].derivative(x) * (phi[j](x=z)).integrate(z, 0, x) * phi[k]
+                ).integrate(x, 0, 1)
+                for k in range(num_moments)
+            ]
+            for j in range(num_moments)
+        ]
+        for i in range(num_moments)
+    ]
+    print('C')
+    C = [
+        [
+            (phi[i].derivative(x) * phi[j].derivative(x)).integrate(x, 0, 1)
+            for j in range(num_moments)
+        ]
+        for i in range(num_moments)
+    ]
+    print('D')
+    D = [
+        (h * alpha[i]).derivative(x) + (h * beta[i]).derivative(y)
+        for i in range(num_moments)
+    ]
+
+    # fluxes
+    f_x_list = [
+        h * u,
+        h * u
+        ^ 2
+        + h * sum([alpha[j] ^ 2 / (2 * j + 3) for j in range(num_moments-1)])
+        + 1 / 2 * g * e_z * h
+        ^ 2,
+        h * u * v
+        + h * sum([alpha[j] * beta[j] / (2 * j + 3) for j in range(num_moments-1)]),
+    ]
+    f_y_list = [
+        h * v,
+        h * u * v
+        + h * sum([alpha[j] * beta[j] / (2 * j + 3) for j in range(num_moments-1)]),
+        h * v
+        ^ 2
+        + h * sum([beta[j] ^ 2 / (2 * j + 3) for j in range(num_moments-1)])
+        + 1 / 2 * g * e_z * h
+        ^ 2,
+    ]
+
+    print('s')
+    # source term
+    s_list = [
+        0,
+        -nu / lambda_ * (u + sum([alpha[j] for j in range(num_moments-1)]))
+        + h * g * (e_x - e_z * h_b.derivative(x)),
+        -nu / lambda_ * (v + sum([beta[j] for j in range(num_moments-1)]))
+        + h * g * (e_y - e_z * h_b.derivative(y)),
+    ]
+
+    for i in range(num_moments - 1):
+        f_x_list.append(
+            2 * h * u * alpha[i]
+            + h
+            * sum(
+                [
+                    sum(
+                        [
+                            A[i][j][k] * alpha[j] * alpha[k]
+                            for k in range(num_moments - 1)
+                        ]
+                    )
+                    for j in range(num_moments - 1)
+                ]
+            )
+        )
+        f_x_list.append(
+            h * u * beta[i]
+            + h * v * alpha[i]
+            + h
+            * sum(
+                [
+                    sum(
+                        [A[i][j][k] * alpha[j] * beta[k] for k in range(num_moments-1)]
+                    )
+                    for j in range(num_moments-1)
+                ]
+            )
+        )
+
+        f_y_list.append(
+            h * u * beta[i]
+            + h * v * alpha[i]
+            + h
+            * sum(
+                [
+                    sum(
+                        [A[i][j][k] * alpha[j] * beta[j] for k in range(num_moments - 1)]
+                    )
+                    for j in range(num_moments - 1)
+                ]
+            )
+        )
+        f_y_list.append(
+            2 * h * v * beta[i]
+            + h
+            * sum(
+                [
+                    sum([A[i][j][k] * beta[j] * beta[k] for k in range(num_moments - 1)])
+                    for j in range(num_moments - 1)
+                ]
+            )
+        )
+
+        s_list.append(
+            -(2 * i + 3)
+            * nu
+            / lambda_
+            * (
+                u
+                + sum(
+                    [
+                        (1 + lambda_ / h * C[i][j]) * alpha[j]
+                        for j in range(num_moments - 1)
+                    ]
+                )
+            )
+        )
+        s_list.append(
+            -(2 * i + 3)
+            * nu
+            / lambda_
+            * (
+                v
+                + sum(
+                    [
+                        (1 + lambda_ / h * C[i][j]) * beta[j]
+                        for j in range(num_moments - 1)
+                    ]
+                )
+            )
+        )
+
+    # nonconservative product matrices
+    G_x_lists = [[0 for i in range(num_eqns)] for j in range(num_eqns)]
+    G_y_lists = [[0 for i in range(num_eqns)] for j in range(num_eqns)]
+
+    for i in range(num_moments - 1):
+        a_i_eqn = 1 + 2 * i
+        b_i_eqn = 2 + 2 * i
+        for j in range(1, num_moments):
+            # (h alpha_j)_x term, column index
+            a_j_eqn = 1 + 2 * j
+            # (h beta_j)_y term, column index
+            b_j_eqn = 2 + 2 * j
+
+            # h alpha[i] equation
+            # (h alpha_i)_t + ... = ... - sum{j=1}{N}{D_j \sum{k=1}{N}{B_ijk alpha_k}} + ...
+            # (h alpha_j)_x sum{k=1}{N}{-B_ijk alpha_k}
+            G_x_lists[a_i_eqn][a_j_eqn] = sum(
+                [-B[i][j][k] * alpha[k] for k in range(1, num_moments)]
+            )
+            # (h beta_j)_y sum{k=1}{N}{-B_ijk alpha_k}
+            G_y_lists[a_i_eqn][b_j_eqn] = sum(
+                [-B[i][j][k] * alpha[k] for k in range(1, num_moments)]
+            )
+
+            # (h beta_i)_t + ... = ... - sum{j=1}{N}{D_j \sum{k=1}{N}{B_ijk beta_k}} + ...
+            # (h alpha_j)_x sum{k=1}{N}{-B_ijk beta_k}
+            G_x_lists[b_i_eqn][a_j_eqn] = sum(
+                [-B[i][j][k] * beta[k] for k in range(1, num_moments)]
+            )
+            # (h beta_j)_y sum{k=1}{N}{-B_ijk beta_k}
+            G_y_lists[b_i_eqn][b_j_eqn] = sum(
+                [-B[i][j][k] * beta[k] for k in range(1, num_moments)]
+            )
+
+        # (h alpha_i)_t + ... = u D_i + ...
+        # u D_i = u (h alpha_i)_x + u (h beta_i)_y
+        G_x_lists[a_i_eqn][a_i_eqn] += u
+        G_y_lists[a_i_eqn][b_i_eqn] += u
+
+        # (h beta_i)_t + ... = v D_i + ...
+        # v D_i = v (h alpha_i)_x + v (h beta_i)_y
+        G_x_lists[b_i_eqn][a_i_eqn] += v
+        G_y_lists[b_i_eqn][b_i_eqn] += v
+
+    global f_x_p, f_y_p, G_x_p, G_y_p, s_p
+    f_x_p = vector(fx_list)
+    f_y_p = vector(fy_list)
+    G_x_p = matrix(gx_lists)
+    G_y_p = matrix(gy_lists)
+    s_p = vector(s_list)
