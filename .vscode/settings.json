@@ -1,11 +1,10 @@
 {
     "python.pythonPath": "/Users/logemann/miniconda3/envs/sage/bin/python",
-    "python.linting.enabled": true,
     "files.exclude": {
         "Python": true,
         "ThinFilmPaper": true,
     },
     "git.detectSubmodules": false,
     "python.dataScience.jupyterServerURI": "http://localhost:8888/?token=a0fb34d3d53e235605d187c3f64ff8a93a09fdb750f39a10",
-    "python.linting.flake8Enabled": true,
+    "python.linting.enabled": false,
 }
