@@ -448,23 +448,23 @@ def set_generalized_shallow_water_variables_2d(num_moments):
     f_y_q_j = jacobian(f_y_p, q)
 
     # Nonconserved matrix
-    global Q_x_q, Q_y_q
-    Q_x_q = Q_x_p.subs(p_to_q)
-    Q_y_q = Q_y_p.subs(p_to_q)
+    global G_x_q, G_y_q
+    G_x_q = G_x_p.subs(p_to_q)
+    G_y_q = G_y_p.subs(p_to_q)
 
     # Quasilinear Matrices
     global A_p, A_q, B_p, B_q, A_x_p, A_x_q, A_y_p, A_y_q
-    A_x_q = f_x_q_j - Q_x_q
-    A_y_q = f_y_q_j - Q_y_q
-    # should also be equivalent to f_x_p_j @ p_q_j - Q_x_p
+    A_x_q = f_x_q_j - G_x_q
+    A_y_q = f_y_q_j - G_y_q
+    # should also be equivalent to f_x_p_j @ p_q_j - G_x_p
     A_x_p = A_x_q.subs(q_to_p)
-    # should also be equivalent to f_y_p_j @ p_q_j - Q_y_p
-    A_y_p = A_u_q.subs(q_to_p)
+    # should also be equivalent to f_y_p_j @ p_q_j - G_y_p
+    A_y_p = A_y_q.subs(q_to_p)
 
     A_p = A_x_p
     A_q = A_x_q
-    B_p = B_x_p
-    B_q = B_x_q
+    B_p = A_y_p
+    B_q = A_y_q
 
 
 def get_generalized_shallow_water_equations_2d(n, is_functions=False):
@@ -537,9 +537,10 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
     print('D')
     D = [
         (h * alpha[i]).derivative(x) + (h * beta[i]).derivative(y)
-        for i in range(num_moments)
+        for i in range(num_moments - 1)
     ]
 
+    print('f')
     # fluxes
     f_x_list = [
         h * u,
@@ -700,8 +701,8 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
         G_y_lists[b_i_eqn][b_i_eqn] += v
 
     global f_x_p, f_y_p, G_x_p, G_y_p, s_p
-    f_x_p = vector(fx_list)
-    f_y_p = vector(fy_list)
-    G_x_p = matrix(gx_lists)
-    G_y_p = matrix(gy_lists)
+    f_x_p = vector(f_x_list)
+    f_y_p = vector(f_y_list)
+    G_x_p = matrix(G_x_lists)
+    G_y_p = matrix(G_y_lists)
     s_p = vector(s_list)
