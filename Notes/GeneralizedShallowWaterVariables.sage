@@ -2,7 +2,7 @@ load("../Sage/SymbolicVectorMatrix.sage")
 load("../Sage/LegendrePolynomials.sage")
 
 
-def set_generalized_shallow_water_variables(num_moments):
+def set_generalized_shallow_water_variables_1d(num_moments):
     g = var("g", domain="positive")
     # primitive variables
     h = var("h", domain="positive")
@@ -444,8 +444,8 @@ def set_generalized_shallow_water_variables_2d(num_moments):
     global f_x_p_j, f_x_q_j, f_y_p_j, f_y_q_j
     f_x_p_j = jacobian(f_x_p, p)
     f_y_p_j = jacobian(f_y_p, p)
-    f_x_q_j = jacobian(f_x_p, q)
-    f_y_q_j = jacobian(f_y_p, q)
+    f_x_q_j = jacobian(f_x_q, q)
+    f_y_q_j = jacobian(f_y_q, q)
 
     # Nonconserved matrix
     global G_x_q, G_y_q
@@ -467,11 +467,9 @@ def set_generalized_shallow_water_variables_2d(num_moments):
     B_q = A_y_q
 
 
-def get_generalized_shallow_water_equations_2d(n, is_functions=False):
+def get_generalized_shallow_water_equations_2d(num_moments, is_functions=False):
     # pass in number of moments not counting constant moment
-    # number of moments including constant moment
-    num_moments = n + 1
-    num_eqns = 1 + 2 * num_moments
+    num_eqns = 3 + 2 * num_moments
     t = var("t")
     x = var("x")
     y = var("y")
@@ -485,40 +483,38 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
     i = var("i", domain="integer")
     j = var("j", domain="integer")
     k = var("k", domain="integer")
+    h_b = function("h_b", nargs=2)(x, y)
     if is_functions:
         h = function("h", nargs=3)(t, x, y)
-        h_b = function("h_b", nargs=2)(x, y)
         u = function("u", nargs=3)(t, x, y)
         v = function("v", nargs=3)(t, x, y)
         get_symbolic = lambda str_name: function(str_name, nargs=3)(t, x, y)
-        alpha = get_vector_symbolic("alpha", num_moments - 1, get_symbolic)
-        beta = get_vector_symbolic("beta", num_moments - 1, get_symbolic)
+        alpha = get_vector_symbolic("alpha", num_moments, get_symbolic)
+        beta = get_vector_symbolic("beta", num_moments, get_symbolic)
     else:
         h = var("h", domain="positive")
-        h_b = var("h_b", domain="positive")
         u = var("u")
         v = var("v")
-        alpha = get_vector_variable("alpha", num_moments - 1)
-        beta = get_vector_variable("beta", num_moments - 1)
+        alpha = get_vector_variable("alpha", num_moments)
+        beta = get_vector_variable("beta", num_moments)
 
-    phi = get_legendre_polynomials_fixed_lower_endpoint(num_moments, 1, 0, 1)
+    phi = get_legendre_polynomials_fixed_lower_endpoint(num_moments + 1, 1, 0, 1)
     A = [
         [
             [
-                (2 * i + 1) * (phi[i] * phi[j] * phi[k]).integrate(x, 0, 1)
+                (2 * i + 3) * (phi[i + 1] * phi[j + 1] * phi[k + 1]).integrate(x, 0, 1)
                 for k in range(num_moments)
             ]
             for j in range(num_moments)
         ]
         for i in range(num_moments)
     ]
-    print('B')
     B = [
         [
             [
-                (2 * i + 1)
+                (2 * i + 3)
                 * (
-                    phi[i].derivative(x) * (phi[j](x=z)).integrate(z, 0, x) * phi[k]
+                    phi[i + 1].derivative(x) * (phi[j + 1](x=z)).integrate(z, 0, x) * phi[k + 1]
                 ).integrate(x, 0, 1)
                 for k in range(num_moments)
             ]
@@ -526,10 +522,9 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
         ]
         for i in range(num_moments)
     ]
-    print('C')
     C = [
         [
-            (phi[i].derivative(x) * phi[j].derivative(x)).integrate(x, 0, 1)
+            (phi[i + 1].derivative(x) * phi[j + 1].derivative(x)).integrate(x, 0, 1)
             for j in range(num_moments)
         ]
         for i in range(num_moments)
@@ -546,34 +541,33 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
         h * u,
         h * u
         ^ 2
-        + h * sum([alpha[j] ^ 2 / (2 * j + 3) for j in range(num_moments-1)])
+        + h * sum([alpha[j] ^ 2 / (2 * j + 3) for j in range(num_moments)])
         + 1 / 2 * g * e_z * h
         ^ 2,
         h * u * v
-        + h * sum([alpha[j] * beta[j] / (2 * j + 3) for j in range(num_moments-1)]),
+        + h * sum([alpha[j] * beta[j] / (2 * j + 3) for j in range(num_moments)]),
     ]
     f_y_list = [
         h * v,
         h * u * v
-        + h * sum([alpha[j] * beta[j] / (2 * j + 3) for j in range(num_moments-1)]),
+        + h * sum([alpha[j] * beta[j] / (2 * j + 3) for j in range(num_moments)]),
         h * v
         ^ 2
-        + h * sum([beta[j] ^ 2 / (2 * j + 3) for j in range(num_moments-1)])
+        + h * sum([beta[j] ^ 2 / (2 * j + 3) for j in range(num_moments)])
         + 1 / 2 * g * e_z * h
         ^ 2,
     ]
 
-    print('s')
     # source term
     s_list = [
         0,
-        -nu / lambda_ * (u + sum([alpha[j] for j in range(num_moments-1)]))
+        -nu / lambda_ * (u + sum([alpha[j] for j in range(num_moments)]))
         + h * g * (e_x - e_z * h_b.derivative(x)),
-        -nu / lambda_ * (v + sum([beta[j] for j in range(num_moments-1)]))
+        -nu / lambda_ * (v + sum([beta[j] for j in range(num_moments)]))
         + h * g * (e_y - e_z * h_b.derivative(y)),
     ]
 
-    for i in range(num_moments - 1):
+    for i in range(num_moments):
         f_x_list.append(
             2 * h * u * alpha[i]
             + h
@@ -582,10 +576,10 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
                     sum(
                         [
                             A[i][j][k] * alpha[j] * alpha[k]
-                            for k in range(num_moments - 1)
+                            for k in range(num_moments)
                         ]
                     )
-                    for j in range(num_moments - 1)
+                    for j in range(num_moments)
                 ]
             )
         )
@@ -596,9 +590,9 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
             * sum(
                 [
                     sum(
-                        [A[i][j][k] * alpha[j] * beta[k] for k in range(num_moments-1)]
+                        [A[i][j][k] * alpha[j] * beta[k] for k in range(num_moments)]
                     )
-                    for j in range(num_moments-1)
+                    for j in range(num_moments)
                 ]
             )
         )
@@ -610,9 +604,9 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
             * sum(
                 [
                     sum(
-                        [A[i][j][k] * alpha[j] * beta[j] for k in range(num_moments - 1)]
+                        [A[i][j][k] * alpha[j] * beta[j] for k in range(num_moments)]
                     )
-                    for j in range(num_moments - 1)
+                    for j in range(num_moments)
                 ]
             )
         )
@@ -621,8 +615,8 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
             + h
             * sum(
                 [
-                    sum([A[i][j][k] * beta[j] * beta[k] for k in range(num_moments - 1)])
-                    for j in range(num_moments - 1)
+                    sum([A[i][j][k] * beta[j] * beta[k] for k in range(num_moments)])
+                    for j in range(num_moments)
                 ]
             )
         )
@@ -636,7 +630,7 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
                 + sum(
                     [
                         (1 + lambda_ / h * C[i][j]) * alpha[j]
-                        for j in range(num_moments - 1)
+                        for j in range(num_moments)
                     ]
                 )
             )
@@ -650,7 +644,7 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
                 + sum(
                     [
                         (1 + lambda_ / h * C[i][j]) * beta[j]
-                        for j in range(num_moments - 1)
+                        for j in range(num_moments)
                     ]
                 )
             )
@@ -660,34 +654,34 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
     G_x_lists = [[0 for i in range(num_eqns)] for j in range(num_eqns)]
     G_y_lists = [[0 for i in range(num_eqns)] for j in range(num_eqns)]
 
-    for i in range(num_moments - 1):
-        a_i_eqn = 1 + 2 * i
-        b_i_eqn = 2 + 2 * i
-        for j in range(1, num_moments):
+    for i in range(num_moments):
+        a_i_eqn = 3 + 2 * i
+        b_i_eqn = 4 + 2 * i
+        for j in range(num_moments):
             # (h alpha_j)_x term, column index
-            a_j_eqn = 1 + 2 * j
+            a_j_eqn = 3 + 2 * j
             # (h beta_j)_y term, column index
-            b_j_eqn = 2 + 2 * j
+            b_j_eqn = 4 + 2 * j
 
             # h alpha[i] equation
             # (h alpha_i)_t + ... = ... - sum{j=1}{N}{D_j \sum{k=1}{N}{B_ijk alpha_k}} + ...
             # (h alpha_j)_x sum{k=1}{N}{-B_ijk alpha_k}
             G_x_lists[a_i_eqn][a_j_eqn] = sum(
-                [-B[i][j][k] * alpha[k] for k in range(1, num_moments)]
+                [-B[i][j][k] * alpha[k] for k in range(num_moments)]
             )
             # (h beta_j)_y sum{k=1}{N}{-B_ijk alpha_k}
             G_y_lists[a_i_eqn][b_j_eqn] = sum(
-                [-B[i][j][k] * alpha[k] for k in range(1, num_moments)]
+                [-B[i][j][k] * alpha[k] for k in range(num_moments)]
             )
 
             # (h beta_i)_t + ... = ... - sum{j=1}{N}{D_j \sum{k=1}{N}{B_ijk beta_k}} + ...
             # (h alpha_j)_x sum{k=1}{N}{-B_ijk beta_k}
             G_x_lists[b_i_eqn][a_j_eqn] = sum(
-                [-B[i][j][k] * beta[k] for k in range(1, num_moments)]
+                [-B[i][j][k] * beta[k] for k in range(num_moments)]
             )
             # (h beta_j)_y sum{k=1}{N}{-B_ijk beta_k}
             G_y_lists[b_i_eqn][b_j_eqn] = sum(
-                [-B[i][j][k] * beta[k] for k in range(1, num_moments)]
+                [-B[i][j][k] * beta[k] for k in range(num_moments)]
             )
 
         # (h alpha_i)_t + ... = u D_i + ...
@@ -706,3 +700,38 @@ def get_generalized_shallow_water_equations_2d(n, is_functions=False):
     G_x_p = matrix(G_x_lists)
     G_y_p = matrix(G_y_lists)
     s_p = vector(s_list)
+
+    return (f_x_p, f_y_p, G_x_p, G_y_p, s_p)
+
+
+def get_generalized_shallow_water_equations_1d(num_moments, is_functions=False):
+    if is_functions:
+        v = function("v", nargs=3)(t, x, y)
+        get_symbolic = lambda str_name: function(str_name, nargs=3)(t, x, y)
+        beta = get_vector_symbolic("beta", num_moments, get_symbolic)
+    else:
+        v = var("v")
+        beta = get_vector_variable("beta", num_moments)
+
+    dict_ = {v: 0}
+    for i in range(num_moments):
+        dict_[beta[i]] = 0
+
+    tuple_ = get_generalized_shallow_water_equations_2d(num_moments, is_functions)
+
+    global f_p, G_p, s_p
+    f_p = tuple_[0].subs(dict_)
+    G_p = tuple_[2].subs(dict_)
+    s_p = tuple_[4].subs(dict_)
+
+    rows_delete = [2 * i + 2 for i in range(num_moments+1)]
+    G_p = G_p.delete_rows(rows_delete)
+    G_p = G_p.delete_columns(rows_delete)
+
+    rows_keep = [2 * i + 1 for i in range(num_moments+1)]
+    rows_keep.insert(0, 0)
+    f_p = vector([f_p[i] for i in rows_keep])
+    s_p = vector([s_p[i] for i in rows_keep])
+
+    return (f_p, G_p, s_p)
+
