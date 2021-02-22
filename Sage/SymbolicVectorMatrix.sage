@@ -13,8 +13,8 @@ def get_matrix_symbolic(name, num_rows, num_cols, get_symbolic):
         for j in range(num_cols):
             sym = get_symbolic(name + '_' + str(i) + '_' + str(j))
             list_2.append(sym)
-        list_.append(list_2)
-    return matrix(list_)
+        list_1.append(list_2)
+    return matrix(list_1)
 
 
 def get_vector_variable(name, length):
