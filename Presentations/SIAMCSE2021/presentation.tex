@@ -134,7 +134,9 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       \frametitle{Constant Moments}
       \small
       \begin{gather*}
-        h_t + \p{hu_m}_x + \p{hv_m}_y = 0 \\
+        \intertext{Continuity Equation}
+        h_t + \p{hu_m}_x + \p{hv_m}_y = 0
+        \intertext{Conservation of Momentum Equations}
         \p{h u_m}_t
         + \p{h\p{u_m^2 + \sum*{j = 1}{N}{\frac{\alpha_j^2}{2j + 1}}} + \frac{1}{2}g e_z h^2}_x \\
         + \p{h\p{u_m v_m + \sum*{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}_y
@@ -213,7 +215,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           3(u_m + \alpha_1 + 4\frac{\lambda}{h} \alpha_1)
         \end{bmatrix}
       \end{align*}
-      Flux Jacobian Eigenvalues, \(u_m \pm \sqrt{gh + \alpha_1^2}, u_m\)
+      Quasilinear Matrix Eigenvalues, \(u_m \pm \sqrt{gh + \alpha_1^2}, u_m\)
     \end{frame}
 
     \begin{frame}
@@ -257,7 +259,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
           5\p{u + \alpha_1 + \alpha_2 + 12 \frac{\lambda}{h}\alpha_2}
         \end{bmatrix}
       \end{gather*}
-      Flux Jacobian Eigenvalues, \(u \pm c \sqrt{gh}\)
+      Quasilinear Matrix Eigenvalues, \(u \pm c \sqrt{gh}\)
       \begin{gather*}
         c^4
         - \frac{10 \alpha_2}{7} c^3
@@ -269,29 +271,106 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
   \section{Nonconservative Products}
     \begin{frame}
-      \frametitle{Nonconservative Products}
+      \frametitle{Nonconservative Products, (\textcite{dal1995definition})}
       Model Equation
       \[
-        \v{q}_t + \div{\v{f}\p{\v{q}}} + Q_i(\v{q}) \v{q}_{x_i} = \v{s}(\v{q}) \quad
+        \v{q}_t + \div{\v{f}\p{\v{q}}} + g_i(\v{q}) \v{q}_{x_i} = \v{s}(\v{q}) \quad
         \text{for } \p{\v{x}, t} \in \Omega \times \br{0, T}
       \]
 
       Traditionally searching for weak solutions, find \(\v{q}\) such that
       \[
-        \dintt{0}{T}{\dintt{\Omega}{}{\p{\v{q}_t + \div{\v{f}\p{\v{q}}} + Q_i(\v{q}) \v{q}_{x_i}} v}{\v{x}}}{t} = \dintt{0}{T}{\dintt{\Omega}{}{\v{s}(\v{q}) v}{\v{x}}}{t}
+        \dintt{0}{T}{\dintt{\Omega}{}{\p{\v{q}_t + \div{\v{f}\p{\v{q}}} + g_i(\v{q}) \v{q}_{x_i}} v}{\v{x}}}{t} = \dintt{0}{T}{\dintt{\Omega}{}{\v{s}(\v{q}) v}{\v{x}}}{t}
       \]
       for all \(v \in C^1_0(\Omega \times \br{0, T})\)
     \end{frame}
 
+    \begin{frame}
+      \frametitle{Regularization Paths}
+      Consider Lipschitz continuous paths,
+      \(\v{\psi}:\br{0, 1} \times \RR^p \times \RR^p \to \RR^p \), that satisfy the
+      following properties.
+      \begin{enumerate}
+        \item \(\forall \v{q}_L, \v{q}_R \in \RR^p\),
+          \(\v{\psi}(0, \v{q}_L, \v{q}_R) = \v{q}_L\) and
+          \(\v{\psi}(1, \v{q}_L, \v{q}_R) = \v{q}_R\)
+        \item \(\exists k > 0\), \(\forall \v{q}_L, \v{q}_R \in \RR^p\),
+          \(\forall s \in \br{0, 1}\), \(\abs{\pd{\v{\psi}}{s}(s, \v{q}_L, \v{q}_R)}
+          \le k \abs{\v{q}_L - \v{q}_R}\) elementwise
+        \item \(\exists k > 0\), \(\forall \v{q}_L, \v{q}_R, \v{u}_L, \v{u}_R \in \RR^p\),
+          \(\forall s \in \br{0, 1}\), elementwise
+          \[
+            \abs{\pd{\v{\psi}}{s}(s, \v{q}_L, \v{q}_R) - \pd{\v{\psi}}{s}(s, \v{u}_L, \v{u}_R)}
+            \le k \p{\abs{\v{q}_L - \v{u}_L} + \abs{\v{q}_R - \v{u}_R}}
+          \]
+      \end{enumerate}
+
+      Let \(u = u_0 + H(x - x_0) (u_1 - u_0)\), then regularize
+      \[
+        u^{\varepsilon}(x) =
+        \begin{cases}
+          u_0 & x < x_0 - \varepsilon \\
+          \psi(\frac{x - x_0 + \varepsilon}{2 \varepsilon}, u_0, u_1) & x_0 - \varepsilon < x < x_0 + \varepsilon \\
+          u_1 & x > x_0 + \varepsilon
+        \end{cases}
+      \]
+
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Nonconservative Product Definition}
+      Let \(\v{q} \in BV\p{\br{a, b} \to \RR^p}\) and
+      \(g \in C^1\p{\RR^p \to \RR^p \times \RR^p}\), then \(\mu \) is a Borel measure.
+      \begin{enumerate}
+        \item If \(q\) is continuous on a Borel set \(B \subset \br{a, b}\), then
+          \[
+            \v{\mu}(B) = \dintt{B}{}{g(\v{q}) \d{\v{q}}{x}}{x}
+          \]
+        \item If \(q\) is discontinuous at a point \(x_0 \in \br{a, b}\), then
+          \[
+            \v{\mu}({x_0}) = \dintt{0}{1}{g(\v{\psi}(s; \v{q}(x_0^-), \v{q}(x_0^+))) \pd{\v{\psi}}{s}(s; \v{q}(x_0^-), \v{q}(x_0^+))}{s}
+          \]
+      \end{enumerate}
+      Define
+      \[
+        \v{\mu} = \br[\v{\psi}]{g(\v{q}) \d{\v{q}}{x}}
+      \]
+    \end{frame}
+
+    \begin{frame}
+      \frametitle{Nonconservative Products}
+      If there exists \(\v{f}(\v{q})\) such that \(\v{f}'(\v{q}) = g(\v{q})\), then
+      \[
+        \br[\psi]{g(\v{q}) \v{q}_x} = \v{f}\p{\v{q}}_x
+      \]
+      or
+      \[
+        \dintt{0}{1}{\v{f}'\p{\psi\p{s, \v{q}_L, \v{q}_R}}
+        \pd{\psi}{s}(s, \v{q}_L, \v{q}_R)}{s} = \v{f}\p{\v{q}_R} - \v{f}\p{\v{q}_R}
+      \]
+
+
+      Find weak solution \(\v{q}\) such that
+      \begin{gather*}
+        \dintt{0}{T}{\dintt{\Omega}{}{\v{q} v_t}{\v{x}}}{t}
+        + \dintt{0}{T}{\dintt{\Omega}{}{\v{f}\p{\v{q}} \div{v}}{\v{x}}}{t} \\
+        + \dintt{0}{T}{\dintt{\Omega}{}{\br[\psi]{g_i(\v{q}) \v{q}_{x_i}} v}{\v{x}}}{t}
+        = \dintt{0}{T}{\dintt{\Omega}{}{\v{s}(\v{q}) v}{\v{x}}}{t}
+      \end{gather*}
+      for all \(v \in C^1_0(\Omega \times \br{0, T})\).
+    \end{frame}
+
   \section{Nonconservative DG Formulation}
     \begin{frame}
-      \frametitle{}
+      \frametitle{Nonconservative DG Formulation}
 
     \end{frame}
 
   \section{Results}
     \begin{frame}
         \frametitle{Manufactured Solution}
+        Shallow Water Equations, constant vertical velocity profile
+        \footnotesize
         \begin{table}
           \centering
           \begin{tabular}{r*{6}l}
@@ -300,16 +379,149 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
             \midrule
             \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order\\
             \midrule
-             20 & \( 0.2263 \) & ---  & \( 8.572 \times 10^{-3} \) &  --- & \( 1.673 \times 10^{-4} \) &  --- \\
-             40 & \( 0.1166 \) & 0.96 & \( 2.166 \times 10^{-3} \) & 1.98 & \( 2.069 \times 10^{-5} \) & 3.02 \\
-             80 & \( 0.0581 \) & 1.00 & \( 5.397 \times 10^{-4} \) & 2.01 & \( 2.573 \times 10^{-6} \) & 3.01 \\
-            160 & \( 0.0278 \) & 1.06 & \( 1.348 \times 10^{-4} \) & 2.00 & \( 3.211 \times 10^{-7} \) & 3.00 \\
-            320 & \( 0.0140 \) & 0.99 & \( 3.372 \times 10^{-5} \) & 2.00 & \( 4.011 \times 10^{-8} \) & 3.00 \\
+             20 & \( 0.226 \) & ---  & \( 8.57 \times 10^{-3} \) &  --- & \( 1.67 \times 10^{-4} \) &  --- \\
+             40 & \( 0.117 \) & 0.96 & \( 2.17 \times 10^{-3} \) & 1.98 & \( 2.07 \times 10^{-5} \) & 3.02 \\
+             80 & \( 0.058 \) & 1.00 & \( 5.40 \times 10^{-4} \) & 2.01 & \( 2.57 \times 10^{-6} \) & 3.01 \\
+            160 & \( 0.028 \) & 1.06 & \( 1.35 \times 10^{-4} \) & 2.00 & \( 3.21 \times 10^{-7} \) & 3.00 \\
+            320 & \( 0.014 \) & 0.99 & \( 3.37 \times 10^{-5} \) & 2.00 & \( 4.01 \times 10^{-8} \) & 3.00 \\
             \bottomrule
           \end{tabular}
-          \caption{Convergence table with a constant, linear, quadratic polynomial bases.
-          CFL = 0.9, 0.2, 0.1 respectively.}\label{tab:convergence_results}
-        \end{table}}
+          % \caption{Convergence table for standard shallow water equations for first, second, and third order methods}\label{tab:convergence_results}
+        \end{table}
+        \begin{table}
+          \centering
+          \begin{tabular}{r*{4}l}
+            \toprule
+            & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+            \midrule
+            \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+            \midrule
+             20 & \( 3.172 \times 10^{-6}  \) & ---  & \( 7.606 \times 10^{-8}  \) & 0.00 \\
+             40 & \( 1.982 \times 10^{-7}  \) & 4.00 & \( 2.380 \times 10^{-9}  \) & 5.00 \\
+             80 & \( 1.240 \times 10^{-8}  \) & 4.00 & \( 7.713 \times 10^{-11} \) & 4.95 \\
+            160 & \( 7.755 \times 10^{-10} \) & 4.00 & \( 4.035 \times 10^{-11} \) & 0.93 \\
+            320 & \( 4.849 \times 10^{-11} \) & 4.00 & \( 8.085 \times 10^{-11} \) & -1.00 \\
+            \bottomrule
+          \end{tabular}
+          % \caption{Convergence table for standard shallow water equations for fourth and fifth order methods}\label{tab:0m45}
+        \end{table}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Manufactured Solution}
+        One moment, linear vertical velocity profile
+        \footnotesize
+        \begin{table}
+          \centering
+          \begin{tabular}{r*{6}l}
+            \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} \\
+            \midrule
+            \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order\\
+            \midrule
+             20 & \( 2.53 \times 10^{-1} \) & ---  & \( 9.97 \times 10^{-3} \) & ---  & \( 1.71 \times 10^{-3} \) & ---  \\
+             40 & \( 1.30 \times 10^{-1} \) & 0.96 & \( 2.52 \times 10^{-3} \) & 1.98 & \( 3.85 \times 10^{-4} \) & 2.15 \\
+             80 & \( 6.47 \times 10^{-2} \) & 1.00 & \( 6.28 \times 10^{-4} \) & 2.00 & \( 6.13 \times 10^{-5} \) & 2.65 \\
+            160 & \( 3.13 \times 10^{-2} \) & 1.05 & \( 1.57 \times 10^{-4} \) & 2.00 & \( 9.09 \times 10^{-6} \) & 2.75 \\
+            320 & \( 1.58 \times 10^{-2} \) & 0.99 & \( 3.92 \times 10^{-5} \) & 2.00 & \( 1.73 \times 10^{-6} \) & 2.39 \\
+            \bottomrule
+          \end{tabular}
+          % \caption{Convergence table for standard shallow water equations for first, second, and third order methods}\label{tab:convergence_results}
+        \end{table}
+        \begin{table}
+          \centering
+          \begin{tabular}{r*{4}l}
+            \toprule
+            & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+            \midrule
+            \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+            \midrule
+             20 & \( 1.14 \times 10^{-4} \) &  --- & \( 2.68 \times 10^{ -5} \) & ---  \\
+             40 & \( 1.74 \times 10^{-5} \) & 2.72 & \( 8.01 \times 10^{ -7} \) & 5.06 \\
+             80 & \( 7.50 \times 10^{-7} \) & 4.53 & \( 1.53 \times 10^{ -8} \) & 5.71 \\
+            160 & \( 1.25 \times 10^{-7} \) & 2.59 & \( 4.04 \times 10^{-10} \) & 5.25 \\
+            320 & \( 8.79 \times 10^{-9} \) & 3.83 & \( 8.40 \times 10^{-11} \) & 2.27 \\
+            \bottomrule
+          \end{tabular}
+          % \caption{Convergence table for standard shallow water equations for fourth and fifth order methods}\label{tab:0m45}
+        \end{table}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Manufactured Solution}
+        Two moments, quadratic vertical velocity profile
+        \footnotesize
+        \begin{table}
+          \centering
+          \begin{tabular}{r*{6}l}
+            \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} \\
+            \midrule
+            \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order\\
+            \midrule
+             20 & \( 2.778 \times 10^{-1} \) &  --- & \( 1.141 \times 10^{-2} \) &  --- & \( 5.350 \times 10^{-3} \) &  --- \\
+             40 & \( 1.424 \times 10^{-1} \) & 0.96 & \( 2.884 \times 10^{-3} \) & 1.98 & \( 6.466 \times 10^{-4} \) & 3.05 \\
+             80 & \( 7.121 \times 10^{-2} \) & 1.00 & \( 7.191 \times 10^{-4} \) & 2.00 & \( 7.836 \times 10^{-5} \) & 3.04 \\
+            160 & \( 3.454 \times 10^{-2} \) & 1.04 & \( 1.797 \times 10^{-4} \) & 2.00 & \( 1.270 \times 10^{-5} \) & 2.63 \\
+            320 & \( 1.740 \times 10^{-2} \) & 0.99 & \( 4.493 \times 10^{-5} \) & 2.00 & \( 2.546 \times 10^{-6} \) & 2.32 \\
+            \bottomrule
+          \end{tabular}
+          % \caption{Convergence table for standard shallow water equations for first, second, and third order methods}\label{tab:convergence_results}
+        \end{table}
+        \begin{table}
+          \centering
+          \begin{tabular}{r*{4}l}
+            \toprule
+            & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+            \midrule
+            \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+            \midrule
+             20 & \( 3.688 \times 10^{ -4} \) &  --- & \( 5.194 \times 10^{ -5} \) &  --- \\
+             40 & \( 2.461 \times 10^{ -5} \) & 3.91 & \( 1.121 \times 10^{ -6} \) & 5.53 \\
+             80 & \( 1.403 \times 10^{ -6} \) & 4.13 & \( 1.934 \times 10^{ -8} \) & 5.86 \\
+            160 & \( 1.144 \times 10^{ -7} \) & 3.62 & \( 5.859 \times 10^{-10} \) & 5.04 \\
+            320 & \( 1.092 \times 10^{ -8} \) & 3.39 & \( 8.791 \times 10^{-11} \) & 2.74 \\
+            \bottomrule
+          \end{tabular}
+          % \caption{Convergence table for standard shallow water equations for fourth and fifth order methods}\label{tab:0m45}
+        \end{table}
+    \end{frame}
+    \begin{frame}
+        \frametitle{Manufactured Solution}
+        Three moments, cubic vertical velocity profile
+        \footnotesize
+        \begin{table}
+          \centering
+          \begin{tabular}{r*{6}l}
+            \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} \\
+            \midrule
+            \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order\\
+            \midrule
+             20 & \( 3.024 \times 10^{-1} \) &  --- & \( 1.300 \times 10^{-2} \) &  --- & \( 7.015 \times 10^{-3} \) &  --- \\
+             40 & \( 1.556 \times 10^{-1} \) & 0.96 & \( 3.283 \times 10^{-3} \) & 1.99 & \( 6.992 \times 10^{-4} \) & 3.33 \\
+             80 & \( 7.808 \times 10^{-2} \) & 0.99 & \( 8.188 \times 10^{-4} \) & 2.00 & \( 1.183 \times 10^{-4} \) & 2.56 \\
+            160 & \( 3.802 \times 10^{-2} \) & 1.04 & \( 2.046 \times 10^{-4} \) & 2.00 & \( 2.545 \times 10^{-5} \) & 2.22 \\
+            320 & \( 1.916 \times 10^{-2} \) & 0.99 & \( 5.117 \times 10^{-5} \) & 2.00 & \( 5.110 \times 10^{-6} \) & 2.32 \\
+            \bottomrule
+          \end{tabular}
+          % \caption{Convergence table for standard shallow water equations for first, second, and third order methods}\label{tab:convergence_results}
+        \end{table}
+        \begin{table}
+          \centering
+          \begin{tabular}{r*{4}l}
+            \toprule
+            & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+            \midrule
+            \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+            \midrule
+             20 & \( 3.167 \times 10^{ -4} \) &  --- & \( 5.571 \times 10^{ -5} \) &  --- \\
+             40 & \( 2.384 \times 10^{ -5} \) & 3.73 & \( 1.099 \times 10^{ -6} \) & 5.66 \\
+             80 & \( 2.509 \times 10^{ -6} \) & 3.25 & \( 2.639 \times 10^{ -8} \) & 5.38 \\
+            160 & \( 3.168 \times 10^{ -7} \) & 2.99 & \( 1.371 \times 10^{ -9} \) & 4.27 \\
+            320 & \( 4.675 \times 10^{ -8} \) & 2.76 & \( 1.171 \times 10^{-10} \) & 3.55 \\
+            \bottomrule
+          \end{tabular}
+          % \caption{Convergence table for standard shallow water equations for fourth and fifth order methods}\label{tab:0m45}
+        \end{table}
     \end{frame}
 
     \begin{frame}
@@ -317,180 +529,19 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
     \end{frame}
 
-    \subsection{Numerical Methods}
-      \begin{frame}
-        \frametitle{Numerical Methods}
-        Model Equation
-        \[
-          \v{q}_t + \v{f}\p{\v{q}}_x = Q(\v{q}) \v{q}_x - \v{P}(\v{q}) \quad
-          \text{for } \p{x, t} \in \br{a, b} \times \br{0, T}
-        \]
-
-        Weak Form, find \(\v{q}\) such that
-        \[
-          \dintt{a}{b}{\v{q}_t v}{x} + \dintt{a}{b}{\v{f}\p{\v{q}}_x v}{x} = \dintt{a}{b}{Q(\v{q})\v{q}_x v}{x} - \dintt{a}{b}{\v{P}(\v{q}) v}{x}
-        \]
-        for all \(v \in L^2(\br{a, b} \times \br{0, T})\)
-      \end{frame}
-
-      \begin{frame}
-        \frametitle{Notation}
-        \begin{itemize}
-          \item Partition the domain, \(\br{a, b}\) as
-            \[
-              a = x_{1/2} < \cdots < x_{j-1/2} < x_{j+1/2} < \cdots < x_{N + 1/2} = b
-            \]
-
-          \item \(I_j = \br{x_{j-1/2}, x_{j+1/2}}\)
-          \item \(x_j = \frac{x_{j+1/2} + x_{j-1/2}}{2}\)
-          \item \(\Delta x_j = x_{j+1/2} - x_{j-1/2}\)
-          \item \(\Delta x_j = \Delta x\) for all \(j\).
-        \end{itemize}
-        % \vspace{0.5in}
-        \begin{center}
-          \includegraphics[scale=0.35]{Figures/DG_Cells.pdf}
-        \end{center}
-      \end{frame}
-
-      \begin{frame}
-        \frametitle{Discontinuous Galerkin Space}
-        Finite Dimensional DG Space
-        \[
-          V^k = \set{v \in L^2(\br{a, b}) \middle| \eval{v}{I_j} \in P^k(I_j)}
-        \]
-        Basis for \(V^k\)
-        \[
-          \set{\phi_j^{\ell}} \text{ where } \eval{\phi_j^{\ell}(x)}{I_j} = \phi^{\ell}(\xi_j(x)) \text{ and } \eval{\phi_j^{\ell}(x)}{\bar{I_j}} = 0
-        \]
-        for \(j = 1, \ldots, N\) and \(\ell = 1, \ldots k\).
-
-        Legendre Polynomials
-        \[
-          \phi^k \in P^k(\br{-1, 1}) \text{ with } \frac{1}{2}\dintt{-1}{1}{\phi^k(\xi) \phi^{\ell}(\xi)}{\xi} = \delta_{k\ell}
-        \]
-        and
-        \[
-          \xi_j(x) = \frac{2}{\Delta x_j} \p{x - x_j}
-        \]
-      \end{frame}
-
-      \begin{frame}
-        \frametitle{Numerical Methods}
-        Find \(\v{q}_h \in V^k\) such that
-        \begin{align*}
-          \dintt{I_j}{}{\p{\v{q}_h}_t \phi^{\ell}_j(x)}{x} &= \dintt{I_j}{}{\v{f}\p{\v{q}_h}_x \phi^{\ell}_j}{x} \\
-          &- F_{j+1/2}\phi^{\ell}_j(x_{j+1/2}) + F_{j-1/2}\phi^{\ell}_j(x_{j-1/2}) \\
-          &+ \dintt{I_j}{}{Q(\v{q}_h)\p{\v{q}_h}_x \phi^{\ell}_j}{x} - \dintt{I_j}{}{\v{P}(\v{q}_h) \phi^{\ell}_j}{x}
-        \end{align*}
-        for all \(\phi^{\ell}_j\).
-
-        Local Lax-Friedrichs Flux
-        \begin{align*}
-          \v{q}_h^+ &= \lim[x \to x_{j+1/2}^+]{\v{q}_h(x)} \\
-          \v{q}_h^- &= \lim[x \to x_{j+1/2}^-]{\v{q}_h(x)} \\
-          a &= \max[q \in \br{\v{q}_h^-, \v{q}_h^+}]{\rho(\v{f}'\p{\v{q}} - Q(\v{q}))} \\
-          F_{j+1/2} &= \frac{1}{2}\p{\v{f}\p{\v{q}_h^+} + \v{f}\p{\v{q}_h^-}} - \frac{1}{2}a\p{\v{q}_h^+ - \v{q}_h^-}
-        \end{align*}
-      \end{frame}
-
-      \begin{frame}
-        \frametitle{Nonconservative Flux}
-        Need to evaluate
-        \begin{gather*}
-          \dintt{}{I_j}{Q \v{q}_x \phi^{\ell}_j}{x}
-        \end{gather*}
-        \[
-          \eval{\v{q}}{I_j} = \sum{\ell = 1}{k}{Q_j^{\ell} \phi_j^{\ell}(x)}, \quad \eval{\v{q}_x}{I_j} = \sum{\ell = 1}{k}{Q_x^{\ell} \phi_j^{\ell}(x)}
-        \]
-        where
-        \begin{gather*}
-          \begin{bmatrix}
-            Q_x^1 \\
-            Q_x^2 \\
-            Q_x^3 \\
-            Q_x^4 \\
-            Q_x^5
-          \end{bmatrix}
-          = \frac{1}{2\Delta x}
-          \begin{bmatrix}
-            \Delta Q^1 - 2\sqrt{5} \Delta Q^3 + 78 \Delta Q^5 \\
-            \Delta Q^2 - \frac{10}{3} \sqrt{3} \sqrt{7} \Delta Q^4 \\
-            \Delta Q^3 - 14 \sqrt{5} \Delta Q^5 \\
-            \Delta Q^4 \\
-            \Delta Q^5
-          \end{bmatrix}
-        \end{gather*}
-        \[
-          \Delta Q^{\ell} = Q_{i+1}^{\ell} - Q_{i-1}^{\ell}
-        \]
-      \end{frame}
-
-    \subsection{Results}
-      \begin{frame}
-        \frametitle{Inviscid Example}
-        \begin{align*}
-          x &\in \br{-1, 1} \quad t \in \br{0, 2.0} \\
-          h(t=0, x) &= 1 + e^{3 \cos{\pi \p{x + 0.5}} - 4} \\
-          \tilde{u}(t=0, x, \zeta) &=
-          \begin{cases}
-            0.25 & \text{constant} \\
-            0.5 \zeta & \text{linear}
-          \end{cases} \\
-          u_m &= 0.25 \\
-          s &= -0.25
-        \end{align*}
-        \centering
-        \includegraphics[scale=0.3]{Figures/h_0.pdf}
-        % \includegraphics[scale=0.2]{Figures/velocity_profile_-0_4_0.pdf}
-        \includegraphics[scale=0.3]{Figures/velocity_profile_0_4_0.pdf}
-      \end{frame}
-
-      \begin{frame}
-        \frametitle{Inviscid Example}
-        \centering
-        \includegraphics[scale=0.3]{Figures/h_10.pdf}
-        \includegraphics[scale=0.3]{Figures/u_10.pdf}
-        % \includegraphics[scale=0.2]{Figures/s_10.pdf}
-        \includegraphics[scale=0.3]{Figures/velocity_profile_-0_4.pdf}
-        \includegraphics[scale=0.3]{Figures/velocity_profile_0_4.pdf}
-      \end{frame}
-
-    \subsection{Future Work}
-      \begin{frame}
-        \frametitle{Future Work}
-        \begin{itemize}
-          \item Higher Order Numerical Methods
-          \item Slope Limiters
-          \item Two Dimensional Meshes
-          \item Icosahedral Spherical Mesh
-          \item Positivity Preserving Limiters
-        \end{itemize}
-      \end{frame}
-
-      \begin{frame}
-        \frametitle{Icosahedral Mesh}
-        \includegraphics[scale=0.3]{Figures/icosahedral_mesh.pdf}
-        Subdivide each edge \\
-        Project vertices onto sphere
-      \end{frame}
-
-      \begin{frame}
-        \frametitle{Spherical Test Cases}
-        \centering
-        \includegraphics[scale=2.6]{Figures/mountain_test_problem.jpg}
-      \end{frame}
-
-      \begin{frame}
-        \frametitle{Spherical Test Cases}
-        \centering
-        \includegraphics[scale=2.0]{Figures/rossby_test_case.jpg}
-      \end{frame}
-
-      \begin{frame}
-        \frametitle{Spherical Test Cases}
-        \centering
-        \includegraphics[scale=0.6]{Figures/cubed_sphere_vorticity.png}
-      \end{frame}
+    \begin{frame}
+      \frametitle{Conclusions}
+      \begin{itemize}
+        \item High Order Discontinous Galerkin Method
+        \item Properly Discretized Nonconservative Product
+      \end{itemize}
+      Future Work
+      \begin{itemize}
+        \item Two Dimensional Meshes
+        \item Icosahedral Spherical Mesh
+        \item Shallow Water test cases on the sphere
+      \end{itemize}
+    \end{frame}
 
     \begin{frame}[allowframebreaks]
       \frametitle{Bibliography}
