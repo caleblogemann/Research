@@ -5,12 +5,12 @@
     % ------------------------------------------------------------------------------
     % Slide Themes
     % ------------------------------------------------------------------------------
-    %\usetheme{default}
-    %\usetheme{AnnArbor}
-    %\usetheme{Antibes}
-    %\usetheme{Bergen}
-    \usetheme{Berkeley}
-    %\usetheme{Berlin}
+    % \usetheme{default}
+    % \usetheme{AnnArbor}
+    % \usetheme{Antibes}
+    % \usetheme{Bergen}
+    % \usetheme{Berkeley}
+    \usetheme{Berlin}
     %\usetheme{Boadilla}
     %\usetheme{CambridgeUS}
     %\usetheme{Copenhagen}
@@ -21,12 +21,12 @@
     %\usetheme{Hannover}
     %\usetheme{Ilmenau}
     %\usetheme{JuanLesPins} % rounded title, gradient at top with section, no bottom bar
-    %\usetheme{Luebeck}     % square title, toc at top of each slide
+    % \usetheme{Luebeck}     % square title, toc at top of each slide
     %\usetheme{Madrid}      % rounded title
     %\usetheme{Malmoe}
     %\usetheme{Marburg}
     %\usetheme{Montpellier}
-    %\usetheme{PaloAlto}
+    % \usetheme{PaloAlto}
     %\usetheme{Pittsburgh}
     %\usetheme{Rochester}
     %\usetheme{Singapore}
@@ -92,7 +92,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
   \section{Generalized Shallow Water Equations}
     \begin{frame}
-      \frametitle{Generalized Shallow Water}
+      \frametitle{Generalized Shallow Water, (\textcite{kowalski2017moment})}
       \includegraphics[scale=0.28]{Figures/ShallowWaterModel.pdf} \\
       Navier Stokes Equations with a free surface
       \begin{align*}
@@ -260,13 +260,13 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \end{bmatrix}
       \end{gather*}
       Quasilinear Matrix Eigenvalues, \(u \pm c \sqrt{gh}\)
-      \begin{gather*}
-        c^4
-        - \frac{10 \alpha_2}{7} c^3
-        - \p{1 + \frac{6\alpha_2^2}{35} + \frac{6 \alpha_1^2}{5}}c^2 \\
-        + \p{\frac{22\alpha_2^3}{35} - \frac{6\alpha_2 \alpha_1^2}{35} + \frac{10\alpha_2}{7}} c
-        - \frac{\alpha_2^4}{35} - \frac{6\alpha_2^2 \alpha_1^2}{35} - \frac{3\alpha_2^2}{7} + \frac{\alpha_1^4}{5} + \frac{\alpha_1^2}{5} = 0
-      \end{gather*}
+      % \begin{gather*}
+      %   c^4
+      %   - \frac{10 \alpha_2}{7} c^3
+      %   - \p{1 + \frac{6\alpha_2^2}{35} + \frac{6 \alpha_1^2}{5}}c^2 \\
+      %   + \p{\frac{22\alpha_2^3}{35} - \frac{6\alpha_2 \alpha_1^2}{35} + \frac{10\alpha_2}{7}} c
+      %   - \frac{\alpha_2^4}{35} - \frac{6\alpha_2^2 \alpha_1^2}{35} - \frac{3\alpha_2^2}{7} + \frac{\alpha_1^4}{5} + \frac{\alpha_1^2}{5} = 0
+      % \end{gather*}
     \end{frame}
 
   \section{Nonconservative Products}
@@ -319,14 +319,14 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
     \begin{frame}
       \frametitle{Nonconservative Product Definition}
-      Let \(\v{q} \in BV\p{\br{a, b} \to \RR^p}\) and
+      Let \(\v{q} \in BV\p{\Omega \to \RR^p}\) and
       \(g \in C^1\p{\RR^p \to \RR^p \times \RR^p}\), then \(\mu \) is a Borel measure.
       \begin{enumerate}
-        \item If \(q\) is continuous on a Borel set \(B \subset \br{a, b}\), then
+        \item If \(\v{q}\) is continuous on a Borel set \(B \subset \Omega \), then
           \[
             \v{\mu}(B) = \dintt{B}{}{g(\v{q}) \d{\v{q}}{x}}{x}
           \]
-        \item If \(q\) is discontinuous at a point \(x_0 \in \br{a, b}\), then
+        \item If \(\v{q}\) is discontinuous at a point \(x_0 \in \Omega \), then
           \[
             \v{\mu}({x_0}) = \dintt{0}{1}{g(\v{\psi}(s; \v{q}(x_0^-), \v{q}(x_0^+))) \pd{\v{\psi}}{s}(s; \v{q}(x_0^-), \v{q}(x_0^+))}{s}
           \]
@@ -346,9 +346,8 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       or
       \[
         \dintt{0}{1}{\v{f}'\p{\psi\p{s, \v{q}_L, \v{q}_R}}
-        \pd{\psi}{s}(s, \v{q}_L, \v{q}_R)}{s} = \v{f}\p{\v{q}_R} - \v{f}\p{\v{q}_R}
+        \pd{\psi}{s}(s, \v{q}_L, \v{q}_R)}{s} = \v{f}\p{\v{q}_L} - \v{f}\p{\v{q}_R}
       \]
-
 
       Find weak solution \(\v{q}\) such that
       \begin{gather*}
@@ -363,7 +362,41 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \section{Nonconservative DG Formulation}
     \begin{frame}
       \frametitle{Nonconservative DG Formulation}
+      Semi Discrete formulation \\
+      find
+      \(\v{q} \in V_h = \set{v \in L^1\p{\Omega} \big| \eval{v}{K_j} \in \PP^M(K_j)} \)
+      such that
+      \begin{gather*}
+        \dintt{\Omega}{}{v_h \v{q}_t}{x} + \dintt{\Omega}{}{v_h \div{\v{f}\p{\v{q}}}}{x} +
+          \dint{\Omega}{}{v_h \br[\v{\psi}]{g_i\p{\v{q}} \v{q}_{x_i}}}
+          = \dintt{\Omega}{}{v_h\v{s}\p{\v{q}}}{x}
+        \intertext{or}
+        \sum{j}{}{\dintt{K_j}{}{v_h \v{q}_t}{x}}
+          - \sum{j}{}{\dintt{K_j}{}{\div{v_{h}} \v{f}\p{\v{q}}}{x}} \\
+          + \sum{I}{}{\p{v_h^L - v_h^R} \hat{\v{f}}}
+          + \sum{j}{}{\dintt{K_j}{}{v_h g_i\p{\v{q}} \v{q}_{x_i}}{x}} \\
+          + \sum{I}{}{\dintt{I}{}{\hat{v}_h \p{\dintt{0}{1}{g\p{\v{\psi}\p{s, \v{q}^L_h, \v{q}^R_h}}
+            \v{\psi}_s\p{s, \v{q}^L_h, \v{q}^R_h}}{s} \, \v{n}}}{I}}
+          = \dintt{\Omega}{}{v_h\v{s}\p{\v{q}}}{x}
+      \end{gather*}
+      for all \(v_h \in V_h\).
+    \end{frame}
 
+    \begin{frame}
+      \frametitle{Nonconservative DG Formulation, (\textcite{rhebergen2008discontinuous})}
+      Test Function Flux,
+      \[
+        \hat{v}_h = \frac{1}{2} \p{v_h^+ + v_h^-}
+      \]
+      consistent with conservative DG formulation when \(\v{h}'(\v{q}) = g(\v{q})\).
+
+      \vspace{0.5cm}
+
+      Local Lax-Friedrichs Numerical Flux
+      \begin{gather*}
+        \lambda = \max[q \in \br{\v{q}_h^-, \v{q}_h^+}]{\rho(\v{f}'\p{\v{q}} + g(\v{q}))} \\
+        \hat{\v{f}} = \frac{1}{2}\p{\v{f}\p{\v{q}_h^+} + \v{f}\p{\v{q}_h^-}} - \frac{1}{2} \lambda \p{\v{q}_h^+ - \v{q}_h^-}
+      \end{gather*}
     \end{frame}
 
   \section{Results}
@@ -526,13 +559,30 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
     \begin{frame}
         \frametitle{Effect of Higher Moments}
+        \centering
+        \includegraphics[scale=0.29]{Figures/height_torillhon.pdf}
+        \includegraphics[scale=0.29]{Figures/mean_velocity_torrilhon.pdf}
+        \includegraphics[scale=0.29]{Figures/alpha_1_torrilhon.pdf}
+        \includegraphics[scale=0.29]{Figures/velocity_profile_-025_torrilhon.pdf}
+        % \includegraphics[scale=0.3]{Figures/velocity_profile_025_torrilhon.pdf}
+    \end{frame}
 
+    \begin{frame}
+        \frametitle{Effect of Higher Moments}
+        \centering
+        \includegraphics[scale=0.29]{Figures/height_dam.pdf}
+        \includegraphics[scale=0.29]{Figures/mean_velocity_dam.pdf}
+        \includegraphics[scale=0.29]{Figures/alpha_1_dam.pdf}
+        \includegraphics[scale=0.29]{Figures/velocity_profile_-1_dam.pdf}
+        % \includegraphics[scale=0.3]{Figures/velocity_profile_1_dam.pdf}
     \end{frame}
 
     \begin{frame}
       \frametitle{Conclusions}
+      Results
       \begin{itemize}
-        \item High Order Discontinous Galerkin Method
+        \item Discontinuous Galerkin Method for Generalized Shallow Water Equations
+        \item High Order Method
         \item Properly Discretized Nonconservative Product
       \end{itemize}
       Future Work
