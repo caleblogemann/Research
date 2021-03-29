@@ -1,0 +1,236 @@
+\documentclass[oneside]{article}
+\usepackage[letterpaper, margin=2cm]{geometry}
+\usepackage{Notes}
+
+\begin{document}
+\begin{center}
+  \textbf{\Large{Derivation of Shallow Water Linearized Moment Equations}} \\
+\end{center}
+
+Shallow Water Moment Equations
+\begin{gather*}
+  h_t + \p{hu_m}_x + \p{hv_m}_y = 0 \\
+  \p{h u_m}_t
+  + \p{h\p{u_m^2 + \sum*{j = 1}{N}{\frac{\alpha_j^2}{2j + 1}}}
+    + \frac{1}{2}g e_z h^2}_x
+  + \p{h\p{u_m v_m + \sum*{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}_y \\
+  = -\frac{\nu}{\lambda} \p{u_m + \sum*{j = 1}{N}{\alpha_j}}
+  + hg\p{e_x - e_z\p{h_b}_x} \\
+  \p{h v_m}_t
+  + \p{h\p{v_m^2 + \sum*{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}
+    + \frac{1}{2}g e_z h^2}_y
+  + \p{h\p{u_m v_m + \sum*{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}_x \\
+  = -\frac{\nu}{\lambda} \p{v_m + \sum*{j = 1}{N}{\beta_j}}
+  + hg\p{e_y - e_z\p{h_b}_y} \\
+  \p{h\alpha_i}_t
+  + \p{2 h u_m \alpha_i + h\sum*{j,k=1}{N}{A_{ijk}\alpha_j \alpha_k}}_x
+  + \p{h u_m \beta_i + h v_m \alpha_i + h\sum*{j,k=1}{N}{A_{ijk}\alpha_j \beta_k}}_y \\
+  = u_m D_i - \sum*{j,k=1}{N}{B_{ijk}D_j \alpha_k}
+  - \p{2i + 1} \frac{\nu}{\lambda}
+  \p{u_m + \sum*{j=1}{N}{\p{1 + \frac{\lambda}{h}C_{ij}}\alpha_j}} \\
+  \p{h\beta_i}_t
+  + \p{h u_m \beta_i + h v_m \alpha_i + h\sum*{j,k=1}{N}{A_{ijk}\alpha_j \beta_k}}_x
+  + \p{2 h v_m \beta_i + h\sum*{j,k=1}{N}{A_{ijk}\beta_j \beta_k}}_y \\
+  = v_m D_i - \sum*{j,k=1}{N}{B_{ijk}D_j \beta_k}
+  - \p{2i + 1} \frac{\nu}{\lambda}
+  \p{v_m + \sum*{j=1}{N}{\p{1 + \frac{\lambda}{h}C_{ij}}\beta_j}} \\
+  A_{ijk} = \p{2i + 1} \dintt{0}{1}{\phi_i \phi_j \phi_k}{\zeta} \\
+  B_{ijk} = \p{2i + 1}
+  \dintt{0}{1}{\phi_i' \p{\dintt{0}{\zeta}{\phi_j}{\hat{\zeta}}} \phi_k}{\zeta} \\
+  C_{ij} = \dintt{0}{1}{\phi_i' \phi_j'}{\zeta} \\
+  D_i = \p{h \alpha_i}_x + \p{h \beta_i}_y
+\end{gather*}
+
+To get to the Shallow Water Linearized Moment Equations, we assume that
+\(\alpha_i = O(\varepsilon)\) and \(\beta_i = O(\varepsilon)\) are drop all terms of
+\(O(\varepsilon^2)\) in the moment equations.
+The momentum equations remain the same even though they contain some of these terms.
+\begin{gather*}
+  h_t + \p{hu_m}_x + \p{hv_m}_y = 0 \\
+  \p{h u_m}_t
+  + \p{h\p{u_m^2 + \sum*{j = 1}{N}{\frac{\alpha_j^2}{2j + 1}}}
+    + \frac{1}{2}g e_z h^2}_x
+  + \p{h\p{u_m v_m + \sum*{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}_y \\
+  = -\frac{\nu}{\lambda} \p{u_m + \sum*{j = 1}{N}{\alpha_j}}
+  + hg\p{e_x - e_z\p{h_b}_x} \\
+  \p{h v_m}_t
+  + \p{h\p{v_m^2 + \sum*{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}
+    + \frac{1}{2}g e_z h^2}_y
+  + \p{h\p{u_m v_m + \sum*{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}_x \\
+  = -\frac{\nu}{\lambda} \p{v_m + \sum*{j = 1}{N}{\beta_j}}
+  + hg\p{e_y - e_z\p{h_b}_y} \\
+  \p{h\alpha_i}_t
+  + \p{2 h u_m \alpha_i}_x
+  + \p{h u_m \beta_i + h v_m \alpha_i}_y
+  = u_m D_i - \p{2i + 1} \frac{\nu}{\lambda}
+  \p{u_m + \sum*{j=1}{N}{\p{1 + \frac{\lambda}{h}C_{ij}}\alpha_j}} \\
+  \p{h\beta_i}_t
+  + \p{h u_m \beta_i + h v_m \alpha_i}_x
+  + \p{2 h v_m \beta_i}_y
+  = v_m D_i - \p{2i + 1} \frac{\nu}{\lambda}
+  \p{v_m + \sum*{j=1}{N}{\p{1 + \frac{\lambda}{h}C_{ij}}\beta_j}} \\
+  C_{ij} = \dintt{0}{1}{\phi_i' \phi_j'}{\zeta} \\
+  D_i = \p{h \alpha_i}_x + \p{h \beta_i}_y
+\end{gather*}
+
+We can write down the shallow water linearized moments equations in the form
+\begin{gather}
+  \v{q}_t + \v{f}_1\p{\v{q}}_x + \v{f}_2\p{\v{q}}_y
+  = g_1(\v{q}) \v{q}_x + g_2(\v{q}) \v{q}_y + \v{p}.
+\end{gather}
+In this case the unknown \(\v{q}\) will have the form
+\begin{gather}
+  \v{q} = \br{h, hu, hv, h\alpha_1, h\beta_1, h\alpha_2, h \beta_2, \ldots}^T,
+\end{gather}
+where the number of components depends on the number of moments in the velocity
+profiles.
+
+The wavespeeds of the two dimensional system in the direction
+\(\v{n} = \br{n_1, n_2}\), are given by the eigenvalues of the matrix
+\[
+  n_1 \p{\v{f}_1'(\v{q}) - g_1(\v{q})} + n_2 \p{\v{f}_2'(\v{q}) - g_2(\v{q})}.
+\]
+If this matrix is diaganalizable with real eigenvalues for all directions
+\(\v{n}\), then this system is considered hyperbolic.
+
+\begin{gather*}
+  \intertext{Flux Functions}
+  \v{f}_1(\v{q}) =
+  \begin{pmatrix}
+    h u                                                                               \\
+    \frac{1}{2} e_{z} g h^{2} + h u^2 + \sum{j = 1}{N}{\frac{1}{2j + 1} h \alpha_j^2} \\
+    h u v + \sum{j = 1}{N}{\frac{1}{2j + 1} h \alpha_{j} \beta_{j}}                   \\
+    2 h u \alpha_{1}                                                                  \\
+    \beta_{1} h u + \alpha_{1} h v                                                    \\
+    \vdots                                                                            \\
+    2 h u \alpha_N                                                                    \\
+    h u \beta_N + h v \alpha_N                                                        \\
+  \end{pmatrix}, \quad
+  \v{f}_2(\v{q}) =
+  \begin{pmatrix}
+    h v                                                                              \\
+    h u v + \sum{j = 1}{N}{\frac{1}{2j + 1} h \alpha_{j} \beta_{j}}                  \\
+    \frac{1}{2} e_{z} g h^{2} + h v^2 + \sum{j = 1}{N}{\frac{1}{2j + 1} h \beta_j^2} \\
+    h u \beta_{1}  + h v \alpha_{1}                                                  \\
+    2 h v \beta_1                                                                    \\
+    \vdots                                                                           \\
+    h u \beta_N + h v \alpha_N                                                       \\
+    2 h v \beta_N                                                                    \\
+  \end{pmatrix}
+  \intertext{Nonconservative Matrices}
+  g_1(\v{q}) =
+  \begin{pmatrix}
+    0 &   &   &   &   &   &   &        & \\
+    0 & 0 &   &   &   &   &   &        & \\
+      & 0 & 0 &   &   &   &   &        & \\
+      &   & 0 & u &   &   &   &        & \\
+      &   &   & v & 0 &   &   &        & \\
+      &   &   &   & 0 & u &   &        & \\
+      &   &   &   &   & v & 0 &        & \\
+      &   &   &   &   &   & 0 & \ddots & \\
+      &   &   &   &   &   &   & \ddots &
+  \end{pmatrix}, \quad
+  g_2(\v{q}) =
+  \begin{pmatrix}
+    0 & 0 &   &   &   &   &   &   &        \\
+      & 0 & 0 &   &   &   &   &   &        \\
+      &   & 0 & 0 &   &   &   &   &        \\
+      &   &   & 0 & u &   &   &   &        \\
+      &   &   &   & v & 0 &   &   &        \\
+      &   &   &   &   & 0 & u &   &        \\
+      &   &   &   &   &   & v & 0 &        \\
+      &   &   &   &   &   &   & 0 & \ddots \\
+      &   &   &   &   &   &   &   & \ddots
+  \end{pmatrix}
+  \intertext{Flux Jacobians}
+  \v{f}_1'(\v{q}) =
+  \begin{pmatrix}
+    0                                                                  & 1          & 0        & 0                     & 0                      & \cdots & 0                         & 0                       \\
+    e_{z} g h - u^{2} - \sum{i = 1}{N}{\frac{1}{2 * i + 1} \alpha_i^2} & 2 u        & 0        & \frac{2}{3} \alpha_1  & 0                      & \cdots & \frac{2}{2N + 1} \alpha_N & 0                       \\
+    -uv - \sum{i = 1}{N}{\frac{1}{2N + 1} \alpha_i \beta_i}            & v          & u        & \frac{1}{3} \beta_{1} & \frac{1}{3} \alpha_{1} & \cdots & \frac{1}{2N+1} \beta_N    & \frac{1}{2N+1} \alpha_N \\
+    -2 u \alpha_1                                                      & 2 \alpha_1 & 0        & 2 u                   &                        &        &                           &                         \\
+    -u \beta_1 - v \alpha_1                                            & \beta_1    & \alpha_1 & v                     & u                      &        &                           &                         \\
+    \vdots                                                             & \vdots     & \vdots   &                       & \ddots                 & \ddots &                           &                         \\
+    -2 u \alpha_N                                                      & 2 \alpha_N & 0        &                       &                        & 0      & 2u                        &                         \\
+    -u \beta_N - v \alpha_N                                            & \beta_N    & \alpha_N &                       &                        &        & v                         & u                       \\
+  \end{pmatrix} \\
+  \v{f}_2'(\v{q}) =
+  \begin{pmatrix}
+    0                                                              & 0       & 1         & 0                     & 0                      & \cdots & 0                      & 0                        \\
+    -uv - \sum{i = 1}{N}{\frac{1}{2i + 1} \alpha_i \beta_i}        & v       & u         & \frac{1}{3} \beta_{1} & \frac{1}{3} \alpha_{1} & \cdots & \frac{1}{2N+1} \beta_N & \frac{1}{2N+1} \alpha_N  \\
+    e_{z} g h - v^{2} - \sum{i = 1}{N}{\frac{1}{2i + 1} \beta_i^2} & 0       & 2v        & 0                     & \frac{2}{3} \beta_1    & \cdots & 0                      & \frac{2}{2N + 1} \beta_N \\
+    - u\beta_1 - \alpha_1 v                                        & \beta_1 & \alpha_1  & v                     & u                      &        &                        &                          \\
+    -2 v \beta_1                                                   & 0       & 2 \beta_1 &                       & 2 v                    & 0      &                        &                          \\
+    \vdots                                                         & \vdots  & \vdots    &                       &                        & \ddots & \ddots                 &                          \\
+    -u \beta_N - v \alpha_N                                        & \beta_N & \alpha_N  &                       &                        &        & v                      & u                        \\
+    -2 u \beta_N                                                   & 0       & 2 \beta_N &                       &                        &        &                        & 2v                       \\
+  \end{pmatrix} \\
+  \intertext{Quasilinear Matrices, \(A = \v{f}_1'(\v{q}) - g_1(\v{q}), B = \v{f}_2'(\v{q}) - g_2(\v{q})\)}
+  A =
+  \begin{pmatrix}
+    0                                                               & 1          & 0        & 0                     & 0                      & \cdots & 0                         & 0                       \\
+    e_{z} g h - u^{2} - \sum{i = 1}{N}{\frac{1}{2i + 1} \alpha_i^2} & 2 u        & 0        & \frac{2}{3} \alpha_1  & 0                      & \cdots & \frac{2}{2N + 1} \alpha_N & 0                       \\
+    -uv - \sum{i = 1}{N}{\frac{1}{2i + 1} \alpha_i \beta_i}         & v          & u        & \frac{1}{3} \beta_{1} & \frac{1}{3} \alpha_{1} & \cdots & \frac{1}{2N+1} \beta_N    & \frac{1}{2N+1} \alpha_N \\
+    -2 u \alpha_1                                                   & 2 \alpha_1 & 0        & u                     &                        &        &                           &                         \\
+    -u \beta_1 - v \alpha_1                                         & \beta_1    & \alpha_1 &                       & u                      &        &                           &                         \\
+    \vdots                                                          & \vdots     & \vdots   &                       &                        & \ddots &                           &                         \\
+    -2 u \alpha_N                                                   & 2 \alpha_N & 0        &                       &                        &        & u                         &                         \\
+    -u \beta_N - v \alpha_N                                         & \beta_N    & \alpha_N &                       &                        &        &                           & u                       \\
+  \end{pmatrix} \\
+  B =
+  \begin{pmatrix}
+    0                                                              & 0       & 1         & 0                     & 0                      & \cdots & 0                      & 0                        \\
+    -uv - \sum{i = 1}{N}{\frac{1}{2i + 1} \alpha_i \beta_i}        & v       & u         & \frac{1}{3} \beta_{1} & \frac{1}{3} \alpha_{1} & \cdots & \frac{1}{2N+1} \beta_N & \frac{1}{2N+1} \alpha_N  \\
+    e_{z} g h - v^{2} - \sum{i = 1}{N}{\frac{1}{2i + 1} \beta_i^2} & 0       & 2v        & 0                     & \frac{2}{3} \beta_1    & \cdots & 0                      & \frac{2}{2N + 1} \beta_N \\
+    - u\beta_1 - \alpha_1 v                                        & \beta_1 & \alpha_1  & v                     &                        &        &                        &                          \\
+    -2 v \beta_1                                                   & 0       & 2 \beta_1 &                       & v                      &        &                        &                          \\
+    \vdots                                                         & \vdots  & \vdots    &                       &                        & \ddots &                        &                          \\
+    -u \beta_N - v \alpha_N                                        & \beta_N & \alpha_N  &                       &                        &        & v                      &                          \\
+    -2 u \beta_N                                                   & 0       & 2 \beta_N &                       &                        &        &                        & v                        \\
+  \end{pmatrix} \\
+\end{gather*}
+
+Quasilinear Eigenvalues
+The wavespeeds of this system in direction \(\v{n} = \br{n_1, n_2}\) are given by
+the eigenvalues of the matrix
+\[
+  n_1 A + n_2 B.
+\]
+If all of the eigenvalues are real with a full set of eigenvectors, this this system
+is hyperbolic.
+
+Convenient constants
+\begin{gather*}
+  d^1_0 = n_1 \p{e_{z} g h - u^{2} - \sum{i = 1}{N}{\frac{1}{2i + 1} \alpha_i^2}}
+  + n_2 \p{-uv - \sum{i = 1}{N}{\frac{1}{2i + 1} \alpha_i \beta_i}} \\
+  d^2_0 = n_1 \p{-uv - \sum{i = 1}{N}{\frac{1}{2i + 1} \alpha_i \beta_i}}
+  + n_2 \p{e_{z} g h - v^{2} - \sum{i = 1}{N}{\frac{1}{2i + 1} \beta_i^2}} \\
+  d^1_i = n_1 \p{-2 u \alpha_i} + n_2 \p{- u\beta_i - \alpha_i v} \\
+  d^2_i = n_1 \p{-u \beta_i - v \alpha_i} + n_2 \p{-2 v \beta_i} \\
+  b^1_i = n_1 \frac{2}{2 i + 1} \alpha_i + n_2 \frac{1}{2i + 1} \beta_i \\
+  b^2_i = n_2 \frac{1}{2i + 1} \alpha_i \\
+  c^1_i = n_1 2 \alpha_i + n_2 \beta_i \\
+  c^2_i = n_1 \beta_i \\
+  c^3_i = n_2 \alpha_i \\
+  c^4_i = n_1 \alpha_i + n_2 2 \beta_i \\
+\end{gather*}
+
+\newcommand{\tl}{\tilde{\lambda}}
+\begin{gather*}
+  \det{n_1 A + n_2 B - \lambda I} =
+  \begin{vmatrix}
+    0      & n_1         & n_2         & 0     & 0     & \cdots & 0     & 0     \\
+    d^1_0  & n_1 u - \tl & n_2 u       & b^1_1 & b^2_1 & \cdots & b^1_N & b^2_N \\
+    d^2_0  & n_1 v       & n_2 v - \tl & b^3_1 & b^4_1 & \cdots & b^3_N & b^4_N \\
+    d^1_1  & c^1_1       & c^3_1       & -\tl  &       &        &       &       \\
+    d^2_1  & c^2_1       & c^4_1       &       & -\tl  &        &       &       \\
+    \vdots & \vdots      & \vdots      &       &       & \ddots &       &       \\
+    d^1_N  & c^1_N       &             &       &       &        & -\tl  &       \\
+    d^2_N  & c^2_N       &             &       &       &        &       & -\tl  \\
+  \end{vmatrix} \\
+\end{gather*}
+
+
+
+Quasilinear Eigenvectors
+\end{document}
