@@ -21,12 +21,32 @@ def test_get_hswme_equations():
         assert A_s.subs(dict_) == A
 
 
+def test_hswme_equal_to_swme():
+    # HSWME should be equal to SWME for 0 and 1 moments
+    for num_moments in range(2):
+        A_hswme = hswme.get_hswme_equations(num_moments)
+        tuple_ = swme.get_generalized_shallow_water_equations_1d(num_moments)
+        A_swme = tuple_[2]
+
+        assert A_hswme == A_swme
+
+
 def test_get_beta_hswme_equations():
     for num_moments in range(max_num_moments):
         num_eqns = num_moments + 2
         A = hswme.get_beta_hswme_equations(num_moments)
         assert A.nrows() == num_eqns
         assert A.ncols() == num_eqns
+
+
+def test_beta_hswme_equal_to_swme():
+    # HSWME should be equal to SWME for 0 and 1 moments
+    for num_moments in range(2):
+        A_beta_hswme = hswme.get_beta_hswme_equations(num_moments)
+        tuple_ = swme.get_generalized_shallow_water_equations_1d(num_moments)
+        A_swme = tuple_[2]
+
+        assert A_beta_hswme == A_swme
 
 
 def test_get_hswme_eigenvalues():

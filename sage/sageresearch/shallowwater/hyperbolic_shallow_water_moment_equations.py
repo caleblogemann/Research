@@ -16,8 +16,9 @@ def get_hswme_equations(num_moments):
     u = p[1]
     alpha = p[2:]
 
-    g = sa.SR.symbol("g", domain="positive")
-    e_z = sa.SR.symbol("e_z", domain="positive")
+    list_ = swme.get_misc_variables()
+    g = list_[0]
+    e_z = list_[3]
 
     # Quasilinear matrix
     A = sa.matrix(sa.SR, num_eqns)
@@ -94,3 +95,5 @@ def get_beta_hswme_equations(num_moments, beta=None):
 
 def get_beta_hswme_eigenvalues(num_moments, beta=None):
     pass
+
+

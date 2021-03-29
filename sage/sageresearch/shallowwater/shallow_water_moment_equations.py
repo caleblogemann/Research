@@ -49,7 +49,6 @@ def get_substitution_dictionaries_1d(num_moments):
         q_to_p[q[2 + i]] = h * p[2 + i]
 
     return (p_to_q, q_to_p)
-    pass
 
 
 def get_conserved_variables_2d(num_moments):
@@ -133,8 +132,7 @@ def get_generalized_shallow_water_equations_1d(num_moments):
     # set to zero in x variables
     f_p = tuple_[0].subs(dict_)
     G_p = tuple_[2].subs(dict_)
-    s_p = tuple_[4].subs(dict_)
-    A_p = tuple_[5].subs(dict_)
+    A_p = tuple_[4].subs(dict_)
 
     # delete rows and and colums related to v and betas
     rows_delete = [2 * i + 2 for i in range(num_moments + 1)]
@@ -147,9 +145,8 @@ def get_generalized_shallow_water_equations_1d(num_moments):
     rows_keep = [2 * i + 1 for i in range(num_moments + 1)]
     rows_keep.insert(0, 0)
     f_p = sa.vector([f_p[i] for i in rows_keep])
-    s_p = sa.vector([s_p[i] for i in rows_keep])
 
-    return (f_p, G_p, s_p, A_p)
+    return (f_p, G_p, A_p)
 
 
 def get_generalized_shallow_water_equations_2d(num_moments):
@@ -157,16 +154,10 @@ def get_generalized_shallow_water_equations_2d(num_moments):
     num_eqns = 3 + 2 * num_moments
     misc_var = get_misc_variables()
     g = misc_var[0]
-    e_x = misc_var[1]
-    e_y = misc_var[2]
     e_z = misc_var[3]
-    nu = misc_var[4]
-    lambda_ = misc_var[5]
-    h_b = misc_var[6]
     t = misc_var[7]
     x = misc_var[8]
     y = misc_var[9]
-    z = misc_var[10]
 
     p = get_primitive_variables_2d(num_moments)
     h = p[0]
@@ -233,15 +224,6 @@ def get_generalized_shallow_water_equations_2d(num_moments):
         + sa.Integer(1) / sa.Integer(2) * g * e_z * h * h,
     ]
 
-    # source term
-    s_list = [
-        sa.Integer(0),
-        -nu / lambda_ * (u + sum([alpha[j] for j in range(num_moments)]))
-        + h * g * (e_x - e_z * h_b.derivative(x)),
-        -nu / lambda_ * (v + sum([beta[j] for j in range(num_moments)]))
-        + h * g * (e_y - e_z * h_b.derivative(y)),
-    ]
-
     for i in range(num_moments):
         f_x_list.append(
             sa.Integer(2) * h * u * alpha[i]
@@ -284,29 +266,6 @@ def get_generalized_shallow_water_equations_2d(num_moments):
                     sum([A[i][j][k] * beta[j] * beta[k] for k in range(num_moments)])
                     for j in range(num_moments)
                 ]
-            )
-        )
-
-        s_list.append(
-            -sa.Integer(2 * i + 3)
-            * nu
-            / lambda_
-            * (
-                u
-                + sum(
-                    [(sa.Integer(1) + lambda_ / h * C[i][j]) * alpha[j] for j in range(num_moments)]
-                )
-            )
-        )
-        s_list.append(
-            -sa.Integer(2 * i + 3)
-            * nu
-            / lambda_
-            * (
-                v
-                + sum(
-                    [(sa.Integer(1) + lambda_ / h * C[i][j]) * beta[j] for j in range(num_moments)]
-                )
             )
         )
 
@@ -358,7 +317,6 @@ def get_generalized_shallow_water_equations_2d(num_moments):
     f_y_p = sa.vector(f_y_list)
     G_x_p = sa.matrix(G_x_lists)
     G_y_p = sa.matrix(G_y_lists)
-    s_p = sa.vector(s_list)
 
     tuple_ = get_substitution_dictionaries_2d(num_moments)
     p_to_q = tuple_[0]
@@ -384,4 +342,80 @@ def get_generalized_shallow_water_equations_2d(num_moments):
     # should also be equivalent to f_y_p_j @ p_q_j - G_y_p
     A_y_p = A_y_q.subs(q_to_p)
 
-    return (f_x_p, f_y_p, G_x_p, G_y_p, s_p, A_x_p, A_y_p)
+    return (f_x_p, f_y_p, G_x_p, G_y_p, A_x_p, A_y_p)
+
+
+def get_source_term_1d(num_moments):
+    p = get_primitive_variables_2d(num_moments)
+    # substitution dict to set v, and all betas to zero
+    dict_ = {p[2]: 0}
+    for i in range(num_moments):
+        dict_[p[4 + 2 * i]] = 0
+
+    # get 2d equations (f_x_p, f_y_p, G_x_p, G_y_p, s_p)
+    s = get_generalized_shallow_water_equations_2d(num_moments)
+
+    # set to zero in x variables
+    s_p = s.subs(dict_)
+
+    rows_keep = [2 * i + 1 for i in range(num_moments + 1)]
+    rows_keep.insert(0, 0)
+    s_p = sa.vector([s_p[i] for i in rows_keep])
+
+    return s_p
+
+
+def get_source_term_2d(num_moments):
+    num_eqns = 3 + 2 * num_moments
+    misc_var = get_misc_variables()
+    g = misc_var[0]
+    e_x = misc_var[1]
+    e_y = misc_var[2]
+    e_z = misc_var[3]
+    nu = misc_var[4]
+    lambda_ = misc_var[5]
+    h_b = misc_var[6]
+    x = misc_var[8]
+    y = misc_var[9]
+
+    p = get_primitive_variables_2d(num_moments)
+    h = p[0]
+    u = p[1]
+    v = p[2]
+    alpha = p[3::2]
+    beta = p[4::2]
+
+    s_list = [
+        sa.Integer(0),
+        -nu / lambda_ * (u + sum([alpha[j] for j in range(num_moments)]))
+        + h * g * (e_x - e_z * h_b.derivative(x)),
+        -nu / lambda_ * (v + sum([beta[j] for j in range(num_moments)]))
+        + h * g * (e_y - e_z * h_b.derivative(y)),
+    ]
+    for i in range(num_moments):
+        s_list.append(
+            -sa.Integer(2 * i + 3)
+            * nu
+            / lambda_
+            * (
+                u
+                + sum(
+                    [(sa.Integer(1) + lambda_ / h * C[i][j]) * alpha[j] for j in range(num_moments)]
+                )
+            )
+        )
+        s_list.append(
+            -sa.Integer(2 * i + 3)
+            * nu
+            / lambda_
+            * (
+                v
+                + sum(
+                    [(sa.Integer(1) + lambda_ / h * C[i][j]) * beta[j] for j in range(num_moments)]
+                )
+            )
+        )
+
+    s_p = sa.vector(s_list)
+
+    return s_p
