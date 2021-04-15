@@ -94,7 +94,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
     \begin{frame}
       \frametitle{Generalized Shallow Water, (\textcite{kowalski2017moment})}
       \includegraphics[scale=0.28]{Figures/ShallowWaterModel.pdf} \\
-      Navier Stokes Equations with a free surface
+      Incompressible Navier Stokes Equations with a free surface
       \begin{align*}
         \div{\v{u}} &= 0 \\
         \v{u}_t + \div*{\v{u}\v{u}} &= - \frac{1}{\rho} \grad{p}
@@ -132,9 +132,8 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
     \begin{frame}
       \frametitle{Constant Moments}
-      \small
+      Continuity Equation
       \begin{gather*}
-        \intertext{Continuity Equation}
         h_t + \p{hu_m}_x + \p{hv_m}_y = 0
         \intertext{Conservation of Momentum Equations}
         \p{h u_m}_t
@@ -591,6 +590,8 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
         \item Icosahedral Spherical Mesh
         \item Shallow Water test cases on the sphere
       \end{itemize}
+
+      Supported by SIAM Student Travel Award
     \end{frame}
 
     \begin{frame}[allowframebreaks]
