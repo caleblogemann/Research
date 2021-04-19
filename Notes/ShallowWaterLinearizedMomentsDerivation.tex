@@ -422,7 +422,7 @@ Look at coefficients of polynomial in \(\tl \).
   % + n_2^2 \p{e_{z} g h - v^{2} - \sum{i = 1}{N}{\frac{1}{2i + 1} \beta_i^2}}}
   % \sum{i=1}{N}{\frac{1}{2i + 1}\p{4 \alpha_i n_1 + \beta_i n_2}\p{\alpha_i n_1 + \beta_i n_2}} \\
   = \p{n_2 n_1 \p{ - \sum{i = 1}{N}{\frac{1}{2i + 1} \alpha_i \beta_i}}
-  + n_2^2 \p{e_{z} g h - \sum{i = 1}{N}{\frac{1}{2i + 1} \beta_i^2}}}
+    + n_2^2 \p{e_{z} g h - \sum{i = 1}{N}{\frac{1}{2i + 1} \beta_i^2}}}
   \sum{i=1}{N}{\frac{1}{2i + 1}\p{4 \alpha_i n_1 + \beta_i n_2}\p{\alpha_i n_1 + \beta_i n_2}} \\
   = e_z g h n_2^2 s_2 - \sum{i = 1}{N}{\frac{1}{2i + 1} \beta_i n_2 \p{\alpha_i n_1 + \beta_i n_2}}
   \sum{i=1}{N}{\frac{1}{2i + 1}\p{4 \alpha_i n_1 + \beta_i n_2}\p{\alpha_i n_1 + \beta_i n_2}} \\
@@ -495,12 +495,87 @@ Look at coefficients of polynomial in \(\tl \).
   \det{\tl \p{A - BD^{-1}C}} = -\tl^6
   + \p{4\sum{i=1}{N}{\frac{1}{2i + 1} a_i^2} + e_{z} g h \p{n_1^2 + n_2^2}} \tl^4 \\
   - \p{3\p{\sum{i=1}{N}{\frac{1}{2i+1} a_i^2}}^2
-  + e_{z} g h \p{n_1^2 + n_2^2}\sum{i=1}{N}{\frac{1}{2i + 1} a_i^2}} \tl^2 \\
+    + e_{z} g h \p{n_1^2 + n_2^2}\sum{i=1}{N}{\frac{1}{2i + 1} a_i^2}} \tl^2 \\
   \det{A - BD^{-1}C} = -\frac{1}{\tl}\p{\tl^2 - \p{3\p{\sum{i=1}{N}{\frac{1}{2i+1} a_i^2}}
-  + e_{z} g h \p{n_1^2 + n_2^2}}}\p{\tl^2 - \sum{i=1}{N}{\frac{1}{2i + 1} a_i^2}}
+      + e_{z} g h \p{n_1^2 + n_2^2}}}\p{\tl^2 - \sum{i=1}{N}{\frac{1}{2i + 1} a_i^2}} \\
   \det{n_1 Q_x + n_2 Q_y + \lambda I} = \det{D} \det{A - BD^{-1}C} \\
-  = -\frac{1}{\tl}\p{\tl^2 - \p{3\p{\sum{i=1}{N}{\frac{1}{2i+1} a_i^2}}
-  + e_{z} g h \p{n_1^2 + n_2^2}}}\p{\tl^2 - \sum{i=1}{N}{\frac{1}{2i + 1} a_i^2}}
+  = -\tl^{2N - 1}\p{\tl^2 - \p{3\p{\sum{i=1}{N}{\frac{1}{2i+1} a_i^2}}
+      + e_{z} g h \p{n_1^2 + n_2^2}}}\p{\tl^2 - \sum{i=1}{N}{\frac{1}{2i + 1} a_i^2}}
 \end{gather*}
+
+\begin{gather*}
+  \lambda = u n_1 + v n_2 \pm \sqrt{e_{z} g h \p{n_1^2 + n_2^2} + 3\p{\sum{i=1}{N}{\frac{1}{2i+1} a_i^2}}} \\
+  \lambda = u n_1 + v n_2 \pm \sqrt{\sum{i=1}{N}{\frac{1}{2i + 1} a_i^2}} \\
+  \lambda = u n_1 + v n_2
+\end{gather*}
+
 Quasilinear Eigenvectors
+
+\begin{gather*}
+  \p{n_1 Q_x + n_2 Q_y - \lambda I} \v{q} = 0 \\
+  \begin{pmatrix}
+    -\tl - n_1 u - n_2 v & n_1         & n_2         & 0     & 0     & \cdots & 0     & 0     \\
+    d^1_0                & n_1 u - \tl & n_2 u       & b^1_1 & b^2_1 & \cdots & b^1_N & b^2_N \\
+    d^2_0                & n_1 v       & n_2 v - \tl & b^3_1 & b^4_1 & \cdots & b^3_N & b^4_N \\
+    d^1_1                & c^1_1       & c^3_1       & -\tl  &       &        &       &       \\
+    d^2_1                & c^2_1       & c^4_1       &       & -\tl  &        &       &       \\
+    \vdots               & \vdots      & \vdots      &       &       & \ddots &       &       \\
+    d^1_N                & c^1_N       & c^3_N       &       &       &        & -\tl  &       \\
+    d^2_N                & c^2_N       & c^4_N       &       &       &        &       & -\tl  \\
+  \end{pmatrix}
+  \begin{pmatrix}
+    q_1 \\
+    q_2 \\
+    q_3 \\
+    q_4 \\
+    q_5 \\
+    \vdots \\
+    q_{2N + 2} \\
+    q_{2N + 3} \\
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    0      \\
+    0      \\
+    0      \\
+    0      \\
+    0      \\
+    \vdots \\
+    0      \\
+    0      \\
+  \end{pmatrix}
+  \intertext{Let \(\lambda = u n_1 + v n_2\)}
+  \begin{pmatrix}
+    - n_1 u - n_2 v & n_1    & n_2    & 0     & 0     & \cdots & 0     & 0     \\
+    d^1_0           & n_1 u  & n_2 u  & b^1_1 & b^2_1 & \cdots & b^1_N & b^2_N \\
+    d^2_0           & n_1 v  & n_2 v  & b^3_1 & b^4_1 & \cdots & b^3_N & b^4_N \\
+    d^1_1           & c^1_1  & c^3_1  &       &       &        &       &       \\
+    d^2_1           & c^2_1  & c^4_1  &       &       &        &       &       \\
+    \vdots          & \vdots & \vdots &       &       &        &       &       \\
+    d^1_N           & c^1_N  & c^3_N  &       &       &        &       &       \\
+    d^2_N           & c^2_N  & c^4_N  &       &       &        &       &       \\
+  \end{pmatrix}
+  \begin{pmatrix}
+    q_1 \\
+    q_2 \\
+    q_3 \\
+    q_4 \\
+    q_5 \\
+    \vdots \\
+    q_{2N + 2} \\
+    q_{2N + 3} \\
+  \end{pmatrix}
+  =
+  \begin{pmatrix}
+    0      \\
+    0      \\
+    0      \\
+    0      \\
+    0      \\
+    \vdots \\
+    0      \\
+    0      \\
+  \end{pmatrix}
+\end{gather*}
+
 \end{document}
