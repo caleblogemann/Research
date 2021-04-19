@@ -578,4 +578,65 @@ Quasilinear Eigenvectors
   \end{pmatrix}
 \end{gather*}
 
+
+Eigenvectors
+Zero Moments
+
+\begin{gather*}
+  \lambda = u n_1 + v n_2 - \sqrt{e_z g h \p{n_1^2 + n_2^2}} \\
+  \begin{pmatrix}
+    1 \\
+    u - \frac{n_1}{n_1^2 + n_2^2} \sqrt{e_z g h \p{n_1^2 + n_2^2}} \\
+    v - \frac{n_2}{n_1^2 + n_2^2} \sqrt{e_z g h \p{n_1^2 + n_2^2}} \\
+  \end{pmatrix} \\
+  \lambda = u n_1 + v n_2 + \sqrt{e_z g h \p{n_1^2 + n_2^2}} \\
+  \begin{pmatrix}
+    1 \\
+    u + \frac{n_1}{n_1^2 + n_2^2} \sqrt{e_z g h \p{n_1^2 + n_2^2}} \\
+    v + \frac{n_2}{n_1^2 + n_2^2} \sqrt{e_z g h \p{n_1^2 + n_2^2}} \\
+  \end{pmatrix} \\
+  \lambda = u n_1 + v n_2 \\
+  \begin{pmatrix}
+    0 \\
+    1 \\
+    -\frac{n_1}{n_2}
+  \end{pmatrix}
+\end{gather*}
+
+One Moment
+\begin{gather*}
+  \lambda = u n_1 + v n_2 - \sqrt{e_z g h \p{n_1^2 + n_2^2} + \p{\alpha_i n_1 + \beta_i n_2}^2} \\
+  \begin{pmatrix}
+    1 \\
+  \end{pmatrix} \\
+  \lambda = u n_1 + v n_2 + \sqrt{e_z g h \p{n_1^2 + n_2^2} + \p{\alpha_i n_1 + \beta_i n_2}^2} \\
+  \begin{pmatrix}
+    1 \\
+  \end{pmatrix} \\
+  \lambda = u n_1 + v n_2 \\
+  \begin{pmatrix}
+    1 \\
+    u \\
+    v \\
+    -\frac{1}{2} \frac{e_z g h \p{3 \alpha_1 n_1^2 + 6 \beta_1 n_1 n_2 - 3 \alpha_1 n_2^2} - \alpha_1 \p{\alpha_1 n_1 + \beta_1 n_2}^2}{\p{\alpha_1 n_1 + \beta_1 n_2}^2} \\
+    \frac{1}{2} \frac{e_z g h \p{3 \beta_1 n_1^2 - 6 \alpha_1 n_1 n_2 - 3 \beta_1 n_2^2} + \beta_1 \p{\alpha_1 n_1 + \beta_1 n_2}^2}{\p{\alpha_1 n_1 + \beta_1 n_2}^2}
+  \end{pmatrix} \\
+  \lambda = u n_1 + v n_2 - \sqrt{\frac{1}{3}\p{\alpha_i n_1 + \beta_i n_2}^2} \\
+  \begin{pmatrix}
+    0 \\
+    1 \\
+    -\frac{n_1}{n_2} \\
+    -\sqrt{3} \\
+    \sqrt{3} \frac{n_1}{n_2}
+  \end{pmatrix} \\
+  \lambda = u n_1 + v n_2 + \sqrt{\frac{1}{3}\p{\alpha_i n_1 + \beta_i n_2}^2} \\
+  \begin{pmatrix}
+    0 \\
+    1 \\
+    -\frac{n_1}{n_2} \\
+    \sqrt{3} \\
+    -\sqrt{3} \frac{n_1}{n_2}
+  \end{pmatrix}
+\end{gather*}
+
 \end{document}
