@@ -378,4 +378,45 @@
           \v{\phi}^T(1) M^{-1}
         + \dintt{-1}{1}{\v{s}\p{Q_i \v{\phi}} \v{\phi}^T}{\xi} \, M^{-1}
     \end{gather}
+
+  \subsection{Two Dimensions}
+    Consider the two dimensional balance law given by
+    \begin{equation}
+      \v{q}_t + \div \v{f}_j\p{\v{q}, \v{x}, t} + \M{G}_j\p{\v{q}, \v{x}, t} \v{q}_{x_j}
+       = \v{s}\p{\v{q}, \v{x}, t}
+    \end{equation}
+    Note that the flux function is a matrix or two index tensor, so the divergence is a
+    vector quantity, and the nonconservative term is a sum over the dimensions.
+    It could also be written as
+    \begin{equation}
+      \v{q}_t + \v{f}_1\p{\v{q}, \v{x}, t}_x + \v{f}_2\p{\v{q}, \v{x}, t}_y
+      + \M{G}_1\p{\v{q}, \v{x}, t} \v{q}_x + \M{G}_2\p{\v{q}, \v{x}, t} \v{q}_y
+      = \v{s}\p{\v{q}, \v{x}, t}
+    \end{equation}
+    The local statements of the weak discontinuous Galerkin form are given by
+    \begin{gather}
+      \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
+      - \v{f}_j\p{\v{q}, \v{x}, t} \phi^k_{i,x_j}(\v{x})
+      + \M{G}_j\p{\v{q}, \v{x}, t} \v{q}_{x_j} \phi_i^k(\v{x})}{\v{x}} \\
+      = -\dintt{\partial K_i}{}{\v{n} \cdot \v{f}^*_j \phi_i^k(\v{x})}{s}
+      - \dintt{\partial K_i}{}{\v{n} \dintt{0}{1}{G(\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{x}, t)
+      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \frac{1}{2} \phi_i^k}{s}
+      + \dintt{K_i}{}{\v{s}\p{\v{q}, \v{x}, t} \phi_i^k(\v{x})}{\v{x}} \\
+      \intertext{We can also consider all of the basis components at once, by using the
+        test function \(\v{\phi}_i^T\) instead of \(\phi_i^k\).}
+      \dintt{K_i}{}{\v{q}_t \v{\phi}_i^T(\v{x})
+      - \v{f}_j\p{\v{q}, \v{x}, t} \v{\phi}^_{i,x_j}(\v{x})
+      + \M{G}_j\p{\v{q}, \v{x}, t} \v{q}_{x_j} \phi_i^k(\v{x})}{\v{x}} \\
+      = -\dintt{\partial K_i}{}{\v{n} \cdot \v{f}^*_j \phi_i^k(\v{x})}{s}
+      - \dintt{\partial K_i}{}{\v{n} \dintt{0}{1}{G(\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{x}, t)
+      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \frac{1}{2} \phi_i^k}{s}
+      + \dintt{K_i}{}{\v{s}\p{\v{q}, \v{x}, t} \phi_i^k(\v{x})}{\v{x}} \\
+      \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
+      - \v{f}_j\p{\v{q}, \v{x}, t} \phi^k_{i,x_j}(\v{x})
+      + \M{G}_j\p{\v{q}, \v{x}, t} \v{q}_{x_j} \phi_i^k(\v{x})}{\v{x}} \\
+      = -\dintt{\partial K_i}{}{\v{n} \cdot \v{f}^*_j \phi_i^k(\v{x})}{s}
+      - \dintt{\partial K_i}{}{\v{n} \dintt{0}{1}{G(\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{x}, t)
+      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \frac{1}{2} \phi_i^k}{s}
+      + \dintt{K_i}{}{\v{s}\p{\v{q}, \v{x}, t} \phi_i^k(\v{x})}{\v{x}} \\
+    \end{gather}
 \end{document}
