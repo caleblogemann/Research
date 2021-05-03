@@ -1,0 +1,220 @@
+\documentclass[oneside]{article}
+\usepackage[letterpaper, margin=2cm]{geometry}
+\usepackage{Notes}
+
+\begin{document}
+\begin{center}
+  \textbf{\Large{Discontinuous Galerkin Formulation for Balance Laws}} \\
+\end{center}
+
+\section{Notation}
+  We partition the domain \(\Omega \) as a set of elements \(K_i\) and label the
+  set \(\Omega_h = \set{K_i}_{i=1}^{N_e}\).
+  Each type of element corresponds to a canonical element denoted \(\mcK \).
+  The coordinates of the mesh will be denoted \(\v{x}\) and the coordinates in the
+  canonical element will be denoted as \(\v{\xi}\).
+  There is a linear transformation from each element to the canonical element and
+  back denoted \(\v{c}_i(\v{x}): K_i \to \mcK \) and \(\v{b}_i(\v{\xi}): \mcK \to K_i\).
+  The metric of the mesh element is denoted as \(m_i\) and is given by
+  \begin{equation}
+    \dintt{K_i}{}{}{\v{x}} = \dintt{\mcK}{}{m_i}{\v{\xi}}
+  \end{equation}
+  or \(m_i = \frac{\abs{K_i}}{\abs{\mcK}} = \abs{b_i'(\v{xi})}\).
+  Solutions will be elements of the Discontinuous Galerkin space of order \(M\),
+  \begin{equation}
+    V_h = \set{v \in L^1\p{\Omega} \big| \eval{v}{K_i} \in \PP^M(K_i)}
+  \end{equation}
+  The basis for this space is given by \(\set{\phi_i^k(\v{x})}\) for \(1 \le i \le N_e\) and
+  \(1 \le k \le N_b\).
+  The number of basis components, \(N_b\) in each element to space \(\PP^M(K_i)\)
+  depends on the dimension and the element shape.
+  The polynomial basis on the canonical element is given by
+  \(\set{\phi^k(\v{\xi})}_{k=1}{N_b}\).
+  The basis on the canonical element can be shifted to be the basis on any element
+  \(K_i\) using the transformations \(b_i\) and \(c_i\), that is
+  \begin{equation}
+    \phi_i^k(\v{x}) = \phi^k(\v{c}_i(\v{x})) \text{ and } \phi^k(\v{\xi}) = \phi_i^k(b_i(\v{\xi})).
+  \end{equation}
+  The basis can be put into vector form for convenience
+  \(\v{\phi} = \br{\phi^1, \cdots \phi^{N_b}}\).
+  The mass matrix of a given basis on the canonical element is given by
+  \begin{equation}
+    M_{ij} = \dintt{\mcK}{}{\phi^i(\v{\xi}) \phi^k(\v{\xi})}{\v{\xi}}
+  \end{equation}
+  or
+  \begin{equation}
+    M = \dintt{\mcK}{}{\v{\phi}(\v{\xi}) \v{\phi}^T(\v{\xi})}{\v{\xi}}.
+  \end{equation}
+
+  We will also have to evaluate integrals over the faces of the elements.
+  In particular we will have to evaluate line integrals over the faces of
+  the canonical element in 2D.
+  Let \(f\) be a face of \(\mcK \) and let \(\v{r}_f(t)\) be a parameterization of that
+  face, then
+  \[
+    \dintt{\partial K_i}{}{h(x)}{s} = \sum{f \in \mcK}{}{\dintt{}{}{h(\v{b}_i(\v{r}_f(t))) \norm{\M{b}_i'(\v{r}_f(t)) \v{r}_f'(t)}}{t}}
+  \]
+
+\section{One Dimension}
+  Consider the one dimensional balance law given below.
+  \begin{equation}
+    \v{q}_t + \v{f}\p{\v{q}, x, t}_x = \v{s}(\v{q}, x, t)
+  \end{equation}
+  In one dimension the elements are \(K_i = \br{x_{i-1/2}, x_{i+1/2}}\), where the
+  center of the element is given by \(x_i\) and
+  \(\Delta x_i = \abs{K_i} = x_{i+1/2} - x_{i-1/2}\).
+  The canonical element is \(\mcK = \br{-1, 1}\), and the linear transformations are
+  \(c_i(x) = \p{x - x_i} \frac{2}{\Delta x_i}\) and
+  \(b_i(\xi) = \frac{\Delta x_i}{2} \xi + x_i\).
+
+\section{Two Dimensions}
+  Consider the two dimensional balance law given by
+  \begin{equation}
+    \v{q}_t + \div \v{f}_j\p{\v{q}, \v{x}, t} = \v{s}\p{\v{q}, \v{x}, t}
+  \end{equation}
+  Note that the flux function is a matrix or two index tensor, so the divergence is a
+  vector quantity.
+  It could also be written as
+  \begin{equation}
+    \v{q}_t + \v{f}_1\p{\v{q}, \v{x}, t}_{x_1} + \v{f}_2\p{\v{q}, \v{x}, t}_{x_2}
+    = \v{s}\p{\v{q}, \v{x}, t}
+  \end{equation}
+  The local statements of the weak discontinuous Galerkin form are given by
+  \begin{equation}
+    \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
+    - \v{f}_j\p{\v{q}, \v{x}, t} \phi^k_{i,x_j}(\v{x})}{\v{x}}
+    = -\dintt{\partial K_i}{}{\v{n} \cdot \v{f}^*_j \phi_i^k(\v{x})}{s}.
+  \end{equation}
+  Note that all of the terms related to the flux function \(\v{f}\) are sums over the
+  two dimensions.
+  It could also be written as
+  \begin{equation}
+    \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
+    - \v{f}_1\p{\v{q}, \v{x}, t} \phi^k_{i, x_1}(\v{x})
+    - \v{f}_2\p{\v{q}, \v{x}, t} \phi^k_{i, x_2}(\v{x})}{\v{x}}
+    = -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \phi_i^k(\v{x})}{s}.
+  \end{equation}
+  We could also consider all of the basis components at one time, by using the test
+  function \(\v{\phi}^T_i\) instead of \(\phi^k_i\).
+  \begin{gather}
+    \dintt{K_i}{}{\v{q}_t \v{\phi}^T_i(\v{x})
+    - \v{f}_1\p{\v{q}, \v{x}, t} \v{\phi}^T_{i, x_1}(\v{x})
+    - \v{f}_2\p{\v{q}, \v{x}, t} \v{\phi}^T_{i, x_2}(\v{x})}{\v{x}}
+    = -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T(\v{x})}{s}.
+    \intertext{Now using the fact that \(\eval{\v{q}}{K_i}{} = Q_i \v{\phi}_i(\v{x})\)}
+    \dintt{K_i}{}{Q_{i,t} \v{\phi}_i(\v{x}) \v{\phi}^T_i(\v{x})
+    - \v{f}_1\p{Q_i \v{\phi}_i(\v{x}), \v{x}, t} \v{\phi}^T_{i, x_1}(\v{x})
+    - \v{f}_2\p{Q_i \v{\phi}_i(\v{x}), \v{x}, t} \v{\phi}^T_{i, x_2}(\v{x})}{\v{x}}
+    = -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T(\v{x})}{s}.
+    \intertext{Rearranging to solve for \(Q_{i,t}\), and dropping explicit dependence
+      on \(\v{x}\) for \(\v{\phi}\)}
+    Q_{i,t} \dintt{K_i}{}{\v{\phi}_i \v{\phi}^T_i}{\v{x}} =
+    \dintt{K_i}{}{\v{f}_1\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_1}
+    + \v{f}_2\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_2}}{\v{x}}
+    -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T}{s}
+    \intertext{Transforming to canonical element}
+    Q_{i,t} m_i M =
+    \dintt{K_i}{}{\v{f}_1\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_1}
+    + \v{f}_2\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_2}}{\v{x}}
+    -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T}{s}.
+  \end{gather}
+
+  \begin{equation}
+    \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
+    - \M{f}\p{\v{q}, \v{x}, t} \phi^k_{i,x_j}(\v{x})}{\v{x}}
+    = -\dintt{\partial K_i}{}{\v{n} \cdot \M{f}^* \phi_i^k(\v{x})}{s}.
+  \end{equation}
+  We could also consider all of the basis components at one time, by using the test
+  function \(\v{\phi}^T_i\) instead of \(\phi^k_i\).
+  \begin{gather}
+    \dintt{K_i}{}{\v{q}_t \v{\phi}^T_i(\v{x})
+    - \M{f}\p{\v{q}, \v{x}, t} \M{D\phi}^T_{i}(\v{x})}{\v{x}}
+    = -\dintt{\partial K_i}{}{\v{n} \cdot \M{f}^*(\v{x}) \v{\phi}_i^T(\v{x})}{s}
+    \intertext{Now using the fact that \(\eval{\v{q}}{K_i}{} = Q_i \v{\phi}_i(\v{x})\)}
+    \dintt{K_i}{}{\M{Q}_{i,t} \v{\phi}_i(\v{x}) \v{\phi}^T_i(\v{x})
+    - \M{f}\p{\M{Q}_i \v{\phi}_i(\v{x}), \v{x}, t} \M{D\phi}^T_{i}(\v{x})}{\v{x}}
+    = -\dintt{\partial K_i}{}{\v{n} \cdot \M{f}^*(\v{x}) \v{\phi}_i^T(\v{x})}{s}
+    \intertext{Rearranging to solve for \(Q_{i,t}\), and dropping explicit dependence
+      on \(\v{x}\) for \(\v{\phi}\)}
+    \M{Q}_{i, t} \dintt{K_i}{}{\v{\phi}_i \v{\phi}^T_i}{\v{x}}
+    = \dintt{K_i}{}{\M{f}\p{\M{Q}_i \v{\phi}_i, \v{x}, t} \M{D\phi}^T_i}{\v{x}}
+    - \dintt{\partial K_i}{}{\v{n} \cdot \M{f}^*\p{\v{x}} \v{\phi}_i^T}{s}
+    \intertext{Transforming to canonical element}
+    \M{Q}_{i, t} m_i \M{M}
+    = \dintt{\mcK}{}{\M{f}\p{\M{Q}_i \v{\phi}, \v{b}_i(\v{\xi}), t} \M{D\phi}^T \M{c}_i' m_i}{\v{\xi}}
+    - \sum{f \in \mcK}{}{\dintt{}{}{\v{n} \cdot \M{f}^*\p{b_i(r_f(t))} \v{\phi}^T(r_f(t)) \norm{b_i'(r_f(t)) r_f'(t)}}{t}}
+    \intertext{Then the set of ODEs are}
+    \M{Q}_{i, t}
+    = \dintt{\mcK}{}{\M{f}\p{\M{Q}_i \v{\phi}, \v{b}_i(\v{\xi}), t} \M{D\phi}^T \M{c}_i'}{\v{\xi}} \M{M}^{-1}
+    - \sum{f \in \mcK}{}{\dintt{}{}{\v{n} \cdot \M{f}^*\p{b_i(r_f(t))} \v{\phi}^T(r_f(t)) \norm{b_i'(r_f(t)) r_f'(t)}}{t} \frac{1}{m_i} M^{-1}}
+  \end{gather}
+
+\subsection{Rectangular Elements}
+  Consider if the mesh contain rectangular elements, then
+  \(K_i = \br{x_{i-1/2}, x_{i+1/2}} \times \br{y_{i-1/2}, y_{i+1/2}}\).
+  The center of the element is \(\p{x_i, y_i}\) with
+  \(\Delta x_i = x_{i+1/2} - x_{i-1/2}\) and \(\Delta y_i = y_{i+1/2} - y_{i-1/2}\).
+  The canonical element is \(\mcK = \br{-1, 1} \times \br{-1, 1}\) with coordinates
+  \(\v{\xi} = \br{\xi, \eta}\).
+  The linear transformations are given by
+  \begin{gather}
+    \v{b}_i(\v{\xi}) = \br{\frac{\Delta x_i}{2} \xi + x_i, \frac{\Delta y_i}{2} \eta + y_i}^T \\
+    \v{c}_i(\v{x}) = \br{\frac{2}{\Delta x_i} \p{x - x_i}, \frac{2}{\Delta y_i} \p{y - y_i}}^T \\
+  \end{gather}
+  with Jacobians
+  \begin{gather}
+    \M{b}_i' =
+    \begin{pmatrix}
+      \frac{\Delta x_i}{2} & 0 \\
+      0 & \frac{\Delta y_i}{2}
+    \end{pmatrix} \\
+    \M{c}_i' =
+    \begin{pmatrix}
+      \frac{2}{\Delta x_i} & 0 \\
+      0 & \frac{2}{\Delta y_i}
+    \end{pmatrix}
+  \end{gather}
+
+  The metric of element i is \(m_i = \frac{\Delta x_i \Delta y_i}{4}\).
+  Also the parameterizations of the left, right, bottom, and top faces,
+  \(r_l, r_r, r_b, r_t\) respectively, are given by
+  \begin{gather}
+    r_l(t) = \br{-1, t} \\
+    r_r(t) = \br{1, t} \\
+    r_b(t) = \br{t, -1} \\
+    r_t(t) = \br{t, 1}
+  \end{gather}
+  for \(t \in \br{-1, 1}\).
+  We can easily compute \(\norm{\M{b}_i'(\v{r}_f(t)) \v{r}_f'(t)}\) for each face as well
+  \begin{gather}
+    \norm{\M{b}_i'(\v{r}_l(t)) \v{r}_l'(t)} = \frac{\Delta y_i}{2} \\
+    \norm{\M{b}_i'(\v{r}_r(t)) \v{r}_r'(t)} = \frac{\Delta y_i}{2} \\
+    \norm{\M{b}_i'(\v{r}_b(t)) \v{r}_b'(t)} = \frac{\Delta x_i}{2} \\
+    \norm{\M{b}_i'(\v{r}_t(t)) \v{r}_t'(t)} = \frac{\Delta x_i}{2}
+  \end{gather}
+  Substituting all these into the formulation gives,
+  \begin{gather}
+    \M{Q}_{i, t}
+    = \dintt{\mcK}{}{\frac{2}{\Delta x_i}\v{f}_1\p{\M{Q}_i \v{\phi}, \v{b}_i(\v{\xi}), t} \v{\phi}^T_{\xi} +\frac{2}{\Delta y_i}\v{f}_2\p{\M{Q}_i \v{\phi}, \v{b}_i(\v{\xi}), t} \v{\phi}^T_{\eta}}{\v{\xi}} \M{M}^{-1} \\
+    + \frac{2}{\Delta x_i} \dintt{-1}{1}{\v{f}^*_1\p{b_i(\xi=-1, \eta)} \v{\phi}^T(\xi=-1, \eta)}{t} \M{M}^{-1}\\
+    - \frac{2}{\Delta x_i} \dintt{-1}{1}{\v{f}^*_1\p{b_i(\xi=1, \eta)} \v{\phi}^T(\xi=1, \eta)}{t} \M{M}^{-1}\\
+    + \frac{2}{\Delta y_i} \dintt{-1}{1}{\v{f}^*_2\p{b_i(\xi, \eta=-1)} \v{\phi}^T(\xi, \eta=-1)}{t} \M{M}^{-1}\\
+    - \frac{2}{\Delta y_i} \dintt{-1}{1}{\v{f}^*_2\p{b_i(\xi, \eta=1)} \v{\phi}^T(\xi, \eta=1)}{t} \M{M}^{-1}\\
+  \end{gather}
+  For the case of a legendre orthogonal basis with orthogonality condition
+  \[
+    \frac{1}{4}\dintt{\mcK}{}{\phi^i(\v{\xi}) \phi^j(\v{\xi})}{\xi} = \delta_{ij},
+  \]
+  then the mass matrix and it's inverse become \(M = 4I\) and \(M = \frac{1}{4}I\).
+  So the full method becomes,
+  \begin{gather}
+    \M{Q}_{i, t}
+    = \dintt{\mcK}{}{\frac{1}{2\Delta x_i}\v{f}_1\p{\M{Q}_i \v{\phi}, \v{b}_i(\v{\xi}), t} \v{\phi}^T_{\xi}
+    + \frac{1}{2\Delta y_i}\v{f}_2\p{\M{Q}_i \v{\phi}, \v{b}_i(\v{\xi}), t} \v{\phi}^T_{\eta}}{\v{\xi}} \\
+    + \frac{1}{2\Delta x_i} \dintt{-1}{1}{\v{f}^*_1\p{b_i(\xi=-1, \eta)} \v{\phi}^T(\xi=-1, \eta)}{t} \\
+    - \frac{1}{2\Delta x_i} \dintt{-1}{1}{\v{f}^*_1\p{b_i(\xi=1, \eta)} \v{\phi}^T(\xi=1, \eta)}{t} \\
+    + \frac{1}{2\Delta y_i} \dintt{-1}{1}{\v{f}^*_2\p{b_i(\xi, \eta=-1)} \v{\phi}^T(\xi, \eta=-1)}{t} \\
+    - \frac{1}{2\Delta y_i} \dintt{-1}{1}{\v{f}^*_2\p{b_i(\xi, \eta=1)} \v{\phi}^T(\xi, \eta=1)}{t} \\
+  \end{gather}
+
+\end{document}
