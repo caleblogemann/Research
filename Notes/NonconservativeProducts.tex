@@ -420,9 +420,11 @@
       = -\dintt{\partial K_i}{}{\M{f}^* \v{n} \phi_i^k(\v{x})}{s}
       - \frac{1}{2}\dintt{\partial K_i}{}{
         \dintt{0}{1}{\M{G}(\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{x}, t)
-      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \v{n} \phi_i^k}{s}
+      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \v{n}_L \phi_i^k}{s}
       + \dintt{K_i}{}{\v{s}\p{\v{q}, \v{x}, t} \phi_i^k(\v{x})}{\v{x}} \\
-      \intertext{We can also consider all of the basis components at once, by using the
+      \intertext{The vector \(\v{n}_L\) is the outward normal facing vector with respect
+        to the left state, i.e.\ the state of \(\v{q}_L\).
+        We can also consider all of the basis components at once, by using the
         test function \(\v{\phi}_i^T\) instead of \(\phi_i^k\).}
       \dintt{K_i}{}{\v{q}_t \v{\phi}_i^T(\v{x})
       - \M{f}\p{\v{q}, \v{x}, t} \M{D\phi}^T_{i} \p{\v{x}}
@@ -430,7 +432,7 @@
       = -\dintt{\partial K_i}{}{\M{f}^* \v{n} \v{\phi}^T_i(\v{x})}{s}
       - \frac{1}{2}\dintt{\partial K_i}{}{
         \dintt{0}{1}{\M{G}\p{\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{x}, t}
-      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \v{n} \v{\phi}_i^T\p{\v{x}}}{s}
+      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \v{n}_L \v{\phi}_i^T\p{\v{x}}}{s}
       + \dintt{K_i}{}{\v{s}\p{\v{q}, \v{x}, t} \v{\phi}_i^T(\v{x})}{\v{x}}
       \intertext{Using the fact that \(\eval{\v{q}}{K_i} = \M{Q}_i \v{\phi}_i\), and
         dropping the explicit dependence on \(\v{x}\) for \(\v{\phi}_i\).}
@@ -441,7 +443,7 @@
       = -\dintt{\partial K_i}{}{\M{f}^* \v{n} \v{\phi}^T_i}{s}
       - \frac{1}{2}\dintt{\partial K_i}{}{
         \dintt{0}{1}{G\p{\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{x}, t}
-      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \v{n} \v{\phi}_i^T}{s}
+      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \v{n}_L \v{\phi}_i^T}{s}
       + \dintt{K_i}{}{\v{s}\p{\M{Q}_i \v{\phi}_i, \v{x}, t} \v{\phi}_i^T}{\v{x}}
       \intertext{Rearranging to solve for \(\M{Q}_{i, t}\).}
       \M{Q}_{i, t}\dintt{K_i}{}{\v{\phi}_i \v{\phi}_i^T}{\v{x}} =
@@ -451,7 +453,7 @@
       -\dintt{\partial K_i}{}{\M{f}^* \v{n} \v{\phi}^T_i}{s}
       - \frac{1}{2}\dintt{\partial K_i}{}{
         \dintt{0}{1}{G\p{\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{x}, t}
-      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \v{n} \v{\phi}_i^T}{s}
+      \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}}{\tau} \v{n}_L \v{\phi}_i^T}{s}
       + \dintt{K_i}{}{\v{s}\p{\M{Q}_i \v{\phi}_i, \v{x}, t} \v{\phi}_i^T}{\v{x}}
       \intertext{Transforming integrals to canonical element, where \(\v{c}_{ij}'\) is
       the jth column of the jacobian of the function \(\v{c}_i(\v{x})\), which
@@ -474,7 +476,7 @@
               \dintt{0}{1}{
                 \M{G}_j\p{\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{b}_i\p{\v{r}(s)}, t}
                 \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}
-              }{\tau} \, n_j
+              }{\tau} \, n_{L,j}
             } \v{\phi}^T\p{\v{r}_f(s)} \norm{\v{b}_i'\p{\v{r}_f(s)} \v{r}_f'(s)}
           }{s}
         } \\
@@ -503,7 +505,7 @@
               \dintt{0}{1}{
                 \M{G}_j\p{\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{b}_i\p{\v{r}(s)}, t}
                 \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}
-              }{\tau} \, n_j
+              }{\tau} \, n_{L,j}
             } \v{\phi}^T\p{\v{r}_f(s)} \norm{\v{b}_i'\p{\v{r}_f(s)} \v{r}_f'(s)}
           }{s}
         } \M{M}^{-1}\\
@@ -585,7 +587,7 @@
       - \frac{2}{\Delta y_i} \dintt{-1}{1}{
         \v{f}_2^*\p{\v{b}_i\p{\xi, \eta=1}} \v{\phi}^T\p{\xi, \eta=1}
       }{\xi} \M{M}^{-1} \\
-      + \frac{1}{\Delta x_i} \dintt{-1}{1}{
+      - \frac{1}{\Delta x_i} \dintt{-1}{1}{
         \dintt{0}{1}{
           \M{G}_1\p{\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{b}_i(\xi=-1, \eta), t}
           \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}
@@ -597,7 +599,7 @@
           \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}
         }{\tau} \v{\phi}^T\p{\xi=1, \eta}
       }{\eta} \M{M}^{-1} \\
-      + \frac{1}{\Delta y_i} \dintt{-1}{1}{
+      - \frac{1}{\Delta y_i} \dintt{-1}{1}{
         \dintt{0}{1}{
           \M{G}_2\p{\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{b}_i(\xi, \eta=-1), t}
           \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}
@@ -645,7 +647,7 @@
       - \frac{1}{2\Delta y_i} \dintt{-1}{1}{
         \v{f}_2^*\p{\v{b}_i\p{\xi, \eta=1}} \v{\phi}^T\p{\xi, \eta=1}
       }{\xi} \\
-      + \frac{1}{4\Delta x_i} \dintt{-1}{1}{
+      - \frac{1}{4\Delta x_i} \dintt{-1}{1}{
         \dintt{0}{1}{
           \M{G}_1\p{\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{b}_i(\xi=-1, \eta), t}
           \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}
@@ -657,7 +659,7 @@
           \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}
         }{\tau} \v{\phi}^T\p{\xi=1, \eta}
       }{\eta} \\
-      + \frac{1}{4\Delta y_i} \dintt{-1}{1}{
+      - \frac{1}{4\Delta y_i} \dintt{-1}{1}{
         \dintt{0}{1}{
           \M{G}_2\p{\v{\psi}\p{\tau, \v{q}_L, \v{q}_R}, \v{b}_i(\xi, \eta=-1), t}
           \v{\psi}_{\tau}\p{\tau, \v{q}_L, \v{q}_R}
