@@ -419,3 +419,12 @@ def get_source_term_2d(num_moments):
     s_p = sa.vector(s_list)
 
     return s_p
+
+
+def get_velocity_basis_functions(num_moments):
+    # velocity is u \phi_0 + \sum{j=1}{num_moments}{alpha_j \phi_j(\zeta)} 
+    # return functions phi
+    phi = legendre_polynomials.get_legendre_polynomials_fixed_lower_endpoint(
+        num_moments + 1, sa.Integer(1), sa.Integer(0), sa.Integer(1)
+    )
+    return phi
