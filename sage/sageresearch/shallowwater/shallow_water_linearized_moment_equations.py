@@ -7,7 +7,10 @@ import sage.all as sa
 # Steady States and Well-balanced Schemes for Shallow Water Moment Equations with
 # Topography by Koellermeier and Pimentel-Garcia
 
+
 def get_swlme_equations_1d(num_moments):
+    # Equations are of the form q_t + f(q)_x + G(q) q_x = 0
+    # Quasilinear Form -> q_t + A q_x = 0
     num_eqns = num_moments + 2
     p = swme.get_primitive_variables_1d(num_moments)
     h = p[0]
@@ -31,7 +34,7 @@ def get_swlme_equations_1d(num_moments):
     # Nonconservative matrix
     G = sa.matrix(sa.SR, num_eqns)
     for i in range(num_moments):
-        G[2 + i, 2 + i] = u
+        G[2 + i, 2 + i] = -u
 
     tuple_ = swme.get_substitution_dictionaries_1d(num_moments)
     p_to_q = tuple_[0]
@@ -40,7 +43,7 @@ def get_swlme_equations_1d(num_moments):
 
     # Quasilinear Matrix
     flux_jacobian = sa.jacobian(f.subs(p_to_q), q).subs(q_to_p)
-    A = flux_jacobian - G
+    A = flux_jacobian + G
 
     return (f, G, A)
 
@@ -105,13 +108,13 @@ def get_swlme_equations_2d(num_moments):
 
         # (h alpha_i)_t + ... = u D_i + ...
         # u D_i = u (h alpha_i)_x + u (h beta_i)_y
-        G_x_lists[a_i_eqn][a_i_eqn] = u
-        G_y_lists[a_i_eqn][b_i_eqn] = u
+        G_x_lists[a_i_eqn][a_i_eqn] = -u
+        G_y_lists[a_i_eqn][b_i_eqn] = -u
 
         # (h beta_i)_t + ... = v D_i + ...
         # v D_i = v (h alpha_i)_x + v (h beta_i)_y
-        G_x_lists[b_i_eqn][a_i_eqn] = v
-        G_y_lists[b_i_eqn][b_i_eqn] = v
+        G_x_lists[b_i_eqn][a_i_eqn] = -v
+        G_y_lists[b_i_eqn][b_i_eqn] = -v
 
     f_x = sa.vector(f_x_list)
     f_y = sa.vector(f_y_list)
@@ -127,8 +130,8 @@ def get_swlme_equations_2d(num_moments):
     f_x_j = sa.jacobian(f_x.subs(p_to_q), q).subs(q_to_p)
     f_y_j = sa.jacobian(f_y.subs(p_to_q), q).subs(q_to_p)
 
-    A_x = f_x_j - G_x
-    A_y = f_y_j - G_y
+    A_x = f_x_j + G_x
+    A_y = f_y_j + G_y
 
     return (f_x, f_y, G_x, G_y, A_x, A_y)
 
