@@ -1,0 +1,262 @@
+\documentclass[oneside]{article}
+\usepackage[letterpaper, margin=2cm]{geometry}
+\usepackage{Notes}
+
+\begin{document}
+\begin{center}
+  \textbf{\Large{Derivation of Shallow Water Moment Equations in Spherical
+      Coordinates}} \\
+\end{center}
+
+First I will define the transformation from cartesian \(\v{x} = \br{x, y, z}\) to
+spherical coordinates, \(\v{r} = \br{r, \theta, \phi}\)
+\begin{gather}
+  r = s_1(x, y, z) = \sqrt{x^2 + y^2 + z^2} \\
+  \theta = s_2(x, y, z) = \arctan{\frac{y}{x}} \\
+  \phi = s_3(x, y, z) = \arctan{\frac{\sqrt{x^2 + y^2}}{z}}
+  = \arccos{\frac{z}{\sqrt{x^2 + y^2 + z^2}}} \\
+  \v{s}(\v{x}) = \v{s}(x, y, z) = \br{s_1(x, y, z), s_2(x, y, z), s_3(x, y, z)} \\
+  x = c_1(r, \theta, \phi) = r \cos{\theta} \sin{\phi} \\
+  y = c_2(r, \theta, \phi) = r \sin{\theta} \sin{\phi} \\
+  z = c_3(r, \theta, \phi) = r \cos{\phi} \\
+  \v{c}(\v{r}) = \v{c}(r, \theta, \phi) = \br{c_1(r, \theta, \phi),
+    c_2(r, \theta, \phi), c_3(r, \theta, \phi)}
+\end{gather}
+
+The projections from cartesian to spherical coordinates can be computed using the
+following unit vectors
+\begin{gather}
+  \hat{r} = \cos{\theta} \sin{\phi} \hat{x} + \sin{\theta} \sin{\phi} \hat{y}
+    + \cos{\phi} \hat{z} \\
+  \hat{\theta} = -\sin{\theta} \hat{x} + \cos{\theta} \hat{y} \\
+  \hat{\phi} = \cos{\theta} \cos{\phi} \hat{x} + \sin{\theta} \cos{\phi} \hat{y}
+    - \sin{\phi} \hat{z} \\
+  \hat{x} = \cos{\theta} \sin{\phi} \hat{r} - \sin{\theta} \hat{\theta}
+    + \cos{\theta} \cos{\phi} \hat{\phi}\\
+  \hat{y} = \sin{\theta} \sin{\phi} \hat{r} + \cos{\theta} \hat{\theta}
+    + \sin{\theta} \cos{\phi} \hat{\phi}\\
+  \hat{z} = \cos{\phi} \hat{r} - \sin{\phi} \hat{\phi} \\
+\end{gather}
+
+The partial derivatives of the transformation to spherical coordinates are needed, when
+considering differential equations.
+\begin{gather}
+  s_{1,x} = \frac{1}{2} \frac{1}{\sqrt{x^2 + y^2 + z^2}} 2x = \cos{\theta} \sin{\phi} \\
+  s_{1,y} = \frac{1}{2} \frac{1}{\sqrt{x^2 + y^2 + z^2}} 2y = \sin{\theta} \sin{\phi} \\
+  s_{1,z} = \frac{1}{2} \frac{1}{\sqrt{x^2 + y^2 + z^2}} 2z = \cos{\phi} \\
+\end{gather}
+\begin{gather}
+  s_{2,x} = \frac{1}{1 + \frac{y^2}{x^2}} \p{- \frac{y}{x^2}} \\
+    = \frac{1}{1 + \frac{r^2 \sin[2]{\theta} \sin[2]{\phi}}{r^2 \cos[2]{\theta} \sin[2]{\phi}}}
+    \p{-\frac{r \sin{\theta} \sin{\phi}}{r^2 \cos[2]{\theta} \sin[2]{\phi}}} \\
+    = \frac{1}{1 + \frac{\sin[2]{\theta}}{\cos[2]{\theta}}}
+      \p{-\frac{\sin{\theta}}{r \cos[2]{\theta} \sin{\phi}}} \\
+    = -\frac{1}{1 + \frac{1 - \cos[2]{\theta}}{\cos[2]{\theta}}}
+      \frac{\sin{\theta}}{r \cos[2]{\theta} \sin{\phi}} \\
+    = -\cos[2]{\theta} \frac{\sin{\theta}}{r \cos[2]{\theta} \sin{\phi}} \\
+    = - \frac{\sin{\theta}}{r \sin{\phi}} \\
+  s_{2,y} = \frac{1}{1 + \frac{y^2}{x^2}} \p{\frac{1}{x}} \\
+    = \cos[2]{\theta} \frac{1}{r \cos{\theta} \sin{\phi}} \\
+    = \frac{\cos{\theta}}{r \sin{\phi}} \\
+  s_{2,z} = 0 \\
+\end{gather}
+\begin{gather}
+  s_{3,x} = \frac{1}{1 + \frac{x^2 + y^2}{z^2}} \frac{1}{2}
+    \frac{2x}{z \sqrt{x^2 + y^2}} \\
+    = \frac{1}{1 + \frac{r^2 \cos[2]{\theta} \sin[2]{\phi} + r^2 \sin[2]{\theta} \sin[2]{\phi}}{r^2 \cos[2]{\phi}}}
+    \frac{r \cos{\theta} \sin{\phi}}{r \cos{\phi} \sqrt{r^2 \cos[2]{\theta} \sin[2]{\phi} + r^2 \sin[2]{\theta} \sin[2]{\phi}}} \\
+    = \frac{1}{1 + \frac{\sin[2]{\phi}}{\cos[2]{\phi}}}
+    \frac{\cos{\theta}}{r \cos{\phi}} \\
+    = \frac{1}{1 + \frac{1 - \cos[2]{\phi}}{\cos[2]{\phi}}}
+    \frac{\cos{\theta}}{r \cos{\phi}} \\
+    = \cos[2]{\phi} \frac{\cos{\theta}}{r \cos{\phi}} \\
+    = \frac{\cos{\theta} \cos{\phi}}{r} \\
+  s_{3,y} = \frac{1}{1 + \frac{x^2 + y^2}{z^2}} \frac{1}{2}
+    \frac{2y}{z \sqrt{x^2 + y^2}} \\
+    = \cos[2]{\phi} \frac{r \sin{\theta} \sin{\phi}}{r \cos{\phi} r \sin{\phi}} \\
+    = \frac{\sin{\theta} \cos{\phi}}{r} \\
+  s_{3,z} = -\frac{1}{1 + \frac{x^2 + y^2}{z^2}} \frac{\sqrt{x^2 + y^2}}{z^2} \\
+    = -\cos[2]{\phi} \frac{r \sin{\phi}}{r^2 \cos[2]{\phi}} \\
+    = - \frac{\sin{\phi}}{r} \\
+\end{gather}
+
+The derivative with respect to a cartesian coordinate, can be expressed in terms of the
+spherical coordinate derivatives using the chain rule.
+Consider a function of spherical coordinates, \(f(r, \theta, \phi)\), then
+\begin{equation}
+  \pda{f(\v{s}(\v{x}))}{t} = \pd{f}{r} \pd{s_1}{t} + \pd{f}{\theta} \pd{s_2}{t}
+  + \pd{f}{\phi} \pd{s_3}{t}
+\end{equation}
+where \(t = x, y, \text{or} z\)
+
+Now let's consider the Navier Stokes equation
+The velocities in cartesian coordinates are given by \(\br{u, v, w} = \v{u}\), then the
+cartesian Navier Stokes equations are
+\begin{gather}
+  \pd{u}{x} + \pd{v}{y} + \pd{w}{z} = 0 \\
+  \pd{u}{t} + \pda{u^2}{x} + \pda{uv}{y} + \pda{uw}{z} = -\frac{1}{\rho} \pd{p}{x}
+    + \pd{\sigma_{xx}}{x} + \pd{\sigma_{xy}}{y} + \pd{\sigma_{xz}}{z} + g_x \\
+  \pd{v}{t} + \pda{uv}{x} + \pda{v^2}{y} + \pda{vw}{z} = -\frac{1}{\rho} \pd{p}{y}
+    + \pd{\sigma_{xy}}{x} + \pd{\sigma_{yy}}{y} + \pd{\sigma_{yz}}{z} + g_y \\
+  \pd{w}{t} + \pda{uw}{x} + \pda{vw}{y} + \pda{w^2}{z} = -\frac{1}{\rho} \pd{p}{z}
+    + \pd{\sigma_{xz}}{x} + \pd{\sigma_{yz}}{y} + \pd{\sigma_{zz}}{z} + g_z \\
+\end{gather}
+
+In spherical coordinates we represent the velocities as
+\(\br{u_r, u_{\theta}, u_{\phi}} = \v{u}_r\).
+Using the unit vectors we can write these velocities in terms of the cartesian
+velocities.
+\begin{gather}
+  u_r = \cos{\theta} \sin{\phi} u + \sin{\theta} \sin{\phi} v + \cos{\phi} w \\
+  u_{\theta} = -\sin{\theta} u + \cos{\theta} w \\
+  u_{\phi} = \cos{\theta} \cos{\phi} u + \sin{\theta} \cos{\phi} v - \sin{\phi} w
+\end{gather}
+We can also write the cartesian velocities in terms of the spherical velocities.
+\begin{gather}
+  u = \cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi} \\
+  v = \sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+  + \sin{\theta} \cos{\phi} u_{\phi} \\
+  w = \cos{\phi} u_r - \sin{\phi} u_{\phi}
+\end{gather}
+
+Now we can express the continuity equation in spherical coordinates
+\begin{gather}
+  \pd{u}{x} + \pd{v}{y} + \pd{w}{z} = 0 \\
+  \pda{\cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi}}{x} \\
+  + \pda{\sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+    + \sin{\theta} \cos{\phi} u_{\phi}}{y} \\
+  + \pda{\cos{\phi} u_r - \sin{\phi} u_{\phi}}{z} = 0 \\
+\end{gather}
+\begin{gather}
+  \pda{\cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi}}{r} \pd{s_1}{x} \\
+  \pda{\cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi}}{\theta} \pd{s_2}{x} \\
+  \pda{\cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi}}{\phi} \pd{s_3}{x} \\
+  + \pda{\sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+    + \sin{\theta} \cos{\phi} u_{\phi}}{r} \pd{s_1}{y} \\
+  + \pda{\sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+    + \sin{\theta} \cos{\phi} u_{\phi}}{\theta} \pd{s_2}{y} \\
+  + \pda{\sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+    + \sin{\theta} \cos{\phi} u_{\phi}}{\phi} \pd{s_3}{y} \\
+  + \pda{\cos{\phi} u_r - \sin{\phi} u_{\phi}}{r} \pd{s_1}{z} \\
+  + \pda{\cos{\phi} u_r - \sin{\phi} u_{\phi}}{\theta} \pd{s_2}{z} \\
+  + \pda{\cos{\phi} u_r - \sin{\phi} u_{\phi}}{\phi} \pd{s_3}{z} = 0 \\
+  \pda{\cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi}}{r} \cos{\theta} \sin{\phi} \\
+  \pda{\cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi}}{\theta} \frac{-\sin{\theta}}{r \sin{\phi}} \\
+  \pda{\cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi}}{\phi} \frac{\cos{\theta} \cos{\phi}}{r} \\
+  + \pda{\sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+    + \sin{\theta} \cos{\phi} u_{\phi}}{r} \sin{\theta} \sin{\phi} \\
+  + \pda{\sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+    + \sin{\theta} \cos{\phi} u_{\phi}}{\theta} \frac{\cos{\theta}}{r \sin{\phi}} \\
+  + \pda{\sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+    + \sin{\theta} \cos{\phi} u_{\phi}}{\phi} \frac{\sin{\theta} \cos{\phi}}{r} \\
+  + \pda{\cos{\phi} u_r - \sin{\phi} u_{\phi}}{r} \cos{\phi} \\
+  + \pda{\cos{\phi} u_r - \sin{\phi} u_{\phi}}{\theta} 0 \\
+  + \pda{\cos{\phi} u_r - \sin{\phi} u_{\phi}}{\phi} \frac{-\sin{\phi}}{r} = 0 \\
+\end{gather}
+\begin{gather}
+  \pda{\cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi}}{r} \cos{\theta} \sin{\phi} \\
+  \pda{\cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi}}{\theta} \frac{-\sin{\theta}}{r \sin{\phi}} \\
+  \pda{\cos{\theta} \sin{\phi} u_r - \sin{\theta} u_{\theta}
+    + \cos{\theta} \cos{\phi} u_{\phi}}{\phi} \frac{\cos{\theta} \cos{\phi}}{r} \\
+  + \pda{\sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+    + \sin{\theta} \cos{\phi} u_{\phi}}{r} \sin{\theta} \sin{\phi} \\
+  + \pda{\sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+    + \sin{\theta} \cos{\phi} u_{\phi}}{\theta} \frac{\cos{\theta}}{r \sin{\phi}} \\
+  + \pda{\sin{\theta} \sin{\phi} u_r + \cos{\theta} u_{\theta}
+    + \sin{\theta} \cos{\phi} u_{\phi}}{\phi} \frac{\sin{\theta} \cos{\phi}}{r} \\
+  + \pda{\cos{\phi} u_r - \sin{\phi} u_{\phi}}{r} \cos{\phi} \\
+  + \pda{\cos{\phi} u_r - \sin{\phi} u_{\phi}}{\phi} \frac{-\sin{\phi}}{r} = 0 \\
+\end{gather}
+Now I will consider the terms of each derivative of each velocity individually,
+\begin{gather}
+  \intertext{\(\pd{u_r}{r}\)}
+    \cos[2]{\theta} \sin[2]{\phi} \pd{u_r}{r} + \sin[2]{\theta} \sin[2]{\phi} \pd{u_r}{r}
+    + \cos[2]{\phi} \pd{u_r}{r}
+    = \sin[2]{\phi} \pd{u_r}{r} + \cos[2]{\phi} \pd{u_r}{r}
+    = \pd{u_r}{r}
+  \intertext{\(\pd{u_{\theta}}{r}\)}
+    - \sin{\theta} \cos{\theta} \sin{\phi} \pd{u_{\theta}}{r}
+    + \cos{\theta} \sin{\theta} \sin{\phi} \pd{u_{\theta}}{r} = 0
+  \intertext{\(\pd{u_{\phi}}{r}\)}
+    \cos[2]{\theta} \cos{\phi} \sin{\phi} \pd{u_{\phi}}{r}
+    + \sin[2]{\theta} \cos{\phi} \sin{\phi} \pd{u_{\phi}}{r}
+    - \sin{\phi} \cos{\phi} \pd{u_{\phi}}{r} \\
+    = \cos{\phi} \sin{\phi} \pd{u_{\phi}}{r}
+    - \sin{\phi} \cos{\phi} \pd{u_{\phi}}{r} = 0
+  \intertext{\(\pd{u_r}{\theta}\)}
+    - \frac{\sin{\theta}}{r} \pda{\cos{\theta} u_r}{\theta}
+    + \frac{\cos{\theta}}{r} \pda{\sin{\theta} u_r}{\theta} \\
+    = - \frac{\sin{\theta} \cos{\theta}}{r} \pd{u_r}{\theta}
+    + \frac{\sin[2]{\theta}}{r} u_r
+    + \frac{\cos{\theta} \sin{\theta}}{r} \pd{u_r}{\theta}
+    + \frac{\cos[2]{\theta}}{r} u_r = \frac{u_r}{r}
+  \intertext{\(\pd{u_{\theta}}{\theta}\)}
+    \frac{\sin{\theta}}{r \sin{\phi}} \pda{\sin{\theta} u_{\theta}}{\theta}
+    + \frac{\cos{\theta}}{r \sin{\phi}} \pda{\cos{\theta} u_{\theta}}{\theta}
+    = \\
+    \frac{\sin{\theta}}{r \sin{\phi}} \p{\sin{\theta} \pd{u_{\theta}}{\theta} + \cos{\theta} u_{\theta}}
+    + \frac{\cos{\theta}}{r \sin{\phi}} \p{\cos{\theta} \pd{u_{\theta}}{\theta} - \sin{\theta} u_{\theta}}
+    = \\
+    \frac{\sin[2]{\theta}}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{\cos[2]{\theta}}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    = \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta} \\
+  \intertext{\(\pd{u_{\phi}}{\theta}\)}
+    - \frac{\sin{\theta} \cos{\phi}}{r \sin{\phi}} \pda{\cos{\theta} u_{\phi}}{\theta}
+    + \frac{\cos{\theta} \cos{\phi}}{r \sin{\phi}} \pda{\sin{\theta} u_{\phi}}{\theta} = \\
+    - \frac{\sin{\theta} \cos{\phi}}{r \sin{\phi}} \p{\cos{\theta} \pd{u_{\phi}}{\theta} - \sin{\theta} u_{\phi}}
+    + \frac{\cos{\theta} \cos{\phi}}{r \sin{\phi}} \p{\sin{\theta} \pd{u_{\phi}}{\theta} + \cos{\theta} u_{\phi}} = \\
+    \frac{\sin[2]{\theta} \cos{\phi}}{r \sin{\phi}} u_{\phi}
+    + \frac{\cos[2]{\theta} \cos{\phi}}{r \sin{\phi}} u_{\phi} =
+    \frac{\cos{\phi}}{r \sin{\phi}} u_{\phi}
+  \intertext{\(\pd{u_r}{\phi}\)}
+    \frac{\cos[2]{\theta} \cos{\phi}}{r} \pda{\sin{\phi} u_r}{\phi}
+    + \frac{\sin[2]{\theta} \cos{\phi}}{r} \pda{\sin{\phi} u_r}{\phi}
+    - \frac{\sin{\phi}}{r} \pda{\cos{\phi} u_r}{\phi} = \\
+    \frac{\cos{\phi}}{r} \pda{\sin{\phi} u_r}{\phi}
+    - \frac{\sin{\phi}}{r} \pda{\cos{\phi} u_r}{\phi} = \\
+    \frac{\cos{\phi}}{r} \p{\sin{\phi} \pd{u_r}{\phi} + \cos{\phi} u_r}
+    - \frac{\sin{\phi}}{r} \p{\cos{\phi} \pd{u_r}{\phi} - \sin{\phi} u_r} = \\
+    \frac{\cos[2]{\phi}}{r} u_r + \frac{\sin[2]{\phi}}{r} u_r =
+    \frac{1}{r} u_r
+  \intertext{\(\pd{u_{\theta}}{\phi}\)}
+    - \frac{\cos{\theta} \sin{\theta} \cos{\phi}}{r} \pd{u_{\theta}}{\phi}
+    + \frac{\sin{\theta} \cos{\theta} \cos{\phi}}{r} \pd{u_{\theta}}{\phi} = 0
+  \intertext{\(\pd{u_{\phi}}{\phi}\)}
+    \frac{\cos[2]{\theta} \cos{\phi}}{r} \pda{\cos{\phi} u_{\phi}}{\phi}
+    + \frac{\sin[2]{\theta} \cos{\phi}}{r} \pda{\cos{\phi} u_{\phi}}{\phi}
+    + \frac{\sin{\phi}}{r} \pda{\sin{\phi} u_{\phi}}{\phi} = \\
+    \frac{\cos{\phi}}{r} \pda{\cos{\phi} u_{\phi}}{\phi}
+    + \frac{\sin{\phi}}{r} \pda{\sin{\phi} u_{\phi}}{\phi} = \\
+    \frac{\cos{\phi}}{r} \p{\cos{\phi} \pd{u_{\phi}}{\phi} - \sin{\phi} u_{\phi}}
+    + \frac{\sin{\phi}}{r} \p{\sin{\phi} \pd{u_{\phi}}{\phi} + \cos{\phi} u_{\phi}} = \\
+    \frac{\cos[2]{\phi}}{r} \pd{u_{\phi}}{\phi}
+    + \frac{\sin[2]{\phi}}{r} \pd{u_{\phi}}{\phi} =
+    \frac{1}{r} \pd{u_{\phi}}{\phi}
+\end{gather}
+The simplified continuity equation is thus
+\begin{gather}
+  \pd{u_r}{r} + \frac{u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+  + \frac{\cos{\phi}}{r \sin{\phi}} u_{\phi} + \frac{1}{r} u_r
+  + \frac{1}{r} \pd{u_{\phi}}{\phi} = 0 \\
+  \pd{u_r}{r} + 2\frac{u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+  + \frac{1}{r} \pd{u_{\phi}}{\phi} + \frac{\cos{\phi}}{r \sin{\phi}} u_{\phi} = 0 \\
+  \intertext{Using the product rule this can also be written as}
+  \frac{1}{r^2}\pda{r^2 u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+  + \frac{1}{r \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0 \\
+\end{gather}
+
+\begin{gather*}
+  \pd{u}{t} + \pda{u^2}{x} + \pda{uv}{y} + \pda{uw}{z} = \\
+\end{gather*}
+
+\end{document}
