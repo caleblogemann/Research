@@ -255,8 +255,170 @@ The simplified continuity equation is thus
   + \frac{1}{r \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0 \\
 \end{gather}
 
-\begin{gather*}
-  \pd{u}{t} + \pda{u^2}{x} + \pda{uv}{y} + \pda{uw}{z} = \\
-\end{gather*}
+% \begin{gather*}
+%   \pd{u}{t} + \pda{u^2}{x} + \pda{uv}{y} + \pda{uw}{z} = \\
+% \end{gather*}
+
+
+Shallow Water in Spherical Coordinates
+R radius, \((\theta, \phi)\), longitude and latitude
+\begin{gather}
+  h_t + \frac{1}{R \cos{\phi}} \p{h u_{\theta}}_{\theta}
+    + \frac{1}{R \cos{\phi}} \p{h u_{\phi} \cos{\phi}}_{\phi} = 0 \\
+  \p{h u_{\theta}}_t + \frac{1}{R \cos{\phi}} \p{h u_{\theta}^2 + \frac{1}{2} g h^2}_{\theta}
+    + \frac{1}{R} \p{h u_{\theta} u_{\phi}}
+    - 2 \frac{h u_{\theta} u_{\phi}}{R} \tan{\phi} = 0 \\
+  \p{h u_{\phi}}_{\phi} + \frac{1}{R \cos{\phi}} \p{h u_{\theta} u_{\phi}}_{\theta}
+    + \frac{1}{R} \p{h u_{\phi}^2 + \frac{1}{2} g h^2}_{\phi}
+    + \frac{h u_{\theta}^2 - h u_{\phi}^2}{R} \tan{\phi} = 0
+\end{gather}
+
+Navier Stokes Equations in Spherical Coordinates
+r radius, \((\theta, \phi)\) azimuth, and polar angle,
+\(\theta = \arctan{y/x}, \phi = \arctan{\frac{\sqrt{x^2 + y^2}}{z}}\)
+
+\begin{gather}
+  \frac{1}{r^2}\pda{r^2 u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0 \\
+  \pd{u_r}{t} + u_r \pd{u_r}{r} + \frac{u_{\theta}}{r \sin{\phi}} \pd{u_r}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_r}{\phi} - \frac{u_{\theta}^2 + u_{\phi}^2}{r}
+    = - \frac{1}{\rho} \pd{p}{r} + g_r \\
+  \pd{u_{\theta}}{t} + u_r \pd{u_{\theta}}{r}
+    + \frac{u_{\theta}}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_{\theta}}{\phi}
+    + \frac{u_r u_{\theta}}{r}
+    + \frac{u_{\theta} u_{\phi} \cot{\phi}}{r}
+    = - \frac{1}{\rho r \sin{\phi}} \pd{p}{\theta} + g_{\theta} \\
+  \pd{u_{\phi}}{t} + u_r \pd{u_{\phi}}{r}
+    + \frac{u_\theta}{r \sin{\phi}} \pd{u_{\phi}}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_{\phi}}{\phi}
+    + \frac{u_r u_{\phi}}{r}
+    - \frac{u_{\theta}^2 \cot{\phi}}{r}
+    = - \frac{1}{\rho r} \pd{p}{\phi} + g_{\phi}
+\end{gather}
+Kinematic Boundary Condition, \(h_s(t, \theta, \phi)\), \(h_b(t, \theta, \phi)\)
+\(u_{\theta/\phi/r}(t, \theta, \phi, r)\)
+\begin{gather}
+  \pd{h_s}{t} + u_{\theta}(t, \theta, \phi, h_s) \pd{h_s}{\theta}
+    + u_{\phi}(t, \theta, \phi, h_s) \pd{h_s}{\phi}
+    = u_r(t, \theta, \phi, h_s) \\
+  \pd{h_b}{t} + u_{\theta}(t, \theta, \phi, h_b) \pd{h_b}{\theta}
+    + u_{\phi}(t, \theta, \phi, h_b) \pd{h_b}{\phi}
+    = u_r(t, \theta, \phi, h_b) \\
+\end{gather}
+
+Dimensional Analysis
+\[
+  r = R \hat{r} \quad h = H \hat{h} \quad \frac{H}{R} = \epsilon
+\]
+\[
+  u_{\theta} = U \hat{u}_{\theta} \quad u_{\phi} = U \hat{u}_{\phi}
+  \quad u_r = U_r \hat{u}_r
+\]
+\[
+  t = T \hat{t} = \frac{R}{U} \hat{t} \quad p = \rho g H \hat{p}
+\]
+
+\begin{gather}
+  \frac{1}{R^2 \hat{r}^2} \frac{1}{R} \pda{R^2 \hat{r}^2 \epsilon U \hat{u}_r}{\hat{r}}
+    + \frac{1}{R \hat{r} \sin{\phi}} \pd{U \hat{u}_{\theta}}{\theta}
+    + \frac{1}{R \hat{r} \sin{\phi}} \pda{\sin{\phi} U \hat{u}_{\phi}}{\phi} = 0 \\
+  \frac{U_r}{T} \pd{\hat{u}_r}{\hat{t}} + U_r \hat{u}_r \frac{U_r}{R} \pd{\hat{u}_r}{\hat{r}}
+    + \frac{U \hat{u}_{\theta}}{R \hat{r} \sin{\phi}} U_r \pd{\hat{u}_r}{\theta}
+    + \frac{U \hat{u}_{\phi}}{R \hat{r}} U_r \pd{\hat{u}_r}{\phi}
+    - \frac{U^2}{R} \frac{\hat{u}_{\theta}^2 + \hat{u}_{\phi}^2}{r}
+    = -\frac{1}{\rho} \rho g H \frac{1}{R} \pd{\hat{p}}{\hat{r}} + g_r \\
+  \frac{U}{T} \pd{\hat{u}_{\theta}}{\hat{t}}
+    + U_r \hat{u}_r \frac{U}{R} \pd{\hat{u}_{\theta}}{\hat{r}}
+    + \frac{U \hat{u}_{\theta}}{R \hat{r} \sin{\phi}} U \pd{\hat{u}_{\theta}}{\theta}
+    + \frac{U \hat{u}_{\phi}}{R \hat{r}} U \pd{\hat{u}_{\theta}}{\phi}
+    + \frac{U_r \hat{u}_r U \hat{u}_{\theta}}{R \hat{r}}
+    + \frac{U^2 \hat{u}_{\theta} \hat{u}_{\phi} \cot{\phi}}{R \hat{r}}
+    = - \frac{1}{\rho R \hat{r} \sin{\phi}} \rho g H \pd{\hat{p}}{\theta}
+    + g_{\theta} \\
+  \frac{U}{T} \pd{\hat{u}_{\phi}}{\hat{t}}
+    + U_r \hat{u}_r \frac{U}{R} \pd{\hat{u}_{\phi}}{\hat{r}}
+    + \frac{U \hat{u}_\theta}{R \hat{r} \sin{\phi}} U \pd{\hat{u}_{\phi}}{\theta}
+    + \frac{U \hat{u}_{\phi}}{R \hat{r}} U \pd{\hat{u}_{\phi}}{\phi}
+    + \frac{U_r U \hat{u}_r \hat{u}_{\phi}}{R \hat{r}}
+    - \frac{U^2 \hat{u}_{\theta}^2 \cot{\phi}}{R \hat{r}}
+    = - \frac{1}{\rho R \hat{r}} \rho g H \pd{\hat{p}}{\phi} + g_{\phi}
+\end{gather}
+
+\(T = \frac{R}{U}\), \(U_r = \epsilon U\)
+\begin{gather}
+  \frac{\epsilon}{\hat{r}^2} \pda{\hat{r}^2 \hat{u}_r}{\hat{r}}
+    + \frac{1}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\theta}}{\theta}
+    + \frac{1}{\hat{r} \sin{\phi}} \pda{\sin{\phi} \hat{u}_{\phi}}{\phi} = 0 \\
+  \epsilon \frac{U^2}{R} \p{\pd{\hat{u}_r}{\hat{t}}
+    + \epsilon \hat{u}_r \pd{\hat{u}_r}{\hat{r}}
+    + \frac{\hat{u}_{\theta}}{\hat{r} \sin{\phi}} \pd{\hat{u}_r}{\theta}
+    + \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_r}{\phi}
+    - \frac{\hat{u}_{\theta}^2 + \hat{u}_{\phi}^2}{\epsilon r}}
+    = - g \frac{H}{R} \pd{\hat{p}}{\hat{r}} + g e_r \\
+   \frac{U^2}{R} \p{\pd{\hat{u}_{\theta}}{\hat{t}}
+    + \epsilon \hat{u}_r \pd{\hat{u}_{\theta}}{\hat{r}}
+    +  \frac{\hat{u}_{\theta}}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\theta}}{\theta}
+    + \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_{\theta}}{\phi}
+    + \epsilon \frac{\hat{u}_r \hat{u}_{\theta}}{\hat{r}}
+    + \frac{\hat{u}_{\theta} \hat{u}_{\phi} \cot{\phi}}{\hat{r}}}
+    = -\frac{g H}{R \hat{r} \sin{\phi}} \pd{\hat{p}}{\theta}
+    + g e_{\theta} \\
+  \frac{U^2}{R} \p{\pd{\hat{u}_{\phi}}{\hat{t}}
+    + \epsilon \hat{u}_r \pd{\hat{u}_{\phi}}{\hat{r}}
+    + \frac{\hat{u}_\theta}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\phi}}{\theta}
+    + \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_{\phi}}{\phi}
+    + \epsilon \frac{\hat{u}_r \hat{u}_{\phi}}{\hat{r}}
+    - \frac{\hat{u}_{\theta}^2 \cot{\phi}}{\hat{r}}}
+    = - \frac{g H}{R \hat{r}} \pd{\hat{p}}{\phi} + g e_{\phi}
+\end{gather}
+
+\(R = \frac{H}{\epsilon}\)
+\begin{gather}
+  \frac{\epsilon}{\hat{r}^2} \pda{\hat{r}^2 \hat{u}_r}{\hat{r}}
+    + \frac{1}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\theta}}{\theta}
+    + \frac{1}{\hat{r} \sin{\phi}} \pda{\sin{\phi} \hat{u}_{\phi}}{\phi} = 0 \\
+  \epsilon^2 \frac{U^2}{g H} \p{\pd{\hat{u}_r}{\hat{t}}
+    + \epsilon \hat{u}_r \pd{\hat{u}_r}{\hat{r}}
+    + \frac{\hat{u}_{\theta}}{\hat{r} \sin{\phi}} \pd{\hat{u}_r}{\theta}
+    + \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_r}{\phi}
+    - \frac{\hat{u}_{\theta}^2 + \hat{u}_{\phi}^2}{\epsilon r}}
+    = - \epsilon \pd{\hat{p}}{\hat{r}} + e_r \\
+   \epsilon \frac{U^2}{g H} \p{\pd{\hat{u}_{\theta}}{\hat{t}}
+    + \epsilon \hat{u}_r \pd{\hat{u}_{\theta}}{\hat{r}}
+    +  \frac{\hat{u}_{\theta}}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\theta}}{\theta}
+    + \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_{\theta}}{\phi}
+    + \epsilon \frac{\hat{u}_r \hat{u}_{\theta}}{\hat{r}}
+    + \frac{\hat{u}_{\theta} \hat{u}_{\phi} \cot{\phi}}{\hat{r}}}
+    = -\frac{\epsilon}{\hat{r} \sin{\phi}} \pd{\hat{p}}{\theta}
+    + e_{\theta} \\
+  \epsilon \frac{U^2}{g H} \p{\pd{\hat{u}_{\phi}}{\hat{t}}
+    + \epsilon \hat{u}_r \pd{\hat{u}_{\phi}}{\hat{r}}
+    + \frac{\hat{u}_\theta}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\phi}}{\theta}
+    + \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_{\phi}}{\phi}
+    + \epsilon \frac{\hat{u}_r \hat{u}_{\phi}}{\hat{r}}
+    - \frac{\hat{u}_{\theta}^2 \cot{\phi}}{\hat{r}}}
+    = - \frac{\epsilon}{\hat{r}} \pd{\hat{p}}{\phi} + e_{\phi}
+\end{gather}
+
+Drop \(\epsilon^2\) terms
+\begin{gather}
+  \frac{\epsilon}{\hat{r}^2} \pda{\hat{r}^2 \hat{u}_r}{\hat{r}}
+    + \frac{1}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\theta}}{\theta}
+    + \frac{1}{\hat{r} \sin{\phi}} \pda{\sin{\phi} \hat{u}_{\phi}}{\phi} = 0 \\
+    - \epsilon\frac{\hat{u}_{\theta}^2 + \hat{u}_{\phi}^2}{r}
+    = - \epsilon \pd{\hat{p}}{\hat{r}} + e_r \\
+   \epsilon \frac{U^2}{g H} \p{\pd{\hat{u}_{\theta}}{\hat{t}}
+    + \frac{\hat{u}_{\theta}}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\theta}}{\theta}
+    + \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_{\theta}}{\phi}
+    + \frac{\hat{u}_{\theta} \hat{u}_{\phi} \cot{\phi}}{\hat{r}}}
+    = -\frac{\epsilon}{\hat{r} \sin{\phi}} \pd{\hat{p}}{\theta}
+    + e_{\theta} \\
+  \epsilon \frac{U^2}{g H} \p{\pd{\hat{u}_{\phi}}{\hat{t}}
+    + \frac{\hat{u}_\theta}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\phi}}{\theta}
+    + \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_{\phi}}{\phi}
+    - \frac{\hat{u}_{\theta}^2 \cot{\phi}}{\hat{r}}}
+    = - \frac{\epsilon}{\hat{r}} \pd{\hat{p}}{\phi} + e_{\phi}
+\end{gather}
 
 \end{document}
