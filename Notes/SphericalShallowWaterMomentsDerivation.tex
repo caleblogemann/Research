@@ -350,11 +350,11 @@ Dimensional Analysis
   \frac{\epsilon}{\hat{r}^2} \pda{\hat{r}^2 \hat{u}_r}{\hat{r}}
     + \frac{1}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\theta}}{\theta}
     + \frac{1}{\hat{r} \sin{\phi}} \pda{\sin{\phi} \hat{u}_{\phi}}{\phi} = 0 \\
-  \epsilon \frac{U^2}{R} \p{\pd{\hat{u}_r}{\hat{t}}
-    + \epsilon \hat{u}_r \pd{\hat{u}_r}{\hat{r}}
-    + \frac{\hat{u}_{\theta}}{\hat{r} \sin{\phi}} \pd{\hat{u}_r}{\theta}
-    + \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_r}{\phi}
-    - \frac{\hat{u}_{\theta}^2 + \hat{u}_{\phi}^2}{\epsilon r}}
+  \frac{U^2}{R} \p{\epsilon \pd{\hat{u}_r}{\hat{t}}
+    + \epsilon^2 \hat{u}_r \pd{\hat{u}_r}{\hat{r}}
+    + \epsilon \frac{\hat{u}_{\theta}}{\hat{r} \sin{\phi}} \pd{\hat{u}_r}{\theta}
+    + \epsilon \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_r}{\phi}
+    - \frac{\hat{u}_{\theta}^2 + \hat{u}_{\phi}^2}{r}}
     = - g \frac{H}{R} \pd{\hat{p}}{\hat{r}} + g e_r \\
    \frac{U^2}{R} \p{\pd{\hat{u}_{\theta}}{\hat{t}}
     + \epsilon \hat{u}_r \pd{\hat{u}_{\theta}}{\hat{r}}
@@ -378,11 +378,11 @@ Dimensional Analysis
   \frac{\epsilon}{\hat{r}^2} \pda{\hat{r}^2 \hat{u}_r}{\hat{r}}
     + \frac{1}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\theta}}{\theta}
     + \frac{1}{\hat{r} \sin{\phi}} \pda{\sin{\phi} \hat{u}_{\phi}}{\phi} = 0 \\
-  \epsilon^2 \frac{U^2}{g H} \p{\pd{\hat{u}_r}{\hat{t}}
-    + \epsilon \hat{u}_r \pd{\hat{u}_r}{\hat{r}}
-    + \frac{\hat{u}_{\theta}}{\hat{r} \sin{\phi}} \pd{\hat{u}_r}{\theta}
-    + \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_r}{\phi}
-    - \frac{\hat{u}_{\theta}^2 + \hat{u}_{\phi}^2}{\epsilon r}}
+  \epsilon \frac{U^2}{g H} \p{\epsilon \pd{\hat{u}_r}{\hat{t}}
+    + \epsilon^2 \hat{u}_r \pd{\hat{u}_r}{\hat{r}}
+    + \epsilon \frac{\hat{u}_{\theta}}{\hat{r} \sin{\phi}} \pd{\hat{u}_r}{\theta}
+    + \epsilon \frac{\hat{u}_{\phi}}{\hat{r}} \pd{\hat{u}_r}{\phi}
+    - \frac{\hat{u}_{\theta}^2 + \hat{u}_{\phi}^2}{r}}
     = - \epsilon \pd{\hat{p}}{\hat{r}} + e_r \\
    \epsilon \frac{U^2}{g H} \p{\pd{\hat{u}_{\theta}}{\hat{t}}
     + \epsilon \hat{u}_r \pd{\hat{u}_{\theta}}{\hat{r}}
@@ -406,7 +406,7 @@ Drop \(\epsilon^2\) terms
   \frac{\epsilon}{\hat{r}^2} \pda{\hat{r}^2 \hat{u}_r}{\hat{r}}
     + \frac{1}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\theta}}{\theta}
     + \frac{1}{\hat{r} \sin{\phi}} \pda{\sin{\phi} \hat{u}_{\phi}}{\phi} = 0 \\
-    - \epsilon\frac{\hat{u}_{\theta}^2 + \hat{u}_{\phi}^2}{r}
+  -\epsilon \frac{U^2}{gH} \frac{\hat{u}_{\theta}^2 + \hat{u}_{\phi}^2}{r}
     = - \epsilon \pd{\hat{p}}{\hat{r}} + e_r \\
    \epsilon \frac{U^2}{g H} \p{\pd{\hat{u}_{\theta}}{\hat{t}}
     + \frac{\hat{u}_{\theta}}{\hat{r} \sin{\phi}} \pd{\hat{u}_{\theta}}{\theta}
