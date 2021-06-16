@@ -103,7 +103,7 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   Find \(\v{q} \in L^2(\Omega \times \br{0, T})\), such that
   \[
     \dintt{0}{T}{\dintt{\Omega}{}{\v{q}\p{\v{x}, t} v_t\p{\v{x}, t}
-    + \v{f}\p{\v{q}, \v{x}, t} \cdot \grad v\p{\v{x}, t}}{\v{x}}}{t}
+        + \v{f}\p{\v{q}, \v{x}, t} \cdot \grad v\p{\v{x}, t}}{\v{x}}}{t}
     = \v{0}
   \]
   for all \(v \in C^{\infty}_0(\Omega \times \br{0, T})\)
@@ -154,14 +154,14 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \end{center}
   \begin{itemize}
     \item Incompressible Navier-Stokes Equation
-      \begin{align*}
-        u_x + w_z                   & = 0                                                                                 \\
-        \rho\p{u_t + u u_x + w u_z} & = -p_x + \mu \Delta u - \phi_x                                                      \\
-        \rho\p{w_t + u w_x + w w_z} & = -p_z + \mu \Delta w - \phi_z                                                      \\
-        w                           & = 0, u = 0                                                       & \text{at } z = 0 \\
-        w                           & = h_t + u h_x                                                    & \text{at } z = h \\
-        \v{T} \cdot \v{n}           & = \p{-\kappa \sigma + \Pi}\v{n} + \p{\pd{\sigma}{s} + \tau}\v{t} & \text{at } z = h
-      \end{align*}
+          \begin{align*}
+            u_x + w_z                   & = 0                                                                                 \\
+            \rho\p{u_t + u u_x + w u_z} & = -p_x + \mu \Delta u - \phi_x                                                      \\
+            \rho\p{w_t + u w_x + w w_z} & = -p_z + \mu \Delta w - \phi_z                                                      \\
+            w                           & = 0, u = 0                                                       & \text{at } z = 0 \\
+            w                           & = h_t + u h_x                                                    & \text{at } z = h \\
+            \v{T} \cdot \v{n}           & = \p{-\kappa \sigma + \Pi}\v{n} + \p{\pd{\sigma}{s} + \tau}\v{t} & \text{at } z = h
+          \end{align*}
   \end{itemize}
 \end{frame}
 
@@ -184,22 +184,22 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \begin{itemize}
     \frametitle{Method Overview}
     \item Simplified Model
-      \[
-        q_t + \p{q^2 - q^3}_x = -\p{q^3 q_{xxx}}_x \qquad \p{0, T} \times \Omega
-      \]
+          \[
+            q_t + \p{q^2 - q^3}_x = -\p{q^3 q_{xxx}}_x \qquad \p{0, T} \times \Omega
+          \]
 
     \item Runge Kutta Implicit Explicit (IMEX)
-      \begin{align*}
-        q_t & = F(q) + G(q)
-      \end{align*}
-      \begin{itemize}
-        \item F evaluated explicitly
-        \item G solved implicitly
-      \end{itemize}
-      \begin{align*}
-        F(q) & = -\p{q^2 - q^3}_x  \\
-        G(q) & = \p{q^3 q_{xxx}}_x
-      \end{align*}
+          \begin{align*}
+            q_t & = F(q) + G(q)
+          \end{align*}
+          \begin{itemize}
+            \item F evaluated explicitly
+            \item G solved implicitly
+          \end{itemize}
+          \begin{align*}
+            F(q) & = -\p{q^2 - q^3}_x  \\
+            G(q) & = \p{q^3 q_{xxx}}_x
+          \end{align*}
   \end{itemize}
 \end{frame}
 
@@ -207,17 +207,17 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \frametitle{Diffusion}
   \begin{itemize}
     \item Diffusion Equation
-      \begin{align*}
-        G(q) &= -\p{q^3 q_{xxx}}_x \qquad \p{0, T} \times \Omega
-      \end{align*}
+          \begin{align*}
+            G(q) & = -\p{q^3 q_{xxx}}_x \qquad \p{0, T} \times \Omega
+          \end{align*}
 
     \item Local Discontinuous Galerkin
-      \begin{align*}
-        r &= q_x \\
-        s &= r_x \\
-        u &= s_x \\
-        G(q) &= -\p{q^3 u}_x
-      \end{align*}
+          \begin{align*}
+            r    & = q_x          \\
+            s    & = r_x          \\
+            u    & = s_x          \\
+            G(q) & = -\p{q^3 u}_x
+          \end{align*}
   \end{itemize}
 \end{frame}
 
@@ -227,13 +227,13 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
 
   \begin{align*}
     \dintt{K_i}{}{r_h \phi^j + q_h \phi^j_x}{\v{x}}
-    &= \dintt{\partial K_i}{}{n \cdot q^* \phi^j}{\v{x}} \\
+     & = \dintt{\partial K_i}{}{n \cdot q^* \phi^j}{\v{x}}  \\
     \dintt{K_i}{}{s_h \phi^j + s_h \phi^j_x}{\v{x}}
-    &= \dintt{\partial K_i}{}{n \cdot r^* \phi^j}{\v{x}} \\
+     & = \dintt{\partial K_i}{}{n \cdot r^* \phi^j}{\v{x}}  \\
     \dintt{K_i}{}{u_h \phi^j + s_h \phi^j_x}{\v{x}}
-    &= \dintt{\partial K_i}{}{n \cdot s^* \phi^j}{\v{x}} \\
+     & = \dintt{\partial K_i}{}{n \cdot s^* \phi^j}{\v{x}}  \\
     \dintt{K_i}{}{G(q_h) \phi^j - q_h^3 u_h \phi^j_x}{\v{x}}
-    &= -\dintt{\partial K_i}{}{n \cdot u^* \phi^j}{\v{x}}
+     & = -\dintt{\partial K_i}{}{n \cdot u^* \phi^j}{\v{x}}
   \end{align*}
 
   for all \(K_i\) and all \(\phi^j \in V_h\).
@@ -243,10 +243,10 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \frametitle{Numerical Fluxes}
   Alternating Fluxes
   \begin{align*}
-    q^* &= \sum{j=1}{N_p}{q^j_h \phi^j\p{\v{x}^L}} \\
-    r^* &= \sum{j=1}{N_p}{r^j_h \phi^j\p{\v{x}^R}} \\
-    s^* &= \sum{j=1}{N_p}{s^j_h \phi^j\p{\v{x}^L}} \\
-    u^* &= \p{\sum{j=1}{N_p}{q^j_h \phi^j\p{\v{x}^R}}}^3\sum{j=1}{N_p}{u^j_h \phi^j\p{\v{x}^R}} \\
+    q^* & = \sum{j=1}{N_p}{q^j_h \phi^j\p{\v{x}^L}}                                              \\
+    r^* & = \sum{j=1}{N_p}{r^j_h \phi^j\p{\v{x}^R}}                                              \\
+    s^* & = \sum{j=1}{N_p}{s^j_h \phi^j\p{\v{x}^L}}                                              \\
+    u^* & = \p{\sum{j=1}{N_p}{q^j_h \phi^j\p{\v{x}^R}}}^3\sum{j=1}{N_p}{u^j_h \phi^j\p{\v{x}^R}} \\
   \end{align*}
   % \begin{center}
   %   \includegraphics[scale=0.3]{Figures/localDG.pdf}
@@ -257,23 +257,23 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \frametitle{Implicit Explicit Runge Kutta}
   \begin{itemize}
     \item IMEX scheme
-      \begin{align*}
-        q^{n+1} &= q^n + \Delta t \sum{i = 1}{s}{b_i' F(t_i, u_i)} + \Delta t \sum{i=1}{s}{b_i G(t_i, u_i)} \\
-        u_i &= q^n + \Delta t \sum{j = 1}{i-1}{a_{ij}' F(t_j, u_j)} + \Delta t \sum{j=1}{i}{a_{ij} G(t_j, u_j)} \\
-        t_i &= t^n + c_i \Delta t
-      \end{align*}
+          \begin{align*}
+            q^{n+1} & = q^n + \Delta t \sum{i = 1}{s}{b_i' F(t_i, u_i)} + \Delta t \sum{i=1}{s}{b_i G(t_i, u_i)}         \\
+            u_i     & = q^n + \Delta t \sum{j = 1}{i-1}{a_{ij}' F(t_j, u_j)} + \Delta t \sum{j=1}{i}{a_{ij} G(t_j, u_j)} \\
+            t_i     & = t^n + c_i \Delta t
+          \end{align*}
 
     \item Double Butcher Tableaus \hfill \\ \hfill \\
-      \begin{tabular}{r|l}
-        \(c'\) & \(a'\) \\
-        \midrule
-          & \(b'^T\)
-      \end{tabular}
-      \begin{tabular}{r|l}
-        \(c\) & \(a\) \\
-        \midrule
-          & \(b^T\)
-      \end{tabular}
+          \begin{tabular}{r|l}
+            \(c'\) & \(a'\)   \\
+            \midrule
+                   & \(b'^T\)
+          \end{tabular}
+          \begin{tabular}{r|l}
+            \(c\) & \(a\)   \\
+            \midrule
+                  & \(b^T\)
+          \end{tabular}
   \end{itemize}
 \end{frame}
 
@@ -281,34 +281,34 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \frametitle{SSP Runge Kutta IMEX Schemes (\textcite{pareschi2000implicit})}
   \begin{itemize}
     \item 1st Order --- L-Stable SSP \hfill \\ \hfill \\
-      \begin{tabular}{r|l}
-        0 & 0 \\
-        \midrule
-          & 1
-      \end{tabular}\hspace{0.5cm}
-      \begin{tabular}{r|l}
-        1 & 1 \\
-        \midrule
-          & 1
-      \end{tabular}
+          \begin{tabular}{r|l}
+            0 & 0 \\
+            \midrule
+              & 1
+          \end{tabular}\hspace{0.5cm}
+          \begin{tabular}{r|l}
+            1 & 1 \\
+            \midrule
+              & 1
+          \end{tabular}
 
-    \vspace{0.5cm}
+          \vspace{0.5cm}
 
     \item 2nd Order --- SSP \hfill \\ \hfill \\
-      \begin{tabular}{r|lll}
-        0 & 0 & 0 & 0 \\
-        0 & 0 & 0 & 0 \\
-        1 & 0 & 1 & 0 \\
-        \midrule
-          & 0 & \(\frac{1}{2}\) & \(\frac{1}{2}\) \\
-      \end{tabular}\hspace{0.5cm}
-      \begin{tabular}{r|lll}
-        \(\frac{1}{2}\) & \(\frac{1}{2}\) & 0 & 0 \\
-        0 & \(-\frac{1}{2}\) & \(\frac{1}{2}\) & 0 \\
-        1 & 0 & \(\frac{1}{2}\) & \(\frac{1}{2}\) \\
-        \midrule
-          & 0 & \(\frac{1}{2}\) & \(\frac{1}{2}\) \\
-      \end{tabular}
+          \begin{tabular}{r|lll}
+            0 & 0 & 0               & 0               \\
+            0 & 0 & 0               & 0               \\
+            1 & 0 & 1               & 0               \\
+            \midrule
+              & 0 & \(\frac{1}{2}\) & \(\frac{1}{2}\) \\
+          \end{tabular}\hspace{0.5cm}
+          \begin{tabular}{r|lll}
+            \(\frac{1}{2}\) & \(\frac{1}{2}\)  & 0               & 0               \\
+            0               & \(-\frac{1}{2}\) & \(\frac{1}{2}\) & 0               \\
+            1               & 0                & \(\frac{1}{2}\) & \(\frac{1}{2}\) \\
+            \midrule
+                            & 0                & \(\frac{1}{2}\) & \(\frac{1}{2}\) \\
+          \end{tabular}
   \end{itemize}
 \end{frame}
 
@@ -316,28 +316,28 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \frametitle{SSP Runge Kutta IMEX Schemes (\textcite{pareschi2005implicit})}
   \begin{itemize}
     \item 3rd Order --- L-Stable SSP \hfill \\ \hfill \\
-      \begin{tabular}{r|llll}
-        0 & 0 & 0 & 0 & 0 \\
-        0 & 0 & 0 & 0 & 0 \\
-        1 & 0 & 1 & 0 & 0 \\
-        \(\frac{1}{2}\) & 0 & \(\frac{1}{4}\) & \(\frac{1}{4}\) & 0 \\
-        \midrule
-          & 0 & \(\frac{1}{6}\) & \(\frac{1}{6}\) & \(\frac{2}{3}\) \\
-      \end{tabular} \hspace{0.5cm}
-      \begin{tabular}{r|llll}
-        \(\alpha \) & \(\alpha \) & 0 & 0 & 0 \\
-        0 & -\(\alpha \) & \(\alpha \) & 0 & 0 \\
-        1 & 0 & \(1 - \alpha \) & \(\alpha \) & 0 \\
-        \(\frac{1}{2}\) & \(\beta \) & \(\eta \) & \(\zeta \) & \(\alpha \) \\
-        \midrule
-          & 0 & \(\frac{1}{6}\) & \(\frac{1}{6}\) & \(\frac{2}{3}\) \\
-      \end{tabular} \\
-      \begin{align*}
-        \alpha &= 0.24169426078821 \\
-        \beta &= 0.06042356519705 \\
-        \eta &= 0.1291528696059 \\
-        \zeta &= \frac{1}{2} - \beta - \eta - \alpha
-      \end{align*}
+          \begin{tabular}{r|llll}
+            0               & 0 & 0               & 0               & 0               \\
+            0               & 0 & 0               & 0               & 0               \\
+            1               & 0 & 1               & 0               & 0               \\
+            \(\frac{1}{2}\) & 0 & \(\frac{1}{4}\) & \(\frac{1}{4}\) & 0               \\
+            \midrule
+                            & 0 & \(\frac{1}{6}\) & \(\frac{1}{6}\) & \(\frac{2}{3}\) \\
+          \end{tabular} \hspace{0.5cm}
+          \begin{tabular}{r|llll}
+            \(\alpha \)     & \(\alpha \)  & 0               & 0               & 0               \\
+            0               & -\(\alpha \) & \(\alpha \)     & 0               & 0               \\
+            1               & 0            & \(1 - \alpha \) & \(\alpha \)     & 0               \\
+            \(\frac{1}{2}\) & \(\beta \)   & \(\eta \)       & \(\zeta \)      & \(\alpha \)     \\
+            \midrule
+                            & 0            & \(\frac{1}{6}\) & \(\frac{1}{6}\) & \(\frac{2}{3}\) \\
+          \end{tabular} \\
+          \begin{align*}
+            \alpha & = 0.24169426078821                    \\
+            \beta  & = 0.06042356519705                    \\
+            \eta   & = 0.1291528696059                     \\
+            \zeta  & = \frac{1}{2} - \beta - \eta - \alpha
+          \end{align*}
   \end{itemize}
 \end{frame}
 
@@ -345,18 +345,18 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \frametitle{Nonlinear Solvers}
   \begin{itemize}
     \item Nonlinear System
-      \begin{align*}
-        u_i - a_{ii} \Delta t G(u_i) &= b
-      \end{align*}
+          \begin{align*}
+            u_i - a_{ii} \Delta t G(u_i) & = b
+          \end{align*}
 
     \item Picard Iteration
-      \begin{align*}
-        \tilde{G}(q, u) &= \p{q^3 u_{xxx}}_x
-      \end{align*}
-      \begin{gather*}
-        u_0 = q^n \qquad u_i^0 = u_{i-1} \\
-        u_i^j - a_{ii} \Delta t \tilde{G}(u_i^{j-1}, u_i^j) = b
-      \end{gather*}
+          \begin{align*}
+            \tilde{G}(q, u) & = \p{q^3 u_{xxx}}_x
+          \end{align*}
+          \begin{gather*}
+            u_0 = q^n \qquad u_i^0 = u_{i-1} \\
+            u_i^j - a_{ii} \Delta t \tilde{G}(u_i^{j-1}, u_i^j) = b
+          \end{gather*}
   \end{itemize}
 \end{frame}
 
@@ -364,32 +364,41 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \frametitle{Manufactured Solution}
   \vspace{-0.3cm}
   \begin{gather*}
-      q_t + \p{q^2 - q^3}_x = -\p{q^3 q_{xxx}}_x + s \\
-      s = \hat{q}_t + \p{\hat{q}^2 - \hat{q}^3}_x + \p{\hat{q}^3 \hat{q}_{xxx}}_x \\
-      \hat{q} = 0.1 \times \sin{2 \pi / 20.0 \times (x - t)} + 0.15 \quad \text{for } (x, t) \in \br{0, 40} \times \br{0, 5.0}
+    q_t + \p{q^2 - q^3}_x = -\p{q^3 q_{xxx}}_x + s \\
+    s = \hat{q}_t + \p{\hat{q}^2 - \hat{q}^3}_x + \p{\hat{q}^3 \hat{q}_{xxx}}_x \\
+    \hat{q} = 0.1 \times \sin{2 \pi / 20.0 \times (x - t)} + 0.15 \quad \text{for } (x, t) \in \br{0, 40} \times \br{0, 5.0}
   \end{gather*}
   \vspace{-0.5cm}
   \small{
-  \begin{table}
-    \centering
-    \begin{tabular}{r*{6}l}
-      \toprule
-      & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} \\
-      \midrule
-      \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order\\
-      \midrule
-        20 &   \(0.136\) &  --- & \(7.33 \times 10^{-3}\) &  --- & \(5.29 \times 10^{-4}\) &  --- \\
-        40 &  \(0.0719\) & 0.92 & \(1.99 \times 10^{-3}\) & 1.88 & \(5.38 \times 10^{-5}\) & 3.30 \\
-        80 &  \(0.0378\) & 0.93 & \(5.60 \times 10^{-4}\) & 1.83 & \(7.47 \times 10^{-6}\) & 2.85 \\
-       160 &  \(0.0191\) & 0.99 & \(1.56 \times 10^{-4}\) & 1.85 & \(9.97 \times 10^{-7}\) & 2.91 \\
-       320 & \(0.00961\) & 0.99 & \(3.98 \times 10^{-5}\) & 1.97 & \(1.26 \times 10^{-7}\) & 2.98 \\
-       640 & \(0.00483\) & 0.99 & \(1.00 \times 10^{-5}\) & 1.99 & \(1.58 \times 10^{-8}\) & 3.00 \\
-      1280 & \(0.00242\) & 1.00 & \(2.50 \times 10^{-6}\) & 2.00 & \(1.98 \times 10^{-9}\) & 3.00 \\
-      \bottomrule
-    \end{tabular}
-    \caption{Convergence table with a constant, linear, quadratic polynomial bases.
-    CFL = 0.9, 0.2, 0.1 respectively.}\label{tab:convergence_results}
-  \end{table}}
+    \begin{table}
+      \centering
+      \begin{tabular}{r*{6}l}
+        \toprule
+              & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order}                                             \\
+        \midrule
+        \(n\) & \multicolumn{1}{c}{error}     & order                         & \multicolumn{1}{c}{error}     & order & \multicolumn{1}{c}{error} & order \\
+        \midrule
+        20    & \(0.136\)                     & ---                           & \(7.33 \times 10^{-3}\)       & ---   & \(5.29 \times 10^{-4}\)   & ---   \\
+        40    & \(0.0719\)                    & 0.92                          & \(1.99 \times 10^{-3}\)       & 1.88  & \(5.38 \times 10^{-5}\)   & 3.30  \\
+        80    & \(0.0378\)                    & 0.93                          & \(5.60 \times 10^{-4}\)       & 1.83  & \(7.47 \times 10^{-6}\)   & 2.85  \\
+        160   & \(0.0191\)                    & 0.99                          & \(1.56 \times 10^{-4}\)       & 1.85  & \(9.97 \times 10^{-7}\)   & 2.91  \\
+        320   & \(0.00961\)                   & 0.99                          & \(3.98 \times 10^{-5}\)       & 1.97  & \(1.26 \times 10^{-7}\)   & 2.98  \\
+        640   & \(0.00483\)                   & 0.99                          & \(1.00 \times 10^{-5}\)       & 1.99  & \(1.58 \times 10^{-8}\)   & 3.00  \\
+        1280  & \(0.00242\)                   & 1.00                          & \(2.50 \times 10^{-6}\)       & 2.00  & \(1.98 \times 10^{-9}\)   & 3.00  \\
+        \bottomrule
+      \end{tabular}
+      \caption{Convergence table with a constant, linear, quadratic polynomial bases.
+        CFL = 0.9, 0.2, 0.1 respectively.}\label{tab:convergence_results}
+    \end{table}}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusions}
+  \begin{itemize}
+    \item DG discretization of a nonlinear 4th derivative operator
+    \item Reasonable time step restriction from IMEX scheme
+    \item Efficient nonlinear solve via Picard iteration
+  \end{itemize}
 \end{frame}
 
 \section{Shallow Water Moment Model}
@@ -700,7 +709,27 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
   \end{gather*}
 \end{frame}
 
-% \subsection{Results}
+\begin{frame}
+  \frametitle{Effect of Higher Moments}
+  \centering
+  \includegraphics[scale=0.29]{Figures/height_torillhon.pdf}
+  \includegraphics[scale=0.29]{Figures/mean_velocity_torrilhon.pdf}
+  \includegraphics[scale=0.29]{Figures/alpha_1_torrilhon.pdf}
+  \includegraphics[scale=0.29]{Figures/velocity_profile_-025_torrilhon.pdf}
+  % \includegraphics[scale=0.3]{Figures/velocity_profile_025_torrilhon.pdf}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Effect of Higher Moments}
+  \centering
+  \includegraphics[scale=0.29]{Figures/height_dam.pdf}
+  \includegraphics[scale=0.29]{Figures/mean_velocity_dam.pdf}
+  \includegraphics[scale=0.29]{Figures/alpha_1_dam.pdf}
+  \includegraphics[scale=0.29]{Figures/velocity_profile_-1_dam.pdf}
+  % \includegraphics[scale=0.3]{Figures/velocity_profile_1_dam.pdf}
+\end{frame}
+
+
 \begin{frame}
   \frametitle{Manufactured Solution}
   Shallow Water Equations, constant vertical velocity profile
@@ -854,46 +883,136 @@ Mathematics Department,\\ Iowa State University \\ % Your institution for the ti
       320   & \( 4.675 \times 10^{ -8} \)   & 2.76                          & \( 1.171 \times 10^{-10} \) & 3.55  \\
       \bottomrule
     \end{tabular}
-    % \caption{Convergence table for standard shallow water equations for fourth and fifth order methods}\label{tab:0m45}
   \end{table}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Effect of Higher Moments}
-  \centering
-  \includegraphics[scale=0.29]{Figures/height_torillhon.pdf}
-  \includegraphics[scale=0.29]{Figures/mean_velocity_torrilhon.pdf}
-  \includegraphics[scale=0.29]{Figures/alpha_1_torrilhon.pdf}
-  \includegraphics[scale=0.29]{Figures/velocity_profile_-025_torrilhon.pdf}
-  % \includegraphics[scale=0.3]{Figures/velocity_profile_025_torrilhon.pdf}
+  \frametitle{2 Dimensional Manufactured Solution}
+  Shallow water equations, 0 vertical moments
+  \footnotesize
+  \begin{table}
+    \centering
+    \begin{tabular}{r*{6}l}
+      \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order}                                              \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error}     & order                         & \multicolumn{1}{c}{error}     & order & \multicolumn{1}{c}{error}  & order \\
+      \midrule
+      5     & \( 9.259 \times 10^{-1} \)    & ---                           & \( 9.423 \times 10^{-2} \)    & ---   & \( 1.243 \times 10^{-2} \) & ---   \\
+      10    & \( 5.016 \times 10^{-1} \)    & 0.88                          & \( 2.115 \times 10^{-2} \)    & 2.16  & \( 2.769 \times 10^{-3} \) & 2.17  \\
+      20    & \( 2.786 \times 10^{-1} \)    & 0.85                          & \( 5.089 \times 10^{-3} \)    & 2.06  & \( 7.163 \times 10^{-4} \) & 1.95  \\
+      40    & \( 1.434 \times 10^{-1} \)    & 0.96                          & \( 1.257 \times 10^{-3} \)    & 2.02  & \( 1.600 \times 10^{-4} \) & 2.16  \\
+      80    & \( 7.355 \times 10^{-2} \)    & 0.96                          & \( 3.133 \times 10^{-4} \)    & 2.00  & \( 3.367 \times 10^{-5} \) & 2.25  \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  \begin{table}
+    \centering
+    \begin{tabular}{r*{4}l}
+      \toprule
+            & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order}                                     \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error}     & order                         & \multicolumn{1}{c}{error} & order \\
+      \midrule
+      5     & \( 2.254\times 10^{-3} \)     & ---                           & \( 4.623\times 10^{-4} \) & ---   \\
+      10    & \( 2.787\times 10^{-4} \)     & 3.02                          & \( 4.121\times 10^{-5} \) & 3.49  \\
+      20    & \( 3.434\times 10^{-5} \)     & 3.02                          & \( 2.395\times 10^{-6} \) & 4.10  \\
+      40    & \( 3.075\times 10^{-6} \)     & 3.48                          & \( 1.234\times 10^{-7} \) & 4.28  \\
+      80    & \( 2.762\times 10^{-7} \)     & 3.48                          & \( 6.087\times 10^{-9} \) & 4.34  \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Effect of Higher Moments}
-  \centering
-  \includegraphics[scale=0.29]{Figures/height_dam.pdf}
-  \includegraphics[scale=0.29]{Figures/mean_velocity_dam.pdf}
-  \includegraphics[scale=0.29]{Figures/alpha_1_dam.pdf}
-  \includegraphics[scale=0.29]{Figures/velocity_profile_-1_dam.pdf}
-  % \includegraphics[scale=0.3]{Figures/velocity_profile_1_dam.pdf}
+  \frametitle{2 Dimensional Manufactured Solution}
+  Linear vertical velocity or 1 vertical moment,
+  \footnotesize
+  \begin{table}
+    \centering
+    \begin{tabular}{r*{6}l}
+      \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order}                                               \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error}     & order                         & \multicolumn{1}{c}{error}     & order & \multicolumn{1}{c}{error}   & order \\
+      \midrule
+      5     & \( 1.199 \)                   & ---                           & \( 1.159 \times 10^{-1 } \)   & ---   & \( 2.073 \times 10^{-2 } \) & ---   \\
+      10    & \( 6.686 \times 10^{-1 } \)   & 0.84                          & \( 2.459 \times 10^{-2 } \)   & 2.24  & \( 7.202 \times 10^{-3 } \) & 1.53  \\
+      20    & \( 3.813 \times 10^{-1 } \)   & 0.81                          & \( 5.857 \times 10^{-3 } \)   & 2.07  & \( 2.096 \times 10^{-3 } \) & 1.78  \\
+      40    & \( 1.995 \times 10^{-1 } \)   & 0.93                          & \( 1.448 \times 10^{-3 } \)   & 2.02  & \( 4.777 \times 10^{-4 } \) & 2.13  \\
+      80    & \( 1.033 \times 10^{-1 } \)   & 0.95                          & \( 3.614 \times 10^{-4 } \)   & 2.00  & \( 1.005 \times 10^{-4 } \) & 2.25  \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  \begin{table}
+    \centering
+    \begin{tabular}{r*{4}l}
+      \toprule
+            & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order}                                      \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error}     & order                         & \multicolumn{1}{c}{error}  & order \\
+      \midrule
+      5     & \( 8.114 \times 10^{-3} \)    & ---                           & \( 1.520 \times 10^{-3} \) & ---   \\
+      10    & \( 8.542 \times 10^{-4} \)    & 3.25                          & \( 1.437 \times 10^{-4} \) & 3.40  \\
+      20    & \( 1.143 \times 10^{-4} \)    & 2.90                          & \( 9.013 \times 10^{-6} \) & 4.00  \\
+      40    & \( 1.180 \times 10^{-5} \)    & 3.28                          & \( 4.625 \times 10^{-7} \) & 4.28  \\
+      80    & \( 1.068 \times 10^{-6} \)    & 3.47                          & \( 2.143 \times 10^{-8} \) & 4.43  \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{2 Dimensional Manufactured Solution}
+  Quadratic vertical velocity or 2 vertical moments,
+  \footnotesize
+  \begin{table}
+    \centering
+    \begin{tabular}{r*{6}l}
+      \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order}                                              \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error}     & order                         & \multicolumn{1}{c}{error}     & order & \multicolumn{1}{c}{error}  & order \\
+      \midrule
+      5     & \( 1.420 \)                   & ---                           & \( 1.399 \times 10^{-1} \)    & ---   & \( 2.770 \times 10^{-2} \) & --- \\
+      10    & \( 8.013 \times 10^{-1} \)    & 0.83                          & \( 2.951 \times 10^{-2} \)    & 2.24  & \( 1.043 \times 10^{-2} \) & 1.41 \\
+      20    & \( 4.615 \times 10^{-1} \)    & 0.80                          & \( 7.011 \times 10^{-3} \)    & 2.07  & \( 2.982 \times 10^{-3} \) & 1.81 \\
+      40    & \( 2.436 \times 10^{-1} \)    & 0.92                          & \( 1.733 \times 10^{-3} \)    & 2.02  & \( 6.596 \times 10^{-4} \) & 2.18 \\
+      80    & \( 1.264 \times 10^{-1} \)    & 0.95                          & \( 4.327 \times 10^{-4} \)    & 2.00  & \( 1.365 \times 10^{-4} \) & 2.27 \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
+  \begin{table}
+    \centering
+    \begin{tabular}{r*{4}l}
+      \toprule
+            & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order}                                      \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error}     & order                         & \multicolumn{1}{c}{error}  & order \\
+      \midrule
+      5     & \( 1.076 \times 10^{-2} \)    & ---                           & \( 2.236 \times 10^{-3} \) & ---   \\
+      10    & \( 1.216 \times 10^{-3} \)    & 3.15                          & \( 2.078 \times 10^{-4} \) & 3.43  \\
+      20    & \( 1.618 \times 10^{-4} \)    & 2.91                          & \( 1.224 \times 10^{-5} \) & 4.09  \\
+      40    & \( 1.566 \times 10^{-5} \)    & 3.37                          & \( 6.114 \times 10^{-7} \) & 4.32  \\
+      80    & \( 1.418 \times 10^{-6} \)    & 3.47                          & \( 2.859 \times 10^{-8} \) & 4.42  \\
+      \bottomrule
+    \end{tabular}
+  \end{table}
 \end{frame}
 
 \begin{frame}
   \frametitle{Conclusions}
   Results
   \begin{itemize}
-    \item Discontinuous Galerkin Method for Generalized Shallow Water Equations
+    \item Discontinuous Galerkin Method for Shallow Water Moment Equations
     \item High Order Method
     \item Properly Discretized Nonconservative Product
   \end{itemize}
   Future Work
   \begin{itemize}
-    \item Two Dimensional Meshes
     \item Icosahedral Spherical Mesh
     \item Shallow Water test cases on the sphere
   \end{itemize}
-
-  Supported by SIAM Student Travel Award
 \end{frame}
 
 \begin{frame}[allowframebreaks]
