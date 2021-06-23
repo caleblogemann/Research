@@ -1150,14 +1150,71 @@ momentum equations by a polynomial basis function and depth average.
     = 0 \\
   \dintt{0}{1}{u_{\theta} \psi_i(\rho)}{\rho} = \frac{\alpha_i}{2 i + 1} \\
   \dintt{0}{1}{u_{\theta}^2 \psi_i(\rho)}{\rho}
-  = \dintt{0}{1}{u_{\theta m}^2 \psi_i(\rho)
-  + 2u_{\theta m} \sum{j=1}{N}{\alpha_j \psi_j(\rho)} \psi_i(\rho)
-  + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \alpha_k \psi_j(\rho) \psi_k(\rho)}} \psi_i(\rho)}{\rho} \\
-  = 2u_{\theta m} \sum{j=1}{N}{\alpha_j \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho)}{\rho}}
-  + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \alpha_k \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho) \psi_k(\rho)}{\rho}}} \\
-  = 2u_{\theta m} frac{\alpha_i}{2 i + 1}
-  + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \alpha_k \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho) \psi_k(\rho)}{\rho}}} \\
+    = \dintt{0}{1}{u_{\theta m}^2 \psi_i(\rho)
+    + 2u_{\theta m} \sum{j=1}{N}{\alpha_j \psi_j(\rho)} \psi_i(\rho)
+    + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \alpha_k \psi_j(\rho) \psi_k(\rho)}} \psi_i(\rho)}{\rho} \\
+    = 2u_{\theta m} \sum{j=1}{N}{\alpha_j \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho)}{\rho}}
+    + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \alpha_k \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho) \psi_k(\rho)}{\rho}}} \\
+    = 2u_{\theta m} \frac{\alpha_i}{2 i + 1}
+    + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \alpha_k \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho) \psi_k(\rho)}{\rho}}} \\
   \dintt{0}{1}{u_{\theta} u_{\phi} \psi_i(\rho)}{\rho}
-  = \dintt{0}{1}{u_{\theta m} u_{\phi m} \psi_i(\rho) + u_{\theta m}\sum{}}
+    = \dintt{0}{1}{u_{\theta m} u_{\phi m} \psi_i(\rho)}{\rho} \\
+    + \dintt{0}{1}{u_{\theta m} \sum{j=1}{N}{\beta_j \psi_i(\rho) \psi_j(\rho)}
+    + u_{\phi m} \sum{j=1}{N}{\alpha_j \psi_i(\rho) \psi_j(\rho)}
+    + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \beta_k \psi_i(\rho) \psi_j(\rho) \psi_k(\rho)}}}{\rho} \\
+    = u_{\theta m} \frac{\beta_i}{2 i + 1}
+    + u_{\phi m} \frac{\alpha_i}{2 i + 1}
+    + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \beta_k \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho) \psi_k(\rho)}{\rho}}} \\
+  \dintt{0}{1}{\psi_i(\rho)\pda{u_{\theta} \omega}{\rho}}{\rho} \\
+    = -\dintt{0}{1}{\psi_i(\rho) \pda{\frac{u_{\theta}}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{\rho}{\tilde{u}_{\theta d}}{\rho'}}{\theta}
+    + \frac{u_{\theta}}{r_0 \sin{\phi}}
+    \pda{h \sin{\phi} \dintt{0}{\rho}{\tilde{u}_{\phi d}}{\rho'}}{\phi}}{\rho}}{\rho} \\
+    = -\psi_i(1) \frac{u_{\theta}(\rho=1)}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{1}{\tilde{u}_{\theta d}}{\rho'}}{\theta}
+    - \psi_i(1)\frac{u_{\theta}(\rho=1)}{r_0 \sin{\phi}}
+    \pda{h \sin{\phi} \dintt{0}{1}{\tilde{u}_{\phi d}}{\rho'}}{\phi} \\
+    + \psi_i(0) \frac{u_{\theta}(\rho=0)}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{0}{\tilde{u}_{\theta d}}{\rho'}}{\theta}
+    + \psi_i(0)\frac{u_{\theta}(\rho=0)}{r_0 \sin{\phi}}
+    \pda{h \sin{\phi} \dintt{0}{0}{\tilde{u}_{\phi d}}{\rho'}}{\phi} \\
+    + \dintt{0}{1}{\psi_i'(\rho) \p{\frac{u_{\theta}}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{\rho}{\tilde{u}_{\theta d}}{\rho'}}{\theta}
+    + \frac{u_{\theta}}{r_0 \sin{\phi}}
+    \pda{h \sin{\phi} \dintt{0}{\rho}{\tilde{u}_{\phi d}}{\rho'}}{\phi}}}{\rho} \\
+    = -\psi_i(1) \frac{u_{\theta m} + u_{\theta d}(\rho=1)}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{1}{\tilde{u}_{\theta d}}{\rho'}}{\theta}
+    - \psi_i(1)\frac{u_{\theta m} + u_{\theta d}(\rho=1)}{r_0 \sin{\phi}}
+    \pda{h \sin{\phi} \dintt{0}{1}{\tilde{u}_{\phi d}}{\rho'}}{\phi} \\
+    + \dintt{0}{1}{\psi_i'(\rho) \p{\frac{u_{\theta m} + u_{\theta d}}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{\rho}{\tilde{u}_{\theta d}}{\rho'}}{\theta}
+    + \frac{u_{\theta m} + u_{\theta d}}{r_0 \sin{\phi}}
+    \pda{h \sin{\phi} \dintt{0}{\rho}{\tilde{u}_{\phi d}}{\rho'}}{\phi}}}{\rho}
+\end{gather}
+
+\begin{gather}
+  \dintt{0}{1}{\psi_i'(\rho) \p{\frac{u_{\theta m}}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{\rho}{\tilde{u}_{\theta d}}{\rho'}}{\theta}
+    + \frac{u_{\theta m}}{r_0 \sin{\phi}}
+    \pda{h \sin{\phi} \dintt{0}{\rho}{\tilde{u}_{\phi d}}{\rho'}}{\phi}}}{\rho} \\
+    = \frac{u_m}{\rho \sin{\phi}}
+    \pda{h \dintt{0}{1}{\psi_i'(\rho)
+    \dintt{0}{\rho}{\tilde{u}_{\theta d}}{\rho'}}{\rho}}{\theta}
+    + \frac{u_m}{\rho \sin{\phi}} \pda{h \sin{\phi} \dintt{0}{1}{\psi_i'(\rho)
+    \dintt{0}{\rho}{\tilde{u}_{\phi d}}{\rho'}}{\rho}}{\phi}\\
+    = \frac{u_m}{\rho \sin{\phi}}
+    \pda{h \p{\psi_i(1)\dintt{0}{1}{\tilde{u}_{\theta d}}{\rho'}
+    - \psi_i(0)\dintt{0}{0}{\tilde{u}_{\theta d}}{\rho'}
+    - \dintt{0}{1}{\psi_i(\rho) \tilde{u}_{\theta d}}{\rho}}}{\theta} \\
+    + \frac{u_m}{\rho \sin{\phi}}
+    \pda{h \sin{\phi} \p{\psi_i(1)\dintt{0}{1}{\tilde{u}_{\phi d}}{\rho'}
+    - \psi_i(0)\dintt{0}{0}{\tilde{u}_{\phi d}}{\rho'}
+    -\dintt{0}{1}{\psi_i(\rho) \tilde{u}_{\phi d}}{\rho}}}{\phi}\\
+    = \frac{u_m}{\rho \sin{\phi}}
+    \pda{h \p{\psi_i(1)\dintt{0}{1}{\tilde{u}_{\theta d}}{\rho'}
+    - \dintt{0}{1}{\psi_i(\rho) \tilde{u}_{\theta d}}{\rho}}}{\theta} \\
+    + \frac{u_m}{\rho \sin{\phi}}
+    \pda{h \sin{\phi} \p{\psi_i(1)\dintt{0}{1}{\tilde{u}_{\phi d}}{\rho'}
+    -\dintt{0}{1}{\psi_i(\rho) \tilde{u}_{\phi d}}{\rho}}}{\phi}\\
 \end{gather}
 \end{document}
