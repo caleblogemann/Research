@@ -299,11 +299,11 @@ r radius, \((\theta, \phi)\) azimuth, and polar angle,
 Kinematic Boundary Condition, \(h_s(t, \theta, \phi)\), \(h_b(t, \theta, \phi)\)
 \(u_{\theta/\phi/r}(t, \theta, \phi, r)\)
 \begin{gather}
-  \pd{h_s}{t} + u_{\theta}(t, \theta, \phi, h_s) \pd{h_s}{\theta}
-    + u_{\phi}(t, \theta, \phi, h_s) \pd{h_s}{\phi}
+  \pd{h_s}{t} + \frac{u_{\theta}(t, \theta, \phi, h_s)}{r \sin{\phi}} \pd{h_s}{\theta}
+    + \frac{u_{\phi}(t, \theta, \phi, h_s)}{r} \pd{h_s}{\phi}
     = u_r(t, \theta, \phi, h_s) \\
-  \pd{h_b}{t} + u_{\theta}(t, \theta, \phi, h_b) \pd{h_b}{\theta}
-    + u_{\phi}(t, \theta, \phi, h_b) \pd{h_b}{\phi}
+  \pd{h_b}{t} + \frac{u_{\theta}(t, \theta, \phi, h_b)}{r \sin{\phi}} \pd{h_b}{\theta}
+    + \frac{u_{\phi}(t, \theta, \phi, h_b)}{r} \pd{h_b}{\phi}
     = u_r(t, \theta, \phi, h_b) \\
 \end{gather}
 
@@ -421,4 +421,743 @@ Drop \(\epsilon^2\) terms
     = - \frac{\epsilon}{\hat{r}} \pd{\hat{p}}{\phi} + e_{\phi}
 \end{gather}
 
+Mapping
+\begin{gather}
+  \rho = \frac{r - h_b(t, \theta, \phi)}{h(t, \theta, \phi)} \\
+  h(t, \theta, \phi) = h_s(t, \theta, \phi) - h_b(t, \theta, \phi) \\
+  r = \rho h(t, \theta, \phi) + h_b(t, \theta, \phi) \\
+  \tilde{\psi}(t, \theta, \phi, \rho) =
+    \psi(t, \theta, \phi, \rho h(t, \theta, \phi) + h_b(t, \theta, \phi)) \\
+  \psi(t, \theta, \phi, r) =
+    \tilde{\psi}(t, \theta, \phi, \frac{r - h_b(t, \theta, \phi)}{h(t, \theta, \phi)}) \\
+  h \pd{\psi}{s} = \pda{h \tilde{\psi}}{s}
+    - \pda{\pda{\rho h + h_b}{s} \tilde{\psi}}{\rho}
+    \quad s \in \set{t, \theta, \phi} \\
+  h \pd{\psi}{r} = \pd{\tilde{\psi}}{\rho}
+\end{gather}
+
+Mapping of Mass Balance
+\begin{gather*}
+  \frac{1}{r^2} \pda{r^2 u_r}{r}
+    + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0
+  \intertext{Multiply by h}
+  \frac{h}{r^2} \pda{r^2 u_r}{r}
+    + \frac{h}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{h}{r \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0
+  \intertext{Transform from \(r\) to \(\rho \)}
+  \frac{1}{\p{h \rho + h_b}^2} \pda{\p{h \rho + h_b}^2 \tilde{u}_r}{\rho}
+    + \frac{1}{\p{h \rho + h_b} \sin{\phi}} \p{\pda{h u_\theta}{\theta}
+    - \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}}{\rho}} \\
+    + \frac{1}{\p{h \rho + h_b} \sin{\phi}}
+    \p{\pda{h \sin{\phi} \tilde{u}_{\phi}}{\phi}
+    - \pda{\pda{h \rho + h_b}{\phi} \sin{\phi} \tilde{u}_{\phi}}{\rho}} = 0 \\
+  \frac{1}{\p{h \rho + h_b} \sin{\phi}} \pda{h u_\theta}{\theta}
+    + \frac{1}{\p{h \rho + h_b} \sin{\phi}} \pda{h \sin{\phi} \tilde{u}_{\phi}}{\phi} \\
+    - \frac{1}{\p{h \rho + h_b} \sin{\phi}}
+    \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+     + \pda{h \rho + h_b}{\phi} \sin{\phi} \tilde{u}_{\phi}}{\rho}
+    = -\frac{1}{\p{h \rho + h_b}^2} \pda{\p{h \rho + h_b}^2 \tilde{u}_r}{\rho} \\
+  -\frac{h \rho + h_b}{\sin{\phi}} \pda{h u_\theta}{\theta}
+    - \frac{h \rho + h_b}{\sin{\phi}} \pda{h \sin{\phi} \tilde{u}_{\phi}}{\phi} \\
+    + \frac{h \rho + h_b}{\sin{\phi}}
+    \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+     + \pda{h \rho + h_b}{\phi} \sin{\phi} \tilde{u}_{\phi}}{\rho}
+    = \pda{\p{h \rho + h_b}^2 \tilde{u}_r}{\rho} \\
+  -\frac{h \rho + h_b}{\sin{\phi}} \pda{h u_\theta}{\theta}
+    - \frac{h \rho + h_b}{\sin{\phi}} \pda{h \sin{\phi} \tilde{u}_{\phi}}{\phi} \\
+    + \frac{h \rho + h_b}{\sin{\phi}}
+    \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+     + \pda{h \rho + h_b}{\phi} \sin{\phi} \tilde{u}_{\phi}}{\rho}
+    = \pda{\p{h \rho + h_b}^2 \tilde{u}_r}{\rho} \\
+\end{gather*}
+
+\begin{gather}
+  \frac{1}{r_0^2} \pda{r_0^2 u_r}{r}
+    + \frac{1}{r_0 \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r_0 \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0
+  \intertext{Mulitply by h}
+  h \pda{u_r}{r} + \frac{h}{r_0 \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{h}{r_0 \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0
+  \intertext{Transform from r to \(\rho \)}
+  \pda{\tilde{u}_r}{\rho}
+    + \frac{1}{r_0 \sin{\phi}} \p{\pda{h \tilde{u}_{\theta}}{\theta}
+    - \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}}{\rho}} \\
+    + \frac{1}{r_0 \sin{\phi}} \p{\pda{h \sin{\phi} u_{\phi}}{\phi}
+    - \pda{\pda{h \rho + h_b}{\phi} \sin{\theta} \tilde{u}_{\phi}}{\rho}} = 0 \\
+  r_0 \sin{\phi} \pda{\tilde{u}_r}{\rho} =
+    - \pda{h \tilde{u}_{\theta}}{\theta}
+    - \pda{h \sin{\phi} u_{\phi}}{\phi} \\
+    + \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+    + \pda{h \rho + h_b}{\phi} \sin{\theta} \tilde{u}_{\phi}}{\rho} \\
+  \dintt{0}{\rho'}{r_0 \sin{\phi} \pda{\tilde{u}_r}{\rho}}{\rho} =
+    - \dintt{0}{\rho'}{\pda{h \tilde{u}_{\theta}}{\theta}}{\rho}
+    - \dintt{0}{\rho'}{\pda{h \sin{\phi} u_{\phi}}{\phi}}{\rho} \\
+    + \dintt{0}{\rho'}{\pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+    + \pda{h \rho + h_b}{\phi} \sin{\phi} \tilde{u}_{\phi}}{\rho}}{\rho} \\
+  r_0 \sin{\phi} \p{\tilde{u}_r(t, \theta, \phi, \rho') - \tilde{u}_r(t, \theta, \phi, 0)} =
+    -\pda{h \dintt{0}{\rho'}{\tilde{u}_{\theta}}{\rho}}{\theta}
+    - \pda{h \sin{\phi} \dintt{0}{\rho'}{u_{\phi}}{\rho}}{\phi} \\
+    + \pda{h \rho' + h_b}{\theta} \tilde{u}_{\theta}(t, \theta, \phi, \rho')
+    + \pda{h \rho' + h_b}{\phi} \sin{\phi} \tilde{u}_{\phi}(t, \theta, \phi, \rho') \\
+    - \pd{h_b}{\theta} \tilde{u}_{\theta}(t, \theta, \phi, 0)
+    - \pd{h_b}{\phi} \sin{\phi} \tilde{u}_{\phi}(t, \theta, \phi, 0)
+    \intertext{Let \(\rho' = 1\)}
+  r_0 \sin{\phi} \p{\tilde{u}_r(t, \theta, \phi, 1) - \tilde{u}_r(t, \theta, \phi, 0)} =
+    -\pda{h \tilde{u}_{\theta m}}{\theta}
+    - \pda{h \sin{\phi} \tilde{u}_{\phi m}}{\phi} \\
+    + \pd{h_s}{\theta} \tilde{u}_{\theta}(t, \theta, \phi, 1)
+    + \pd{h_s}{\phi} \sin{\phi} \tilde{u}_{\phi}(t, \theta, \phi, 1) \\
+    - \pd{h_b}{\theta} \tilde{u}_{\theta}(t, \theta, \phi, 0)
+    - \pd{h_b}{\phi} \sin{\phi} \tilde{u}_{\phi}(t, \theta, \phi, 0) \\
+  0 =
+    -\frac{1}{r_0 \sin{\phi}}\pda{h \tilde{u}_{\theta m}}{\theta}
+    -\frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \tilde{u}_{\phi m}}{\phi} \\
+    + \frac{1}{r_0 \sin{\phi}}\pd{h_s}{\theta} \tilde{u}_{\theta}(t, \theta, \phi, 1)
+    + \frac{1}{r_0} \pd{h_s}{\phi} \tilde{u}_{\phi}(t, \theta, \phi, 1)
+    - \tilde{u}_r(t, \theta, \phi, 1) \\
+    - \frac{1}{r_0 \sin{\phi}}\pd{h_b}{\theta} \tilde{u}_{\theta}(t, \theta, \phi, 0)
+    - \frac{1}{r_0} \pd{h_b}{\phi} \tilde{u}_{\phi}(t, \theta, \phi, 0)
+    + \tilde{u}_r(t, \theta, \phi, 0) \\
+  \intertext{Using Kinematic Boundary condition with \(r_0 = r\)}
+  \pd{h}{t}
+    + \frac{1}{r_0 \sin{\phi}}\pda{h \tilde{u}_{\theta m}}{\theta}
+    + \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \tilde{u}_{\phi m}}{\phi} = 0\\
+\end{gather}
+
+Mapping of Momentum Balance
+\begin{gather}
+  \pd{u_{\theta}}{t} + u_r \pd{u_{\theta}}{r}
+    + \frac{u_{\theta}}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_{\theta}}{\phi}
+    + \frac{u_r u_{\theta}}{r}
+    + \frac{u_{\theta} u_{\phi} \cot{\phi}}{r}
+    = - \frac{1}{\rho r \sin{\phi}} \pd{p}{\theta} + g_{\theta}
+  \intertext{Multiply by h}
+  h \pd{u_{\theta}}{t} + h u_r \pd{u_{\theta}}{r}
+    + \frac{h u_{\theta}}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{h u_{\phi}}{r} \pd{u_{\theta}}{\phi}
+    + \frac{h u_r u_{\theta}}{r}
+    + \frac{h u_{\theta} u_{\phi} \cot{\phi}}{r}
+    = - \frac{h}{\rho r \sin{\phi}} \pd{p}{\theta} + h g e_{\theta}
+  \intertext{Transform from r to \(\rho \)}
+  \pda{h \tilde{u}_{\theta}}{t}
+    - \pda{\pda{\rho h + h_b}{t} \tilde{u}_{\theta}}{\rho}
+    + \tilde{u}_r \pd{h \tilde{u}_{\theta}}{\rho} \\
+    + \frac{\tilde{u}_{\theta}}{r \sin{\phi}} \p{\pda{h \tilde{u}_{\theta}}{\theta}
+    - \pda{\pda{\rho h + h_b}{\theta} \tilde{u}_{\theta}}{\rho}} \\
+    + \frac{\tilde{u}_{\phi}}{r} \p{\pda{h \tilde{u}_{\theta}}{\phi}
+    - \pda{\pda{\rho h + h_b}{\phi} \tilde{u}_{\theta}}{\rho}} \\
+    + \frac{h \tilde{u}_r \tilde{u}_{\theta}}{r}
+    + \frac{h \tilde{u}_{\theta} \tilde{u}_{\phi} \cot{\phi}}{r}
+    = - \frac{1}{\rho_0 r \sin{\phi}} \p{\pda{h \tilde{p}}{\theta}
+    - \pda{\pda{\rho h + h_b}{\theta} \tilde{p}}{\rho}}
+    + h g e_{\theta}
+\end{gather}
+
+Transform hydrostatic pressure and simplify terms from momentum equations with pressure
+\begin{gather}
+  p = \p{h_s(t, \theta, \phi) - r} \rho_0 g e_r \\
+  \tilde{p} = \p{h_s(t, \theta, \phi) - \p{h \rho + h_b}} \rho_0 g e_r \\
+  = \p{h_s - h_b + h \rho} \rho_0 g e_r \\
+  = h \p{1 - \rho} \rho_0 g e_r
+  \intertext{\(\theta \) momentum equation}
+  \pda{h \tilde{p}}{\theta} - \pda{\pda{\rho h + h_b}{\theta} \tilde{p}}{\rho} \\
+  = \pda{h h \p{1 - \rho} \rho_0 g e_r}{\theta}
+  - \pda{\pda{\rho h + h_b}{\theta} h \p{1 - \rho} \rho_0 g e_r}{\rho} \\
+  = \rho_0 g e_r \p{\pda{h^2 \p{1 - \rho} }{\theta}
+  - h\pda{\p{\rho \pd{h}{\theta} + \pd{h_b}{\theta}} \p{1 - \rho}}{\rho}} \\
+  = \rho_0 g e_r \p{\pda{h^2 \p{1 - \rho} }{\theta}
+  - h\p{\pd{h}{\theta}\p{1 - \rho} - \rho \pd{h}{\theta} - \pd{h_b}{\theta}}} \\
+  = \rho_0 g e_r \p{\pda{h^2 \p{1 - \rho} }{\theta}
+  + 2 h \pd{h}{\theta} \rho - h \pd{h}{\theta} + h \pd{h_b}{\theta}} \\
+  = \rho_0 g e_r \p{\pda{h^2 \p{1 - \rho} }{\theta}
+  + \pda{h^2}{\theta} \rho - \frac{1}{2} \pda{h^2}{\theta} + h \pd{h_b}{\theta}} \\
+  = \rho_0 g e_r \p{\frac{1}{2}\pda{h^2}{\theta} + h \pd{h_b}{\theta}}
+  \intertext{\(\phi \) momentum equation}
+  \pda{h \tilde{p}}{\phi} - \pda{\pda{\rho h + h_b}{\phi} \tilde{p}}{\rho} \\
+  = \pda{h h \p{1 - \rho} \rho_0 g e_r}{\phi}
+  - \pda{\pda{\rho h + h_b}{\phi} h \p{1 - \rho} \rho_0 g e_r}{\rho} \\
+  = \rho_0 g e_r \p{\pda{h^2 \p{1 - \rho} }{\phi}
+  - h\pda{\p{\rho \pd{h}{\theta} + \pd{h_b}{\phi}} \p{1 - \rho}}{\rho}} \\
+  = \rho_0 g e_r \p{\pda{h^2 \p{1 - \rho} }{\phi}
+  - h\p{\pd{h}{\phi}\p{1 - \rho} - \rho \pd{h}{\phi} - \pd{h_b}{\phi}}} \\
+  = \rho_0 g e_r \p{\pda{h^2 \p{1 - \rho} }{\phi}
+  + 2 h \pd{h}{\phi} \rho - h \pd{h}{\phi} + h \pd{h_b}{\phi}} \\
+  = \rho_0 g e_r \p{\pda{h^2 \p{1 - \rho} }{\phi}
+  + \pda{h^2}{\phi} \rho - \frac{1}{2} \pda{h^2}{\phi} + h \pd{h_b}{\phi}} \\
+  = \rho_0 g e_r \p{\frac{1}{2}\pda{h^2}{\phi} + h \pd{h_b}{\phi}} \\
+\end{gather}
+
+Plug pressure expression into momentum balance equation
+\begin{gather}
+  \pda{h \tilde{u}_{\theta}}{t}
+    - \pda{\pda{\rho h + h_b}{t} \tilde{u}_{\theta}}{\rho}
+    + \tilde{u}_r \pd{h \tilde{u}_{\theta}}{\rho} \\
+    + \frac{\tilde{u}_{\theta}}{r \sin{\phi}} \p{\pda{h \tilde{u}_{\theta}}{\theta}
+    - \pda{\pda{\rho h + h_b}{\theta} \tilde{u}_{\theta}}{\rho}} \\
+    + \frac{\tilde{u}_{\phi}}{r} \p{\pda{h \tilde{u}_{\theta}}{\phi}
+    - \pda{\pda{\rho h + h_b}{\phi} \tilde{u}_{\theta}}{\rho}} \\
+    + \frac{h \tilde{u}_r \tilde{u}_{\theta}}{r}
+    + \frac{h \tilde{u}_{\theta} \tilde{u}_{\phi} \cot{\phi}}{r}
+    = - \frac{1}{\rho_0 r \sin{\phi}} \p{\rho_0 g e_r \p{\frac{1}{2}\pda{h^2}{\theta}
+    + h \pd{h_b}{\theta}}}
+    + h g e_{\theta} \\
+  \pda{h \tilde{u}_{\theta}}{t}
+    - \pda{\pda{\rho h + h_b}{t} \tilde{u}_{\theta}}{\rho}
+    + \tilde{u}_r \pd{h \tilde{u}_{\theta}}{\rho} \\
+    + \frac{\tilde{u}_{\theta}}{r \sin{\phi}} \p{\pda{h \tilde{u}_{\theta}}{\theta}
+    - \pda{\pda{\rho h + h_b}{\theta} \tilde{u}_{\theta}}{\rho}} \\
+    + \frac{\tilde{u}_{\phi}}{r} \p{\pda{h \tilde{u}_{\theta}}{\phi}
+    - \pda{\pda{\rho h + h_b}{\phi} \tilde{u}_{\theta}}{\rho}} \\
+    + \frac{h \tilde{u}_r \tilde{u}_{\theta}}{r}
+    + \frac{h \tilde{u}_{\theta} \tilde{u}_{\phi} \cot{\phi}}{r}
+    = - \frac{g e_r}{2 r \sin{\phi}} \pda{h^2}{\theta}
+    - \frac{h g e_r}{r \sin{\phi}} \pd{h_b}{\theta}
+    + h g e_{\theta} \\
+\end{gather}
+
+Rewriting Incompressible Navier Stokes Equations
+\begin{gather}
+  \frac{1}{r^2}\pda{r^2 u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0 \\
+  \pd{u_r}{t} + u_r \pd{u_r}{r} + \frac{u_{\theta}}{r \sin{\phi}} \pd{u_r}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_r}{\phi} - \frac{u_{\theta}^2 + u_{\phi}^2}{r}
+    = - \frac{1}{\rho} \pd{p}{r} + g_r \\
+  \pd{u_{\theta}}{t} + u_r \pd{u_{\theta}}{r}
+    + \frac{u_{\theta}}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_{\theta}}{\phi}
+    + \frac{u_r u_{\theta}}{r}
+    + \frac{u_{\theta} u_{\phi} \cot{\phi}}{r}
+    = - \frac{1}{\rho r \sin{\phi}} \pd{p}{\theta} + g_{\theta} \\
+  \pd{u_{\phi}}{t} + u_r \pd{u_{\phi}}{r}
+    + \frac{u_\theta}{r \sin{\phi}} \pd{u_{\phi}}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_{\phi}}{\phi}
+    + \frac{u_r u_{\phi}}{r}
+    - \frac{u_{\theta}^2 \cot{\phi}}{r}
+    = - \frac{1}{\rho r} \pd{p}{\phi} + g_{\phi}
+  \intertext{Continuity Equation after product rule}
+  \pd{u_r}{r} + 2 \frac{u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r} \pd{u_{\phi}}{\phi} + \frac{\cot{\phi}}{r} u_{\phi} = 0
+\end{gather}
+
+Simplify \(u_r\) evolution equation
+\begin{gather}
+  u_r \pd{u_r}{r} = \pda{u_r^2}{r} - u_r \pd{u_r}{r} \\
+  \frac{u_{\theta}}{r \sin{\phi}} \pd{u_r}{\theta}
+    = \frac{1}{r \sin{\phi}} \pda{u_r u_\theta}{\theta}
+    - \frac{u_r}{r \sin{\phi}} \pd{u_{\theta}}{\theta} \\
+  \frac{u_{\phi}}{r} \pd{u_r}{\phi} = \frac{1}{r} \pda{u_r u_{\phi}}{\phi}
+    - \frac{u_r}{r} \pd{u_{\phi}}{\phi} \\
+  u_r \pd{u_r}{r} + \frac{u_{\theta}}{r \sin{\phi}} \pd{u_r}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_r}{\phi} \\
+    = \pda{u_r^2}{r} + \frac{1}{r \sin{\phi}} \pda{u_r u_\theta}{\theta}
+    + \frac{1}{r} \pda{u_r u_{\phi}}{\phi}
+    - u_r \p{\pd{u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r} \pd{u_{\phi}}{\phi}}
+  \intertext{From the continuity equation}
+  \pd{u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r} \pd{u_{\phi}}{\phi}
+    = - 2 \frac{u_r}{r} - \frac{\cot{\phi}}{r} u_{\phi}
+  \intertext{So }
+  u_r \pd{u_r}{r} + \frac{u_{\theta}}{r \sin{\phi}} \pd{u_r}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_r}{\phi}
+    = \pda{u_r^2}{r} + \frac{1}{r \sin{\phi}} \pda{u_r u_\theta}{\theta}
+    + \frac{1}{r} \pda{u_r u_{\phi}}{\phi}
+    + u_r \p{2 \frac{u_r}{r} + \frac{\cot{\phi}}{r} u_{\phi}} \\
+  = \pda{u_r^2}{r} + \frac{1}{r \sin{\phi}} \pda{u_r u_\theta}{\theta}
+    + \frac{1}{r} \pda{u_r u_{\phi}}{\phi}
+    + \frac{2 u_r^2 + u_r u_{\phi} \cot{\phi}}{r} \\
+  \intertext{Substituting this into the \(u_r\) evolution equation gives}
+  \pd{u_r}{t} + \pda{u_r^2}{r} + \frac{1}{r \sin{\phi}} \pda{u_r u_\theta}{\theta}
+    + \frac{1}{r} \pda{u_r u_{\phi}}{\phi}
+    + \frac{2 u_r^2 + u_r u_{\phi} \cot{\phi} - u_{\theta}^2 - u_{\phi}^2}{r}
+    = - \frac{1}{\rho} \pd{p}{r} + g_r \\
+\end{gather}
+Simplify \(u_{\theta}\) evolution equation
+\begin{gather}
+  u_r \pd{u_{\theta}}{r} = \pda{u_r u_{\theta}}{r} - u_{\theta} \pd{u_r}{r} \\
+  \frac{u_{\theta}}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    = \frac{1}{r \sin{\phi}} \pda{u_{\theta}^2}{\theta}
+    - \frac{u_{\theta}}{r \sin{\phi}} \pd{u_{\theta}}{\theta}\\
+  \frac{u_{\phi}}{r} \pd{u_{\theta}}{\phi} = \frac{1}{r} \pda{u_{\theta} u_{\phi}}{\phi}
+    - \frac{u_{\theta}}{r} \pd{u_{\phi}}{\phi} \\
+  u_r \pd{u_{\theta}}{r} + \frac{u_{\theta}}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_{\theta}}{\phi} \\
+  = \pda{u_r u_{\theta}}{r} + \frac{1}{r \sin{\phi}} \pda{u_{\theta}^2}{\theta}
+    + \frac{1}{r} \pda{u_{\theta} u_{\phi}}{\phi}
+    - u_{\theta} \p{\pd{u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r} \pd{u_{\phi}}{\phi}}
+  \intertext{From the Continuity Equation}
+  \pd{u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r} \pd{u_{\phi}}{\phi}
+    = - 2 \frac{u_r}{r} - \frac{\cot{\phi}}{r} u_{\phi} \\
+  u_r \pd{u_{\theta}}{r} + \frac{u_{\theta}}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_{\theta}}{\phi} \\
+  = \pda{u_r u_{\theta}}{r} + \frac{1}{r \sin{\phi}} \pda{u_{\theta}^2}{\theta}
+    + \frac{1}{r} \pda{u_{\theta} u_{\phi}}{\phi}
+    + u_{\theta} \p{2 \frac{u_r}{r} + \frac{\cot{\phi}}{r} u_{\phi}}
+  \intertext{Substituting this into \(u_{\theta}\) equation gives}
+  \pd{u_{\theta}}{t} + \pda{u_r u_{\theta}}{r}
+    + \frac{1}{r \sin{\phi}} \pda{u_{\theta}^2}{\theta}
+    + \frac{1}{r} \pda{u_{\theta} u_{\phi}}{\phi}
+    + 3\frac{u_r u_{\theta}}{r}
+    + 2\frac{u_{\theta} u_{\phi} \cot{\phi}}{r}
+    = - \frac{1}{\rho r \sin{\phi}} \pd{p}{\theta} + g_{\theta}
+\end{gather}
+
+Simplify the \(u_{\phi}\) equation
+\begin{gather}
+  u_r \pd{u_{\phi}}{r} = \pda{u_r u_{\phi}}{r} - u_{\phi} \pd{u_r}{r} \\
+  \frac{u_\theta}{r \sin{\phi}} \pd{u_{\phi}}{\theta}
+    = \frac{1}{r \sin{\phi}} \pda{u_{\theta} u_{\phi}}{\theta}
+    - \frac{u_{\phi}}{r \sin{\phi}} \pd{u_{\theta}}{\theta} \\
+  \frac{u_{\phi}}{r} \pd{u_{\phi}}{\phi} = \frac{1}{r} \pda{u_{\phi}^2}{\phi}
+    - \frac{u_{\phi}}{r} \pd{u_{\phi}}{\phi} \\
+  u_r \pd{u_{\phi}}{r} + \frac{u_\theta}{r \sin{\phi}} \pd{u_{\phi}}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_{\phi}}{\phi} \\
+  = \pda{u_r u_{\phi}}{r} + \frac{1}{r \sin{\phi}} \pda{u_{\theta} u_{\phi}}{\theta}
+    + \frac{1}{r} \pda{u_{\phi}^2}{\phi}
+    - u_{\phi} \p{\pd{u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r} \pd{u_{\phi}}{\phi}} \\
+  \intertext{From the Continuity Equation}
+  \pd{u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r} \pd{u_{\phi}}{\phi}
+    = - 2 \frac{u_r}{r} - \frac{\cot{\phi}}{r} u_{\phi} \\
+  u_r \pd{u_{\phi}}{r} + \frac{u_\theta}{r \sin{\phi}} \pd{u_{\phi}}{\theta}
+    + \frac{u_{\phi}}{r} \pd{u_{\phi}}{\phi} \\
+  = \pda{u_r u_{\phi}}{r} + \frac{1}{r \sin{\phi}} \pda{u_{\theta} u_{\phi}}{\theta}
+    + \frac{1}{r} \pda{u_{\phi}^2}{\phi}
+    + u_{\phi} \p{2 \frac{u_r}{r} + \frac{\cot{\phi}}{r} u_{\phi}}
+  \intertext{Substituting into \(u_{\phi}\) equation}
+  \pd{u_{\phi}}{t} + \pda{u_r u_{\phi}}{r}
+    + \frac{1}{r \sin{\phi}} \pda{u_{\theta} u_{\phi}}{\theta}
+    + \frac{1}{r} \pda{u_{\phi}^2}{\phi}
+    + 3 \frac{u_r u_{\phi}}{r}
+    + \frac{\p{u_{\phi}^2 - u_{\theta}^2} \cot{\phi}}{r}
+    = - \frac{1}{\rho r} \pd{p}{\phi} + g_{\phi}
+\end{gather}
+
+The Incompressible Navier Stokes Equations can be rewritten as
+\begin{gather}
+  \frac{1}{r^2}\pda{r^2 u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0 \\
+  \pd{u_r}{t} + \pda{u_r^2}{r} + \frac{1}{r \sin{\phi}} \pda{u_r u_\theta}{\theta}
+    + \frac{1}{r} \pda{u_r u_{\phi}}{\phi}
+    + \frac{2 u_r^2 + u_r u_{\phi} \cot{\phi} - u_{\theta}^2 - u_{\phi}^2}{r}
+    = - \frac{1}{\rho} \pd{p}{r} + g_r \\
+  \pd{u_{\theta}}{t} + \pda{u_r u_{\theta}}{r}
+    + \frac{1}{r \sin{\phi}} \pda{u_{\theta}^2}{\theta}
+    + \frac{1}{r} \pda{u_{\theta} u_{\phi}}{\phi}
+    + 3\frac{u_r u_{\theta}}{r}
+    + 2\frac{u_{\theta} u_{\phi} \cot{\phi}}{r}
+    = - \frac{1}{\rho r \sin{\phi}} \pd{p}{\theta} + g_{\theta} \\
+  \pd{u_{\phi}}{t} + \pda{u_r u_{\phi}}{r}
+    + \frac{1}{r \sin{\phi}} \pda{u_{\theta} u_{\phi}}{\theta}
+    + \frac{1}{r} \pda{u_{\phi}^2}{\phi}
+    + 3 \frac{u_r u_{\phi}}{r}
+    + \frac{\p{u_{\phi}^2 - u_{\theta}^2} \cot{\phi}}{r}
+    = - \frac{1}{\rho r} \pd{p}{\phi} + g_{\phi}
+\end{gather}
+
+Kinematic Boundary Condition
+\begin{gather}
+  \pd{h_s}{t} + \frac{u_{\theta}(t, \theta, \phi, h_s)}{r \sin{\phi}} \pd{h_s}{\theta}
+    + \frac{u_{\phi}(t, \theta, \phi, h_s)}{r} \pd{h_s}{\phi}
+    = u_r(t, \theta, \phi, h_s) \\
+  \pd{h_b}{t} + \frac{u_{\theta}(t, \theta, \phi, h_b)}{r \sin{\phi}} \pd{h_b}{\theta}
+    + \frac{u_{\phi}(t, \theta, \phi, h_b)}{r} \pd{h_b}{\phi}
+    = u_r(t, \theta, \phi, h_b)
+\end{gather}
+
+Mapped Boundary Condition, assuming \(r = r_0\)
+\begin{gather}
+  \pd{h_s}{t} + \frac{\tilde{u}_{\theta}(t, \theta, \phi, 1)}{r_0 \sin{\phi}} \pd{h_s}{\theta}
+    + \frac{\tilde{u}_{\phi}(t, \theta, \phi, 1)}{r_0} \pd{h_s}{\phi}
+    = \tilde{u}_r(t, \theta, \phi, 1) \\
+  \pd{h_b}{t} + \frac{\tilde{u}_{\theta}(t, \theta, \phi, 0)}{r_0 \sin{\phi}} \pd{h_b}{\theta}
+    + \frac{\tilde{u}_{\phi}(t, \theta, \phi, 0)}{r_0} \pd{h_b}{\phi}
+    = \tilde{u}_r(t, \theta, \phi, 0)
+\end{gather}
+
+
+Mapping the Mass Balance Equation
+\begin{gather}
+  \frac{1}{r_0^2} \pda{r_0^2 u_r}{r}
+    + \frac{1}{r_0 \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{1}{r_0 \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0
+  \intertext{Mulitply by h}
+  h \pda{u_r}{r} + \frac{h}{r_0 \sin{\phi}} \pd{u_{\theta}}{\theta}
+    + \frac{h}{r_0 \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0
+  \intertext{Transform from r to \(\rho \)}
+  \pda{\tilde{u}_r}{\rho}
+    + \frac{1}{r_0 \sin{\phi}} \p{\pda{h \tilde{u}_{\theta}}{\theta}
+    - \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}}{\rho}} \\
+    + \frac{1}{r_0 \sin{\phi}} \p{\pda{h \sin{\phi} u_{\phi}}{\phi}
+    - \pda{\pda{h \rho + h_b}{\phi} \sin{\theta} \tilde{u}_{\phi}}{\rho}} = 0 \\
+  \pda{\tilde{u}_r}{\rho} =
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \tilde{u}_{\theta}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} u_{\phi}}{\phi} \\
+    + \frac{1}{r_0 \sin{\phi}} \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+    + \pda{h \rho + h_b}{\phi} \sin{\phi} \tilde{u}_{\phi}}{\rho} \\
+  \dintt{0}{\rho'}{\pda{\tilde{u}_r}{\rho}}{\rho} =
+    - \frac{1}{r_0 \sin{\phi}}\dintt{0}{\rho'}{\pda{h \tilde{u}_{\theta}}{\theta}}{\rho}
+    - \frac{1}{r_0 \sin{\phi}}\dintt{0}{\rho'}{\pda{h \sin{\phi} u_{\phi}}{\phi}}{\rho} \\
+    + \frac{1}{r_0 \sin{\phi}} \dintt{0}{\rho'}{
+      \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+    + \pda{h \rho + h_b}{\phi} \sin{\phi} \tilde{u}_{\phi}}{\rho}}{\rho} \\
+  \tilde{u}_r(t, \theta, \phi, \rho') - \tilde{u}_r(t, \theta, \phi, 0) =
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \dintt{0}{\rho'}{\tilde{u}_{\theta}}{\rho}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \dintt{0}{\rho'}{u_{\phi}}{\rho}}{\phi} \\
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \rho' + h_b}{\theta} \tilde{u}_{\theta}
+    + \frac{1}{r_0 } \pda{h \rho' + h_b}{\phi} \tilde{u}_{\phi}
+    - \frac{1}{r_0 \sin{\phi}} \pd{h_b}{\theta} \tilde{u}_{\theta}
+    - \frac{1}{r_0} \pd{h_b}{\phi} \tilde{u}_{\phi} \label{eq:ur} \\
+  \intertext{Let \(\rho' = 1\)}
+  \tilde{u}_r(t, \theta, \phi, 1) - \tilde{u}_r(t, \theta, \phi, 0) =
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \dintt{0}{1}{\tilde{u}_{\theta}}{\rho}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \dintt{0}{1}{u_{\phi}}{\rho}}{\phi} \\
+    + \frac{1}{r_0 \sin{\phi}} \pd{h_s}{\theta} \tilde{u}_{\theta}
+    + \frac{1}{r_0} \pd{h_s}{\phi} \tilde{u}_{\phi}
+    - \frac{1}{r_0 \sin{\phi}} \pd{h_b}{\theta} \tilde{u}_{\theta}
+    - \frac{1}{r_0} \pd{h_b}{\phi} \tilde{u}_{\phi} \\
+  0 =
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \dintt{0}{1}{\tilde{u}_{\theta}}{\rho}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \dintt{0}{1}{u_{\phi}}{\rho}}{\phi} \\
+    + \frac{1}{r_0 \sin{\phi}} \pd{h_s}{\theta} \tilde{u}_{\theta}
+    + \frac{1}{r_0} \pd{h_s}{\phi} \tilde{u}_{\phi}
+    - \tilde{u}_r(t, \theta, \phi, 1)
+    - \frac{1}{r_0 \sin{\phi}} \pd{h_b}{\theta} \tilde{u}_{\theta}
+    - \frac{1}{r_0} \pd{h_b}{\phi} \tilde{u}_{\phi}
+    + \tilde{u}_r(t, \theta, \phi, 0) \\
+  \intertext{Using Mapped Kinematic Boundary condition with \(r_0 = r\)}
+  0 =
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \dintt{0}{1}{\tilde{u}_{\theta}}{\rho}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \dintt{0}{1}{u_{\phi}}{\rho}}{\phi}
+    - \pd{h_s}{t}
+    + \pd{h_b}{t}
+  \intertext{Now we can denote
+    \(\tilde{u}_{\theta m} = \dintt{0}{1}{\tilde{u}_{\theta}}{\rho}\) and
+    \(\tilde{u}_{\phi m} = \dintt{0}{1}{\tilde{u}_{\phi}}{\rho}\), then}
+  \pd{h_s}{t} + \frac{1}{r_0 \sin{\phi}}\pda{h \tilde{u}_{\theta m}}{\theta}
+    + \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \tilde{u}_{\phi m}}{\phi}
+\end{gather}
+
+Also using the mapped boundary conditions we can write an explicit expression for
+\(\tilde{u}_r\)
+\begin{gather}
+  \tilde{u}_r(t, \theta, \phi, \rho) =
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \dintt{0}{\rho}{\tilde{u}_{\theta}}{\rho'}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \dintt{0}{\rho}{u_{\phi}}{\rho'}}{\phi} \\
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+    + \frac{1}{r_0 } \pda{h \rho + h_b}{\phi} \tilde{u}_{\phi}
+\end{gather}
+
+Mapping of Momentum Balance
+\begin{gather}
+  \pd{u_{\theta}}{t} + \pda{u_r u_{\theta}}{r}
+    + \frac{1}{r \sin{\phi}} \pda{u_{\theta}^2}{\theta}
+    + \frac{1}{r} \pda{u_{\theta} u_{\phi}}{\phi}
+    + 3\frac{u_r u_{\theta}}{r}
+    + 2\frac{u_{\theta} u_{\phi} \cot{\phi}}{r}
+    = - \frac{1}{\rho r \sin{\phi}} \pd{p}{\theta} + g e_{\theta}
+  \intertext{Mulitply by h}
+  h\pd{u_{\theta}}{t} + h\pda{u_r u_{\theta}}{r}
+    + \frac{h}{r \sin{\phi}} \pda{u_{\theta}^2}{\theta}
+    + \frac{h}{r} \pda{u_{\theta} u_{\phi}}{\phi}
+    + 3\frac{h u_r u_{\theta}}{r}
+    + 2\frac{h u_{\theta} u_{\phi} \cot{\phi}}{r}
+    = - \frac{h}{\rho r \sin{\phi}} \pd{p}{\theta} + g h e_{\theta}
+  \intertext{Transform from r to \(\rho \)}
+  \pda{h \tilde{u}_{\theta}}{t} - \pda{\pda{h \rho + h_b}{t} \tilde{u}_{\theta}}{\rho}
+    + \pda{\tilde{u}_r \tilde{u}_{\theta}}{\rho}
+    + \frac{1}{r \sin{\phi}} \p{\pda{h \tilde{u}_{\theta}^2}{\theta}
+    - \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}^2}{\rho}} \\
+    + \frac{1}{r} \p{\pda{h \tilde{u}_{\theta} \tilde{u}_{\phi}}{\phi}
+    - \pda{\pda{h \rho + h_b}{\phi} \tilde{u}_{\theta} \tilde{u}_{\phi}}{\rho}}
+    + 3\frac{h \tilde{u}_r \tilde{u}_{\theta}}{r}
+    + 2\frac{h \tilde{u}_{\theta} \tilde{u}_{\phi} \cot{\phi}}{r} \\
+    = - \frac{1}{\rho r \sin{\phi}} \p{\pda{h \tilde{p}}{\theta}
+    - \pda{\pda{h \rho + h_b}{\theta} \tilde{p}}{\rho}}
+    + g h e_{\theta}
+  \intertext{Substitute for transformed pressure}
+  \pda{h \tilde{u}_{\theta}}{t} - \pda{\pda{h \rho + h_b}{t} \tilde{u}_{\theta}}{\rho}
+    + \pda{\tilde{u}_r \tilde{u}_{\theta}}{\rho}
+    + \frac{1}{r \sin{\phi}} \p{\pda{h \tilde{u}_{\theta}^2}{\theta}
+    - \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}^2}{\rho}} \\
+    + \frac{1}{r} \p{\pda{h \tilde{u}_{\theta} \tilde{u}_{\phi}}{\phi}
+    - \pda{\pda{h \rho + h_b}{\phi} \tilde{u}_{\theta} \tilde{u}_{\phi}}{\rho}}
+    + 3\frac{h \tilde{u}_r \tilde{u}_{\theta}}{r}
+    + 2\frac{h \tilde{u}_{\theta} \tilde{u}_{\phi} \cot{\phi}}{r} \\
+    = - \frac{1}{\rho r \sin{\phi}} \p{\rho_0 g e_r \p{\frac{1}{2}\pda{h^2}{\theta}
+    + h \pd{h_b}{\theta}}}
+    + g h e_{\theta}
+  \intertext{Gather derivatives}
+  \pda{h \tilde{u}_{\theta}}{t}
+    + \frac{1}{r \sin{\phi}} \pda{h \tilde{u}_{\theta}^2 + \frac{1}{2} g h^2 e_r}{\theta}
+    + \frac{1}{r} \pda{h \tilde{u}_{\theta} \tilde{u}_{\phi}}{\phi} \\
+    + \pda{\tilde{u}_r \tilde{u}_{\theta}
+    - \pda{h \rho + h_b}{t} \tilde{u}_{\theta}}{\rho}
+    - \frac{1}{r \sin{\phi}} \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}^2}{\rho}
+    - \frac{1}{r} \pda{\pda{h \rho + h_b}{\phi} \tilde{u}_{\theta} \tilde{u}_{\phi}}{\rho} \\
+    + 3\frac{h \tilde{u}_r \tilde{u}_{\theta}}{r}
+    + 2\frac{h \tilde{u}_{\theta} \tilde{u}_{\phi} \cot{\phi}}{r}
+    = - \frac{g h e_r}{r \sin{\phi}} \pd{h_b}{\theta}
+    + g h e_{\theta}
+\end{gather}
+
+Consider the following separately, and label it as \(\omega \)
+\begin{gather}
+  \omega = \tilde{u}_r - \pda{h \rho + h_b}{t}
+    - \frac{1}{r_0 \sin{\phi}} \pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+    - \frac{1}{r_0} \pda{h \rho + h_b}{\phi} \tilde{u}_{\phi}
+  \intertext{Using expression for \(\tilde{u}_r\)}
+  \omega =
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \dintt{0}{\rho}{\tilde{u}_{\theta}}{\rho'}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \dintt{0}{\rho}{u_{\phi}}{\rho'}}{\phi} \\
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+    + \frac{1}{r_0} \pda{h \rho + h_b}{\phi} \tilde{u}_{\phi}
+   - \pda{h \rho + h_b}{t} \\
+    - \frac{1}{r_0 \sin{\phi}} \pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+    - \frac{1}{r_0} \pda{h \rho + h_b}{\phi} \tilde{u}_{\phi} \\
+  \omega =
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \dintt{0}{\rho}{\tilde{u}_{\theta}}{\rho'}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \dintt{0}{\rho}{u_{\phi}}{\rho'}}{\phi}
+   - \rho\pd{h}{t}
+  \intertext{Using continuity equation}
+  \omega =
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \dintt{0}{\rho}{\tilde{u}_{\theta}}{\rho'}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \dintt{0}{\rho}{u_{\phi}}{\rho'}}{\phi} \\
+    + \rho\p{\frac{1}{r_0 \sin{\phi}}\pda{h \tilde{u}_{\theta m}}{\theta}
+    + \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \tilde{u}_{\phi m}}{\phi}} \\
+  \intertext{Using the fact that \(\rho = \dintt{0}{\rho}{1}{\rho'}\)}
+  \omega = \frac{1}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{\rho}{\tilde{u}_{\theta m} - \tilde{u}_{\theta}}{\rho'}}{\theta}
+    + \frac{1}{r_0 \sin{\phi}}
+    \pda{h \sin{\phi} \dintt{0}{\rho}{\tilde{u}_{\phi m} - u_{\phi}}{\rho'}}{\phi} \\
+  \intertext{Letting
+    \(\tilde{u}_{\theta d} = \tilde{u}_{\theta} - \tilde{u}_{\theta m}\) and
+    \(\tilde{u}_{\phi d} = \tilde{u}_{\phi} - \tilde{u}_{\phi m}\), then}
+  \omega = -\frac{1}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{\rho}{\tilde{u}_{\theta d}}{\rho'}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}
+    \pda{h \sin{\phi} \dintt{0}{\rho}{\tilde{u}_{\phi d}}{\rho'}}{\phi} \\
+\end{gather}
+
+Thus the mapped momentum balance equation is
+\begin{gather}
+  \pda{h \tilde{u}_{\theta}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \tilde{u}_{\theta}^2 + \frac{1}{2} g h^2 e_r}{\theta}
+    + \frac{1}{r_0} \pda{h \tilde{u}_{\theta} \tilde{u}_{\phi}}{\phi} \\
+    + \pda{\tilde{u}_{\theta} \omega}{\rho}
+    + 3\frac{h \tilde{u}_r \tilde{u}_{\theta}}{r_0}
+    + 2\frac{h \tilde{u}_{\theta} \tilde{u}_{\phi} \cot{\phi}}{r_0}
+    = - \frac{g h e_r}{r_0 \sin{\phi}} \pd{h_b}{\theta}
+    + g h e_{\theta}
+\end{gather}
+
+Now we can do the same for the \(\phi \) momentum equation.
+\begin{gather}
+  \pd{u_{\phi}}{t} + \pda{u_r u_{\phi}}{r}
+    + \frac{1}{r \sin{\phi}} \pda{u_{\theta} u_{\phi}}{\theta}
+    + \frac{1}{r} \pda{u_{\phi}^2}{\phi}
+    + 3 \frac{u_r u_{\phi}}{r}
+    + \frac{\p{u_{\phi}^2 - u_{\theta}^2} \cot{\phi}}{r}
+    = - \frac{1}{\rho_0 r} \pd{p}{\phi} + g e_{\phi}
+  \intertext{Multiply by h}
+  h \pd{u_{\phi}}{t} + h \pda{u_r u_{\phi}}{r}
+    + \frac{h}{r \sin{\phi}} \pda{u_{\theta} u_{\phi}}{\theta}
+    + \frac{h}{r} \pda{u_{\phi}^2}{\phi}
+    + 3 \frac{h u_r u_{\phi}}{r}
+    + h \frac{\p{u_{\phi}^2 - u_{\theta}^2} \cot{\phi}}{r}
+    = - \frac{h}{\rho_0 r} \pd{p}{\phi} + g h e_{\phi}
+  \intertext{Transform from r to \(\rho \)}
+  \pda{h \tilde{u}_{\phi}}{t} - \pda{\pda{h \rho + h_b}{t} \tilde{u}_{\phi}}{\rho}
+    + \pda{\tilde{u}_r \tilde{u}_{\phi}}{\rho}
+    + \frac{1}{r \sin{\phi}} \p{\pda{h \tilde{u}_{\theta} \tilde{u}_{\phi}}{\theta}
+    - \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta} \tilde{u}_{\phi}}{\rho}} \\
+    + \frac{1}{r} \p{\pda{h \tilde{u}_{\phi}^2}{\phi}
+    - \pda{\pda{h \rho + h_b}{\phi} \tilde{u}_{\phi}^2}{\rho}}
+    + 3 \frac{h \tilde{u}_r \tilde{u}_{\phi}}{r}
+    + h \frac{\p{\tilde{u}_{\phi}^2 - \tilde{u}_{\theta}^2} \cot{\phi}}{r} \\
+    = - \frac{1}{\rho_0 r} \p{\pda{h \tilde{p}}{\phi}
+    - \pda{\pda{h \rho + h_b}{\phi} \tilde{p}}{\rho}}
+    + g h e_{\phi}
+  \intertext{Substitute for transformed pressure}
+  \pda{h \tilde{u}_{\phi}}{t} - \pda{\pda{h \rho + h_b}{t} \tilde{u}_{\phi}}{\rho}
+    + \pda{\tilde{u}_r \tilde{u}_{\phi}}{\rho}
+    + \frac{1}{r \sin{\phi}} \p{\pda{h \tilde{u}_{\theta} \tilde{u}_{\phi}}{\theta}
+    - \pda{\pda{h \rho + h_b}{\theta} \tilde{u}_{\theta} \tilde{u}_{\phi}}{\rho}} \\
+    + \frac{1}{r} \p{\pda{h \tilde{u}_{\phi}^2}{\phi}
+    - \pda{\pda{h \rho + h_b}{\phi} \tilde{u}_{\phi}^2}{\rho}}
+    + 3 \frac{h \tilde{u}_r \tilde{u}_{\phi}}{r}
+    + h \frac{\p{\tilde{u}_{\phi}^2 - \tilde{u}_{\theta}^2} \cot{\phi}}{r} \\
+    = - \frac{1}{r} \p{g e_r \p{\frac{1}{2}\pda{h^2}{\phi}
+    + h \pd{h_b}{\phi}}}
+    + g h e_{\phi}
+  \intertext{Gather derivatives}
+  \pda{h \tilde{u}_{\phi}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \tilde{u}_{\theta} \tilde{u}_{\phi}}{\theta}
+    + \frac{1}{r_0} \pda{h \tilde{u}_{\phi}^2 + \frac{1}{2} g e_r h^2}{\phi} \\
+    + \pda{ \tilde{u}_{\phi}\p{\tilde{u}_r - \pda{h \rho + h_b}{t}
+    - \frac{1}{r_0 \sin{\phi}} \pda{h \rho + h_b}{\theta} \tilde{u}_{\theta}
+    - \frac{1}{r_0} \pda{h \rho + h_b}{\phi} \tilde{u}_{\phi}}}{\rho} \\
+    + 3 \frac{h \tilde{u}_r \tilde{u}_{\phi}}{r_0}
+    + h \frac{\p{\tilde{u}_{\phi}^2 - \tilde{u}_{\theta}^2} \cot{\phi}}{r_0}
+    = -\frac{g h e_r}{r_0} \pd{h_b}{\phi}
+    + g h e_{\phi}
+  \intertext{Substituting for \(\omega \) gives}
+  \pda{h \tilde{u}_{\phi}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \tilde{u}_{\theta} \tilde{u}_{\phi}}{\theta}
+    + \frac{1}{r_0} \pda{h \tilde{u}_{\phi}^2 + \frac{1}{2} g e_r h^2}{\phi}
+    + \pda{ \tilde{u}_{\phi} \omega}{\rho} \\
+    + 3 \frac{h \tilde{u}_r \tilde{u}_{\phi}}{r_0}
+    + h \frac{\p{\tilde{u}_{\phi}^2 - \tilde{u}_{\theta}^2} \cot{\phi}}{r_0}
+    = -\frac{g h e_r}{r_0} \pd{h_b}{\phi}
+    + g h e_{\phi}
+\end{gather}
+
+The complete vertically resolved system is thus
+\begin{gather}
+  \pd{h}{t} + \frac{1}{r_0 \sin{\phi}}\pda{h \tilde{u}_{\theta m}}{\theta}
+    + \frac{1}{r_0 \sin{\phi}}\pda{h \sin{\phi} \tilde{u}_{\phi m}}{\phi} = 0 \\
+  \pda{h \tilde{u}_{\theta}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \tilde{u}_{\theta}^2 + \frac{1}{2} g h^2 e_r}{\theta}
+    + \frac{1}{r_0} \pda{h \tilde{u}_{\theta} \tilde{u}_{\phi}}{\phi}
+    + \pda{\tilde{u}_{\theta} \omega}{\rho} \\
+    + 3\frac{h \tilde{u}_r \tilde{u}_{\theta}}{r_0}
+    + 2\frac{h \tilde{u}_{\theta} \tilde{u}_{\phi} \cot{\phi}}{r_0}
+    = - \frac{g h e_r}{r_0 \sin{\phi}} \pd{h_b}{\theta}
+    + g h e_{\theta} \\
+  \pda{h \tilde{u}_{\phi}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \tilde{u}_{\theta} \tilde{u}_{\phi}}{\theta}
+    + \frac{1}{r_0} \pda{h \tilde{u}_{\phi}^2 + \frac{1}{2} g e_r h^2}{\phi}
+    + \pda{ \tilde{u}_{\phi} \omega}{\rho} \\
+    + 3 \frac{h \tilde{u}_r \tilde{u}_{\phi}}{r_0}
+    + h \frac{\p{\tilde{u}_{\phi}^2 - \tilde{u}_{\theta}^2} \cot{\phi}}{r_0}
+    = -\frac{g h e_r}{r_0} \pd{h_b}{\phi}
+    + g h e_{\phi}
+  \intertext{Where}
+  \omega = -\frac{1}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{\rho}{\tilde{u}_{\theta d}}{\rho'}}{\theta}
+    - \frac{1}{r_0 \sin{\phi}}
+    \pda{h \sin{\phi} \dintt{0}{\rho}{\tilde{u}_{\phi d}}{\rho'}}{\phi} \\
+\end{gather}
+
+From now on we will drop the tilde for readability purposes.
+Now we can express the velocities as polynomial expansions
+\begin{gather}
+  u_{\theta}(t, \theta, \phi, \rho)
+    = u_{\theta m}(t, \theta, \phi, \rho) + u_{\theta d}(t, \theta, \phi, \rho)
+    = u_{\theta m}(t, \theta, \phi, \rho)
+    + \sum{j=1}{N}{\alpha_j(t, \theta, \phi)} \psi_j(\rho) \\
+  u_{\phi}(t, \theta, \phi, \rho)
+    = u_{\phi m}(t, \theta, \phi, \rho) + u_{\phi d}(t, \theta, \phi, \rho)
+    = u_{\phi m}(t, \theta, \phi, \rho)
+    + \sum{j=1}{N}{\alpha_j(t, \theta, \phi)} \psi_j(\rho)
+  \intertext{Where}
+  \dintt{0}{1}{\psi_j(\rho) \psi_j(\rho)}{\rho} = \frac{1}{2 j + 1} \qquad
+  \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho)}{\rho} = 0 \text{ for } i \neq j
+  \qquad \psi(0) = 1
+\end{gather}
+
+Some key quantities are
+\begin{gather}
+  \dintt{0}{1}{u_{\theta}^2}{\rho} = u_{\theta m}^2
+    + \sum{j = 1}{N}{\frac{\alpha_j^2}{2j + 1}} \\
+  \dintt{0}{1}{u_{\phi}^2}{\rho} = u_{\phi m}^2
+    + \sum{j = 1}{N}{\frac{\beta_j^2}{2j + 1}} \\
+  \dintt{0}{1}{u_{\theta} u_{\phi}}{\rho} = u_{\theta m} u_{\phi m}
+    + \sum{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}
+\end{gather}
+
+Now we depth average
+\begin{gather}
+  \pda{h \dintt{0}{1}{u_{\theta}}{\rho}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \dintt{0}{1}{u_{\theta}^2}{\rho}
+    + \frac{1}{2} g h^2 e_r}{\theta}
+    + \frac{1}{r_0} \pda{h \dintt{0}{1}{u_{\theta} u_{\phi}}{\rho}}{\phi}
+    + \dintt{0}{1}{\pda{u_{\theta} \omega}{\rho}}{\rho} \\
+    + 2\frac{h \dintt{0}{1}{u_{\theta} u_{\phi}}{\rho} \cot{\phi}}{r_0}
+    = -\frac{g h e_r}{r_0 \sin{\phi}} \pd{h_b}{\theta}
+    + g h e_{\theta} \\
+  \pda{h u_{\theta m}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \p{u_{\theta m}^2
+    + \sum{j = 1}{N}{\frac{\alpha_j^2}{2j + 1}}}
+    + \frac{1}{2} g h^2 e_r}{\theta}
+    + \frac{1}{r_0} \pda{h \p{u_{\theta m} u_{\phi m}
+    + \sum{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}{\phi} \\
+    + \eval*{u_{\theta} \omega}{\rho=0}{1}
+    + 2\frac{h \p{u_{\theta m} u_{\phi m}
+    + \sum{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}} \cot{\phi}}{r_0}
+    = -\frac{g h e_r}{r_0 \sin{\phi}} \pd{h_b}{\theta}
+    + g h e_{\theta} \\
+  \intertext{Since \(\omega \) vanishes at \(\rho = 0\) and \(\rho = 1\)}
+  \pda{h u_{\theta m}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \p{u_{\theta m}^2
+    + \sum{j = 1}{N}{\frac{\alpha_j^2}{2j + 1}}}
+    + \frac{1}{2} g h^2 e_r}{\theta}
+    + \frac{1}{r_0} \pda{h \p{u_{\theta m} u_{\phi m}
+    + \sum{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}{\phi} \\
+    + 2\frac{h \p{u_{\theta m} u_{\phi m}
+    + \sum{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}} \cot{\phi}}{r_0}
+    = -\frac{g h e_r}{r_0 \sin{\phi}} \pd{h_b}{\theta}
+    + g h e_{\theta}
+\end{gather}
+
+\begin{gather}
+  \pda{h \dintt{0}{1}{u_{\phi}}{\rho}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \dintt{0}{1}{u_{\theta} u_{\phi}}{\rho}}{\theta}
+    + \frac{1}{r_0} \pda{h \dintt{0}{1}{u_{\phi}^2}{\rho}
+    + \frac{1}{2} g e_r h^2}{\phi}
+    + \dintt{0}{1}{\pda{ u_{\phi} \omega}{\rho}}{\rho} \\
+    + h \frac{\dintt{0}{1}{u_{\phi}^2 - u_{\theta}^2}{\rho} \cot{\phi}}{r_0}
+    = -\frac{g h e_r}{r_0} \pd{h_b}{\phi}
+    + g h e_{\phi} \\
+  \pda{h u_{\phi m}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \p{u_{\theta m} u_{\phi m}
+    + \sum{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}{\theta}
+    + \frac{1}{r_0} \pda{h \p{u_{\phi m}^2
+    + \sum{j = 1}{N}{\frac{\beta_j^2}{2j + 1}}}
+    + \frac{1}{2} g e_r h^2}{\phi} \\
+    + \eval*{u_{\phi} \omega}{\rho=0}{1}
+    + h \frac{\p{u_{\phi m}^2 - u_{\theta m}^2
+    + \sum{j = 1}{N}{\frac{\beta_j^2 - \alpha_j^2}{2j + 1}}}\cot{\phi}}{r_0}
+    = -\frac{g h e_r}{r_0} \pd{h_b}{\phi}
+    + g h e_{\phi}
+  \intertext{Since \(\omega \) vanishes at \(\rho = 0\) and \(\rho = 1\)}
+  \pda{h u_{\phi m}}{t}
+    + \frac{1}{r_0 \sin{\phi}} \pda{h \p{u_{\theta m} u_{\phi m}
+    + \sum{j = 1}{N}{\frac{\alpha_j \beta_j}{2j + 1}}}}{\theta}
+    + \frac{1}{r_0} \pda{h \p{u_{\phi m}^2
+    + \sum{j = 1}{N}{\frac{\beta_j^2}{2j + 1}}}
+    + \frac{1}{2} g e_r h^2}{\phi} \\
+    + h \frac{\p{u_{\phi m}^2 - u_{\theta m}^2
+    + \sum{j = 1}{N}{\frac{\beta_j^2 - \alpha_j^2}{2j + 1}}} \cot{\phi}}{r_0}
+    = -\frac{g h e_r}{r_0} \pd{h_b}{\phi}
+    + g h e_{\phi}
+\end{gather}
+
+In order to find the equations for the higher moments we multiply the conservation of
+momentum equations by a polynomial basis function and depth average.
+\begin{gather}
+  \pda{h \dintt{0}{1}{u_{\theta} \psi_i(\rho)}{\rho}}{t}
+    + \frac{1}{r_0 \sin{\phi}}
+    \pda{h \dintt{0}{1}{u_{\theta}^2 \psi_i(\rho)}{\rho}}{\theta}
+    + \frac{1}{r_0} \pda{h \dintt{0}{1}{u_{\theta} u_{\phi} \psi_i(\rho)}{\rho}}{\phi} \\
+    + \dintt{0}{1}{\pda{u_{\theta} \omega}{\rho} \psi_i(\rho)}{\rho}
+    + 2\frac{h \dintt{0}{1}{u_{\theta} u_{\phi} \psi_i(\rho)}{\rho} \cot{\phi}}{r_0}
+    = 0 \\
+  \dintt{0}{1}{u_{\theta} \psi_i(\rho)}{\rho} = \frac{\alpha_i}{2 i + 1} \\
+  \dintt{0}{1}{u_{\theta}^2 \psi_i(\rho)}{\rho}
+  = \dintt{0}{1}{u_{\theta m}^2 \psi_i(\rho)
+  + 2u_{\theta m} \sum{j=1}{N}{\alpha_j \psi_j(\rho)} \psi_i(\rho)
+  + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \alpha_k \psi_j(\rho) \psi_k(\rho)}} \psi_i(\rho)}{\rho} \\
+  = 2u_{\theta m} \sum{j=1}{N}{\alpha_j \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho)}{\rho}}
+  + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \alpha_k \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho) \psi_k(\rho)}{\rho}}} \\
+  = 2u_{\theta m} frac{\alpha_i}{2 i + 1}
+  + \sum{j=1}{N}{\sum{k=1}{N}{\alpha_j \alpha_k \dintt{0}{1}{\psi_i(\rho) \psi_j(\rho) \psi_k(\rho)}{\rho}}} \\
+  \dintt{0}{1}{u_{\theta} u_{\phi} \psi_i(\rho)}{\rho}
+  = \dintt{0}{1}{u_{\theta m} u_{\phi m} \psi_i(\rho) + u_{\theta m}\sum{}}
+\end{gather}
 \end{document}
