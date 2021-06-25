@@ -1271,23 +1271,56 @@ Beta Evolution Equation
   + \dintt{0}{1}{\psi_i(\rho) \pda{u_{\phi d} \omega}{\rho}}{\rho} \\
   = u_{\phi m} \dintt{0}{1}{\psi_i(\rho) \pda{\omega}{\rho}}{\rho}
   - \dintt{0}{1}{\psi_i'(\rho) u_{\phi d} \omega}{\rho} \\
-  = u_{\phi m} \dintt{0}{1}{\psi_i(\rho) \pda{\p{\frac{1}{r_0 \sin{\phi}}
+  = -u_{\phi m} \dintt{0}{1}{\psi_i(\rho) \pda{\p{\frac{1}{r_0 \sin{\phi}}
     \pda{h \dintt{0}{\rho}{u_{\theta d}}{\rho'}}{\theta}
     + \frac{1}{r_0 \sin{\phi}}
     \pda{h \sin{\phi} \dintt{0}{\rho}{u_{\phi d}}{\rho'}}{\phi}}}{\rho}}{\rho} \\
-  - \dintt{0}{1}{\psi_i'(\rho) u_{\phi d} \p{\frac{1}{r_0 \sin{\phi}}
+  + \dintt{0}{1}{\psi_i'(\rho) u_{\phi d} \p{\frac{1}{r_0 \sin{\phi}}
     \pda{h \dintt{0}{\rho}{u_{\theta d}}{\rho'}}{\theta}
     + \frac{1}{r_0 \sin{\phi}}
     \pda{h \sin{\phi} \dintt{0}{\rho}{u_{\phi d}}{\rho'}}{\phi}}}{\rho} \\
-  = \frac{u_{\phi m}}{r_0 \sin{\phi}} \p{\pda{h \frac{\alpha_i}{2 i + 1}}{\theta}
+  = - \frac{u_{\phi m}}{r_0 \sin{\phi}} \p{\pda{h \frac{\alpha_i}{2 i + 1}}{\theta}
     + \pda{h \sin{\phi} \frac{\beta_i}{2i + 1}}{\phi}} \\
-  - \frac{1}{r_0 \sin{\phi}} \sum{j=1}{N}{\sum{k=1}{N}{\beta_j
+  +  \frac{1}{r_0 \sin{\phi}} \sum{j=1}{N}{\sum{k=1}{N}{\beta_j
     \dintt{0}{1}{\psi_i'(\rho) \psi_j(\rho) \dintt{0}{\rho}{\psi_k(\rho)}{\rho'}}{\rho}
+    \p{\pda{h \alpha_k}{\theta} + \pda{h \sin{\phi} \beta_k}{\phi}}}} \\
+  = - \frac{u_{\phi m}}{r_0 \sin{\phi}} \p{\pda{h \frac{\alpha_i}{2 i + 1}}{\theta}
+    + \pda{h \sin{\phi} \frac{\beta_i}{2i + 1}}{\phi}} \\
+  + \frac{1}{r_0 \sin{\phi} (2i + 1)} \sum{j=1}{N}{\sum{k=1}{N}{B_{ijk} \beta_j
     \p{\pda{h \alpha_k}{\theta} + \pda{h \sin{\phi} \beta_k}{\phi}}}}
-  - \dintt{0}{1}{\psi_i'(\rho) u_{\phi d} \p{\frac{1}{r_0 \sin{\phi}}
-    \pda{h \dintt{0}{\rho}{u_{\theta d}}{\rho'}}{\theta}
-    + \frac{1}{r_0 \sin{\phi}}
-    \pda{h \sin{\phi} \dintt{0}{\rho}{u_{\phi d}}{\rho'}}{\phi}}}{\rho}
+\end{gather}
+
+\begin{gather}
+  \pda{h \frac{\beta_i}{2i + 1}}{t}
+  + \frac{1}{r_0 \sin{\phi}}
+  \pda{h u_{\theta m} \frac{\beta_i}{2 i + 1}
+    + h u_{\phi m} \frac{\alpha_i}{2 i + 1}
+    + \frac{1}{2i + 1}\sum{j=1}{N}{\sum{k=1}{N}{h \alpha_j \beta_k A_{ijk}}}}{\theta} \\
+  + \frac{1}{r_0} \pda{2 h u_{\phi m} \frac{\beta_i}{2i + 1}
+  + \frac{1}{2i + 1}\sum{j=1}{N}{\sum{k=1}{N}{h \beta_j \beta_k A_{ijk}}}}{\phi} \\
+  - \frac{u_{\phi m}}{r_0 \sin{\phi}} \p{\pda{h \frac{\alpha_i}{2 i + 1}}{\theta}
+  + \pda{h \sin{\phi} \frac{\beta_i}{2i + 1}}{\phi}} \\
+  + \frac{1}{r_0 \sin{\phi} (2i + 1)} \sum{j=1}{N}{\sum{k=1}{N}{B_{ijk} \beta_j
+  \p{\pda{h \alpha_k}{\theta} + \pda{h \sin{\phi} \beta_k}{\phi}}}} \\
+  + \frac{h \cot{\phi}}{r_0} \p{
+    2 u_{\phi m} \frac{\beta_i}{2i + 1} - 2u_{\theta m} \frac{\alpha_i}{2 i + 1}
+  + \frac{1}{2i + 1}\sum{j=1}{N}{\sum{k=1}{N}{A_{ijk} (\beta_j \beta_k - \alpha_j \alpha_k)}}}
+  = 0 \\
+  \pda{h \beta_i}{t}
+  + \frac{1}{r_0 \sin{\phi}}
+  \pda{h u_{\theta m} \beta_i
+    + h u_{\phi m} \alpha_i
+    + \sum{j=1}{N}{\sum{k=1}{N}{h \alpha_j \beta_k A_{ijk}}}}{\theta} \\
+  + \frac{1}{r_0} \pda{2 h u_{\phi m} \beta_i
+  + \sum{j=1}{N}{\sum{k=1}{N}{h \beta_j \beta_k A_{ijk}}}}{\phi} \\
+  - \frac{u_{\phi m}}{r_0 \sin{\phi}} \p{\pda{h \alpha_i}{\theta}
+  + \pda{h \sin{\phi} \beta_i}{\phi}} \\
+  + \frac{1}{r_0 \sin{\phi}} \sum{j=1}{N}{\sum{k=1}{N}{B_{ijk} \beta_j
+  \p{\pda{h \alpha_k}{\theta} + \pda{h \sin{\phi} \beta_k}{\phi}}}} \\
+  + \frac{h \cot{\phi}}{r_0} \p{
+    2 u_{\phi m} \beta_i - 2u_{\theta m} \alpha_i
+  + \sum{j=1}{N}{\sum{k=1}{N}{A_{ijk} (\beta_j \beta_k - \alpha_j \alpha_k)}}}
+  = 0
 \end{gather}
 
 \end{document}
