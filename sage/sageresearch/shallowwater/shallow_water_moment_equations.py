@@ -134,7 +134,7 @@ def get_generalized_shallow_water_equations_1d(num_moments):
     G_p = tuple_[2].subs(dict_)
     A_p = tuple_[4].subs(dict_)
 
-    # delete rows and and colums related to v and betas
+    # delete rows and and columns related to v and betas
     rows_delete = [2 * i + 2 for i in range(num_moments + 1)]
     G_p = G_p.delete_rows(rows_delete)
     G_p = G_p.delete_columns(rows_delete)
@@ -422,7 +422,7 @@ def get_source_term_2d(num_moments):
 
 
 def get_velocity_basis_functions(num_moments):
-    # velocity is u \phi_0 + \sum{j=1}{num_moments}{alpha_j \phi_j(\zeta)} 
+    # velocity is u \phi_0 + \sum{j=1}{num_moments}{alpha_j \phi_j(\zeta)}
     # return functions phi
     phi = legendre_polynomials.get_legendre_polynomials_fixed_lower_endpoint(
         num_moments + 1, sa.Integer(1), sa.Integer(0), sa.Integer(1)
