@@ -2,11 +2,48 @@
 %   which includes bibliographic references.
 \chapter{The Models}
 
-
 \section{Shallow Water Moment Models}
+  The shallow water moment equations (SWME) were first introduced by Kowalski and
+  Torrilhon.
+  The goal of this new model is to add vertical resolution to the velocity of the shallow
+  water equations.
+  The standard shallow water equations make several key assumptions.
+  The shallow water equations assume hydrostatic pressure and that the horizontal
+  velocity is constant in the vertical direction.
+  The assumption that the horizontal velocity is constant in the vertical direction
+  is particularly restricting.
+  One common approach to add vertical resolution the the shallow water models is the
+  so-called multilayer shallow water model.
+  The multilayer shallow water model assumes that the horizontal velocity consists of
+  multiple layers of constant velocity.
+  This approach can reflect nature, where the oceans and atmosphere do have multiple
+  layers.
+  However the multilayer model has a significant numerical downside.
+  The multilayer model is not globally hyperbolic, which means that the problem can
+  become ill-posed.
+  When the velocities of the different layers become too different the system is no
+  longer hyperbolic.
+  In this case the fluid should create vortices at the interface between the layers.
+  However the multilayer shallow water model does not allow for these roll-ups and so
+  becomes ill-posed.
 
-The shallow water moment equations (SWME) were first introduced by
-Kowalski and Torrilhon\cite{}
+  Kowalski and Torrilhon have introduced a new approach to adding vertical resolution
+  to the shallow water equations, which has better hyperbolicity properties.
+  The main idea of their approach is to approximate the horizontal velocity as
+  an Ansatz expansion in the vertical direction, that is the velocities can be represented
+  as
+  \begin{align}
+    u(x, y, z, t) &= u_m(x, y, t) + \sum{j=1}{N}{\alpha_j(x, y, t) \phi_j(z)} \\
+    v(x, y, z, t) &= v_m(x, y, t) + \sum{j=1}{N}{\beta_j(x, y, t) \phi_j(z)},
+  \end{align}
+  where \(u_m(x, y, t)\) and \(v_m(x, y, t)\) are the mean velocities in the \(x\) and
+  \(y\) directions respectively.
+  In general the functions \(\phi_j\) can be arbitrary.
+  In fact if \(\phi_j\) are characteristic functions, then the multilayer shallow water
+  model can be derived.
+  However in this work we will assume that \(\phi_j\) are polynomials.
+  This approach maintains computational efficiency compared with fully vertically resolved
+  models.
 
 \subsection{Derivation}
   We begin by considering the Navier-Stokes equations,
@@ -64,7 +101,7 @@ Kowalski and Torrilhon\cite{}
   \end{equation}
 
   Substituting all of these scaled variables into the Navier-Stokes system gives,
-  \begin{align*}
+  \begin{align}
     \hat{u}_{\hat{x}} + \hat{v}_{\hat{y}} + \hat{w}_{\hat{z}} &= 0 \\
     \varepsilon F^2 \p{\hat{u}_{\hat{t}} + \p{\hat{u}^2}_{\hat{x}}
       + \p{\hat{u}\hat{v}}_{\hat{y}} + \p{\hat{u}\hat{w}}_{\hat{z}}}
@@ -100,10 +137,10 @@ Kowalski and Torrilhon\cite{}
         + \p{\hat{\sigma}_{zz}}_{\hat{z}}
       } + e_z \\
       F = \frac{U}{\sqrt{gH}} \approx 1, &\quad G = \frac{S}{\rho g H} < 1
-  \end{align*}
+  \end{align}
 
   Drop terms with \(\varepsilon^2\) and \(\varepsilon G\), giving
-  \begin{align*}
+  \begin{align}
     \hat{u}_{\hat{x}} + \hat{v}_{\hat{y}} + \hat{w}_{\hat{z}} &= 0 \\
     \varepsilon F^2 \p{\hat{u}_{\hat{t}} + \p{\hat{u}^2}_{\hat{x}}
       + \p{\hat{u}\hat{v}}_{\hat{y}} + \p{\hat{u}\hat{w}}_{\hat{z}}}
@@ -121,14 +158,152 @@ Kowalski and Torrilhon\cite{}
       + G \p{\hat{\sigma}_{yz}}_{\hat{z}}
       + e_y \\
       \hat{p}_{\hat{z}} &= e_z
-  \end{align*}
+  \end{align}
   where we can solve for the hydrostatic pressure
-  \begin{align*}
+  \begin{align}
     \hat{p}(\hat{t}, \hat{x}, \hat{y}) = \p{\hat{h}_s(\hat{t}, \hat{x}, \hat{y}) - \hat{z}} e_z
-  \end{align*}
+  \end{align}
+
+  For the rest of the derivation we will transform back into dimensional variables for
+  readability purposes.
+  \begin{align}
+    u_x + v_y + w_z &= 0 \\
+    u_t + \p{u^2}_x + \p{uv}_y + \p{uw}_z
+      &= -\frac{1}{\rho} p_x + \frac{1}{\rho} \p{\sigma_{xz}}_z + g e_x \\
+    v_t + \p{uv}_x + \p{v^2}_y + \p{vw}_z
+      &= -\frac{1}{\rho} p_y + \frac{1}{\rho} \p{\sigma_{yz}}_z + g e_y \\
+    p(t, x, y, z) &= \p{h_s(t, x, y) - z} \rho g e_z
+  \end{align}
 
 \subsubsection{Mapping}
+  In order to make this system more accessible we will map the vertical variable \(z\)
+  to the normalized variable \(\zeta \), through the transformation
+  \begin{gather}
+    \zeta(t, x, y, z) = \frac{z - h_b(t, x, y)}{h(t, x, y)},
+  \end{gather}
+  or equivalently
+  \begin{gather}
+    z(t, x, y, \zeta) = h(t, x, y) \zeta + h_b(t, x, y)
+  \end{gather}
+  where \(h(t, x, y) = h_s(t, x, y) - h_b(t, x, y)\).
+  This transformation maps the vertical variable, \(z\) onto \(\zeta \in \br{0, 1}\).
+  In order to transform the partial differential equations we consider a function
+  \(\Psi(t, x, y, z)\), then it's mapped counterpart \(\tilde{\Psi}(t, x, y, \zeta)\)
+  can be described as
+  \[
+    \tilde{\Psi}(t, x, y, \zeta) = \Psi\p{t, x, y, z(t, x, y, \zeta)}
+      = \Psi\p{t, x, y, h(t, x, y) \zeta + h_b(t, x, y)},
+  \]
+  or equivalently
+  \[
+    \Psi(t, x, y, z) = \tilde{\Psi}\p{t, x, y, \zeta(t, x, y, z)}
+      = \tilde{\Psi}\p{t, x, y, \frac{z - h_b(t, x, y)}{h(t, x, y)}}.
+  \]
+  We also need to be able to map derivatives of functions in order to be able to map
+  the differential equations.
+  This can be described
+  \begin{align}
+    \Psi_z(t, x, y, z) &= \p{\tilde{\Psi}\p{t, x, y, \zeta(t, x, y, z)}}_z \\
+    \Psi_z(t, x, y, z) &= \tilde{\Psi}_{\zeta}\p{t, z, y, \zeta(t, x, y, z)} \zeta_z(t, x, y, z) \\
+    \Psi_z(t, x, y, z) &= \tilde{\Psi}_{\zeta}\p{t, z, y, \zeta(t, x, y, z)} \frac{1}{h(t, x, y)} \\
+    h(t, x, y) \Psi_z(t, x, y, z) &= \tilde{\Psi}_{\zeta}\p{t, z, y, \zeta(t, x, y, z)} \\
+    h \Psi_z &= \tilde{\Psi}_{\zeta}
+  \end{align}
 
+  For the other variables, \(\set{t, x, y}\), the partial derivatives are identical.
+  Let \(s \in \set{t, x, y}\), then
+  \begin{align}
+    \zeta_s(t, x, y, z) &= \p{\frac{z - h_b(t, x, y)}{h(t, x, y)}}_s \\
+    &= -\frac{\p{z - h_b(t, x, y)}h_s(t, x, y)}{h\p{t, x, y}^2} - \frac{\p{h_b}_s(t, x, y)}{h(t, x, y)} \\
+    &= -\zeta(t, x, y, z)\frac{h_s(t, x, y)}{h\p{t, x, y}} - \frac{\p{h_b}_s(t, x, y)}{h(t, x, y)} \\
+    &= -\frac{\zeta(t, x, y, z)h_s(t, x, y) + \p{h_b}_s(t, x, y)}{h\p{t, x, y}}
+  \end{align}
+  and
+  \begin{align}
+    \Psi_s(t, x, y, z) &= \p{\tilde{\Psi}\p{t, x, y, \zeta(t, x, y, z)}}_s \\
+    \Psi_s(t, x, y, z) &= \tilde{\Psi}_s\p{t, x, y, \zeta(t, x, y, z)}
+      + \tilde{\Psi}_{\zeta}(t, x, y, \zeta(t, x, y, z)) \zeta_s(t, x, y, z) \\
+    \Psi_s(t, x, y, z) &= \tilde{\Psi}_s\p{t, x, y, \zeta}
+      - \tilde{\Psi}_{\zeta}(t, x, y, \zeta)
+      \p{\frac{\zeta h_s(t, x, y) + \p{h_b}_s(t, x, y)}{h\p{t, x, y}}} \\
+    h(t, x, y)\Psi_s(t, x, y, z) &= h(t, x, y)\tilde{\Psi}_s\p{t, x, y, \zeta}
+      - \tilde{\Psi}_{\zeta}(t, x, y, \zeta) \p{\zeta h_s(t, x, y) + \p{h_b}_s(t, x, y)} \\
+    h(t, x, y)\Psi_s(t, x, y, z) &= h(t, x, y)\tilde{\Psi}_s\p{t, x, y, \zeta}
+      - \tilde{\Psi}_{\zeta}(t, x, y, \zeta) \p{\zeta h_s(t, x, y) + \p{h_b}_s(t, x, y)} \\
+    h\Psi_s &= h\tilde{\Psi}_s - \tilde{\Psi}_{\zeta} \p{\zeta h_s + \p{h_b}_s} \\
+    h\Psi_s &= h\tilde{\Psi}_s + h_s\tilde{\Psi}
+      - h_s\tilde{\Psi} - \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_s \\
+    h\Psi_s &= \p{h\tilde{\Psi}}_s - \p{h_s \tilde{\Psi}
+      + \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_s} \\
+    h\Psi_s &= \p{h\tilde{\Psi}}_s
+      - \p{\p{\p{\zeta h + h_b}_{\zeta}}_s \tilde{\Psi} + \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_s} \\
+    h\Psi_s &= \p{h\tilde{\Psi}}_s
+      - \p{\p{\p{\zeta h + h_b}_s}_{\zeta} \tilde{\Psi} + \tilde{\Psi}_{\zeta} \p{\zeta h + h_b}_s} \\
+    h\Psi_s &= \p{h\tilde{\Psi}}_s
+      - \p{\p{\zeta h + h_b}_s \tilde{\Psi}}_{\zeta}
+  \end{align}
+
+\paragraph{Mapping of the Mass Balance Equation}
+  Now we can use these differential transformations to map the continuity equation
+  or mass balance equation onto the normalized space.
+  We begin by multiplying the continuity equation by \(h\)
+  \begin{gather}
+    h\p{u_x + v_y + w_z} = 0,
+  \end{gather}
+  and then transforming from \(z\) to \(\zeta \)
+  \begin{gather}
+    % \p{h\tilde{u}}_x - \p{\p{\zeta h + h_b}_x \tilde{u}}_{\zeta}
+    %   + \p{h\tilde{v}}_y - \p{\p{\zeta h + h_b}_y \tilde{v}}_{\zeta}
+    %   + \p{\tilde{w}}_{\zeta} = 0 \\
+    \p{h\tilde{u}}_x + \p{h\tilde{v}}_y
+      + \p{\tilde{w} - \p{\zeta h + h_b}_x \tilde{u} - \p{\zeta h + h_b}_y \tilde{v}}_{\zeta} = 0.
+  \end{gather}
+
+  We can then integrate over \(\zeta \) to find an explicit expression for \(w\) the
+  vertical velocity.
+  \begin{gather}
+    \tilde{w}(t, x, y, \zeta) - \tilde{w}(t, x, y, 0) = \nonumber \\
+    -\dintt{0}{\zeta}{\p{h\tilde{u}}_x}{\zeta'}
+      - \dintt{0}{\zeta}{\p{h\tilde{v}}_y}{\zeta'}
+      + \p{\zeta h + h_b}_x \tilde{u} + \p{\zeta h + h_b}_y \tilde{v}
+      - \p{h_b}_x \tilde{u} - \p{h_b}_y \tilde{v}.
+  \end{gather}
+  This can be simplified using the kinematic boundary condition at the bottom surface,
+  to show that the vertical velocity can be expressed as
+  \begin{gather}
+    \tilde{w}(t, x, y, \zeta) =
+    -\dintt{0}{\zeta}{\p{h\tilde{u}}_x}{\zeta'}
+      - \dintt{0}{\zeta}{\p{h\tilde{v}}_y}{\zeta'}
+      + \p{\zeta h + h_b}_x \tilde{u} + \p{\zeta h + h_b}_y \tilde{v}.
+      \label{eq:vertical_velocity}
+  \end{gather}
+  Lastly by consider the vertical velocity at the free surface and using the kinematic
+  boundary condition at that surface we arrive at the mass conservation equation,
+  \begin{align}
+    h_t + \p{hu_m}_x + \p{hv_m}_y = 0, \label{eq:mass_conservation}
+  \end{align}
+  where \(u_m = \dintt{0}{1}{\tilde{u}}{\zeta}\) and
+  \(v_m = \dintt{0}{1}{\tilde{v}}{\zeta}\) are the mean velocities in the \(x\) and
+  \(y\) directions respectively.
+  This mass conservation equation is identical to the corresponding equation in the
+  standard shallow water equations.
+
+\paragraph{Mapping of the Momentum Equations}
+  Next we map the conservation of momentum equations.
+  Again we multiply by \(h\),
+  \begin{gather}
+      hu_t + h\p{u^2}_x + h\p{uv}_y + h\p{uw}_z + \frac{1}{\rho} hp_x
+        = \frac{1}{\rho} h\p{\sigma_{xz}}_z + g h e_x
+  \end{gather}
+  and transform from \(z\) to \(\zeta \),
+  \begin{gather}
+      \p{h\tilde{u}}_t + \p{h\tilde{u}^2}_x + \p{h\tilde{u}\tilde{v}}_y
+        + \p{\tilde{u} \p{\tilde{w} - \p{\zeta h + h_b}_t
+        - \p{\zeta h + h_b}_x \tilde{u} - \p{\zeta h + h_b}_y \tilde{v}}}_{\zeta} \\
+        + \frac{1}{\rho}\p{h\tilde{p}}_x
+        - \frac{1}{\rho}\p{\p{\zeta h + h_b}_x \tilde{p}}_{\zeta}
+        = \frac{1}{\rho} \p{\tilde{\sigma}_{xz}}_{\zeta} + g h e_x \\
+  \end{gather}
 % Below \subsubsection
 % Sectional commands: \paragraph and \subparagraph may also be used
 
