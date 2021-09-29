@@ -258,7 +258,6 @@
     \p{h\tilde{u}}_x + \p{h\tilde{v}}_y
       + \p{\tilde{w} - \p{\zeta h + h_b}_x \tilde{u} - \p{\zeta h + h_b}_y \tilde{v}}_{\zeta} = 0.
   \end{gather}
-
   We can then integrate over \(\zeta \) to find an explicit expression for \(w\) the
   vertical velocity.
   \begin{gather}
@@ -302,8 +301,197 @@
         - \p{\zeta h + h_b}_x \tilde{u} - \p{\zeta h + h_b}_y \tilde{v}}}_{\zeta} \\
         + \frac{1}{\rho}\p{h\tilde{p}}_x
         - \frac{1}{\rho}\p{\p{\zeta h + h_b}_x \tilde{p}}_{\zeta}
-        = \frac{1}{\rho} \p{\tilde{\sigma}_{xz}}_{\zeta} + g h e_x \\
+        = \frac{1}{\rho} \p{\tilde{\sigma}_{xz}}_{\zeta} + g h e_x.
   \end{gather}
+  The hydrostatic pressure can be mapped onto \(\zeta \) as
+  \begin{gather}
+      \tilde{p}(t, x, y, \zeta) = h(t, x, y) \p{1 - \zeta} \rho g e_z,
+  \end{gather}
+  and then the pressure terms in the momentum equation can be simplified
+  in the following way,
+  \begin{gather}
+    \frac{1}{\rho}\p{h\tilde{p}}_x
+    - \frac{1}{\rho}\p{\p{\zeta h + h_b}_x \tilde{p}}_{\zeta}
+    = \p{\frac{1}{2} h^2 g e_z}_x + \p{h_b}_x h g e_z.
+  \end{gather}
+  The resulting momentum balance equation is
+  \begin{gather}
+    \p{h\tilde{u}}_t + \p{h\tilde{u}^2 + \frac{1}{2} h^2 g e_z}_x
+      + \p{h\tilde{u}\tilde{v}}_y
+      + \p{\tilde{u} \p{\tilde{w} - \p{\zeta h + h_b}_t
+      - \p{\zeta h + h_b}_x \tilde{u} - \p{\zeta h + h_b}_y \tilde{v}}}_{\zeta} \\
+      = \frac{1}{\rho} \p{\tilde{\sigma}_{xz}}_{\zeta} + g h \p{e_x - \p{h_b}_x e_z}
+  \end{gather}
+  Next we consider the vertical coupling term, \(\omega \)
+  \begin{gather}
+    \omega = \tilde{w} - \p{\zeta h + h_b}_t - \p{\zeta h + h_b}_x \tilde{u}
+    - \p{\zeta h + h_b}_y \tilde{v},
+  \end{gather}
+  Using the expression for vertical velocity in~\eqref{eq:vertical_velocity}, we find
+  that,
+  \begin{gather}
+    \omega = -\p{h\dintt{0}{\zeta}{\tilde{u}}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}}{\zeta'}}_y
+        - \zeta h_t,
+  \end{gather}
+  and then using~\eqref{eq:mass_conservation}, the vertical coupling becomes
+  \begin{gather}
+    \omega = -\p{h\dintt{0}{\zeta}{\tilde{u}_d}{\zeta'}}_x
+        - \p{h\dintt{0}{\zeta}{\tilde{v}_d}{\zeta'}}_y,
+  \end{gather}
+  where
+  \begin{gather}
+      \tilde{u}_d = \tilde{u} - u_m \quad \tilde{v}_d = \tilde{v} - v_m.
+  \end{gather}
+  Thus the x momentum equation can be concisely written as
+  \begin{gather}
+    \p{h\tilde{u}}_t + \p{h\tilde{u}^2 + \frac{1}{2} h^2 g e_z}_x
+      + \p{h\tilde{u}\tilde{v}}_y
+      + \p{\tilde{u} \omega}_{\zeta} \\
+      = \frac{1}{\rho} \p{\tilde{\sigma}_{xz}}_{\zeta} + g h \p{e_x - \p{h_b}_x e_z}
+  \end{gather}
+  Similarly the y-momentum equation can be written
+  \begin{gather}
+    \p{h\tilde{v}}_t + \p{h\tilde{u}\tilde{v}}_x
+      + \p{h\tilde{v}^2 + \frac{1}{2} h^2 g e_z}_y
+      + \p{\tilde{u} \omega}_{\zeta} \\
+      = \frac{1}{\rho} \p{\tilde{\sigma}_{yz}}_{\zeta} + g h \p{e_y - \p{h_b}_y e_z}
+  \end{gather}
+
+\subsubsection{}
+
+\subsubsection{Newtonian Closure}
+
+\subsection{Example Systems}
+
+\section{Shallow Water Linearized Moment Equations}
+
+
+\section{Spherical Shallow Water Moment Equations}
+  We would like to construct the shallow water moment models on the sphere.
+  Consider a thin film of fluid on a sphere with a
+  In this work, we will use the standard mathematical notation for spherical
+  coordinates, that is
+  \begin{gather}
+    r = \sqrt{x^2 + y^2 + z^2} \quad
+    \theta = \arctan{y/x} \quad
+    \phi = \arctan{\frac{\sqrt{x^2 + y^2}}{z}}
+  \end{gather}
+  or equivalently
+  \begin{gather}
+    x = r \cos{\theta} \sin{\phi} \quad
+    y = r \sin{\theta} \sin{\phi} \quad
+    z = r \cos{\phi}.
+  \end{gather}
+
+\subsection{Derivation}
+  We begin by considering the incompressible Navier-Stokes equations in spherical
+  coordinates,
+  \begin{gather}
+    \frac{1}{r^2}\pda{r^2 u_r}{r} + \frac{1}{r \sin{\phi}} \pd{u_{\theta}}{\theta}
+      + \frac{1}{r \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0 \\
+    \pd{u_r}{t} + \pda{u_r^2}{r} + \frac{1}{r \sin{\phi}} \pda{u_r u_\theta}{\theta}
+      + \frac{1}{r} \pda{u_r u_{\phi}}{\phi}
+      + \frac{2 u_r^2 + u_r u_{\phi} \cot{\phi} - u_{\theta}^2 - u_{\phi}^2}{r}
+      = - \frac{1}{\rho_0} \pd{p}{r} + g_r \\
+    \pd{u_{\theta}}{t} + \pda{u_r u_{\theta}}{r}
+      + \frac{1}{r \sin{\phi}} \pda{u_{\theta}^2}{\theta}
+      + \frac{1}{r} \pda{u_{\theta} u_{\phi}}{\phi}
+      + 3\frac{u_r u_{\theta}}{r}
+      + 2\frac{u_{\theta} u_{\phi} \cot{\phi}}{r}
+      = - \frac{1}{\rho_0 r \sin{\phi}} \pd{p}{\theta} + g_{\theta} \\
+    \pd{u_{\phi}}{t} + \pda{u_r u_{\phi}}{r}
+      + \frac{1}{r \sin{\phi}} \pda{u_{\theta} u_{\phi}}{\theta}
+      + \frac{1}{r} \pda{u_{\phi}^2}{\phi}
+      + 3 \frac{u_r u_{\phi}}{r}
+      + \frac{\p{u_{\phi}^2 - u_{\theta}^2} \cot{\phi}}{r}
+      = - \frac{1}{\rho_0 r} \pd{p}{\phi} + g_{\phi}
+  \end{gather}
+  where \(u_r\) is the fluid velocity in the radial direction, \(u_{\theta}\) and
+  \(u_{\phi}\) are the fluid velocities in the azimuthal and polar directions,
+  \(\rho_0\) is the constant fluid density, \(p\) is the pressure, \(g\) is the gravity
+  constant, and \(e_r, e_{\theta}, e_{\phi}\) are the components of the direction of
+  gravitational force.
+
+  We will assume kinematic boundary conditions at both the bottom topography and the
+  free surface.
+  The kinematic boundary condition states that the material derivative at the surface
+  is zero.
+  Thus in spherical coordinates the kinematic boundary conditions are
+  \begin{gather}
+    \pd{h_s}{t} + \frac{u_{\theta}(t, \theta, \phi, h_s)}{r \sin{\phi}} \pd{h_s}{\theta}
+      + \frac{u_{\phi}(t, \theta, \phi, h_s)}{r} \pd{h_s}{\phi}
+      = u_r(t, \theta, \phi, h_s) \\
+    \pd{h_b}{t} + \frac{u_{\theta}(t, \theta, \phi, h_b)}{r \sin{\phi}} \pd{h_b}{\theta}
+      + \frac{u_{\phi}(t, \theta, \phi, h_b)}{r} \pd{h_b}{\phi}
+      = u_r(t, \theta, \phi, h_b),
+  \end{gather}
+  where \(h_s\) is the radius of the free surface, and \(h_b\) is the radius of the
+  bottom topography.
+  Note that \(\pd{h_b}{t} = 0\), but is included for symmetry.
+
+\subsubsection{Dimensional Analysis}
+  First we assume that the radius of the sphere is much larger than the height of the
+  fluid, and we replace the instances of the variable \(r\) with the radius of the
+  sphere \(r_0\) in the Navier-Stokes equations.
+  So the system we are considering is
+  \begin{gather}
+    \pda{u_r}{r} + \frac{1}{r_0 \sin{\phi}} \pd{u_{\theta}}{\theta}
+      + \frac{1}{r_0 \sin{\phi}} \pda{\sin{\phi} u_{\phi}}{\phi} = 0 \\
+    \pd{u_r}{t} + \pda{u_r^2}{r} + \frac{1}{r_0 \sin{\phi}} \pda{u_r u_\theta}{\theta}
+      + \frac{1}{r_0} \pda{u_r u_{\phi}}{\phi}
+      + \frac{2 u_r^2 + u_r u_{\phi} \cot{\phi} - u_{\theta}^2 - u_{\phi}^2}{r_0}
+      = - \frac{1}{\rho_0} \pd{p}{r} + g e_r \\
+    \pd{u_{\theta}}{t} + \pda{u_r u_{\theta}}{r}
+      + \frac{1}{r_0 \sin{\phi}} \pda{u_{\theta}^2}{\theta}
+      + \frac{1}{r_0} \pda{u_{\theta} u_{\phi}}{\phi}
+      + 3\frac{u_r u_{\theta}}{r_0}
+      + 2\frac{u_{\theta} u_{\phi} \cot{\phi}}{r_0}
+      = - \frac{1}{\rho_0 r_0 \sin{\phi}} \pd{p}{\theta} + g e_{\theta} \\
+    \pd{u_{\phi}}{t} + \pda{u_r u_{\phi}}{r}
+      + \frac{1}{r_0 \sin{\phi}} \pda{u_{\theta} u_{\phi}}{\theta}
+      + \frac{1}{r_0} \pda{u_{\phi}^2}{\phi}
+      + 3 \frac{u_r u_{\phi}}{r_0}
+      + \frac{\p{u_{\phi}^2 - u_{\theta}^2} \cot{\phi}}{r_0}
+      = - \frac{1}{\rho_0 r_0} \pd{p}{\phi} + g e_{\phi},
+  \end{gather}
+  with boundary conditions
+  \begin{gather}
+    \pd{h_s}{t} + \frac{u_{\theta}(t, \theta, \phi, h_s)}{r_0 \sin{\phi}} \pd{h_s}{\theta}
+      + \frac{u_{\phi}(t, \theta, \phi, h_s)}{r_0} \pd{h_s}{\phi}
+      = u_r(t, \theta, \phi, h_s) \\
+    \pd{h_b}{t} + \frac{u_{\theta}(t, \theta, \phi, h_b)}{r_0 \sin{\phi}} \pd{h_b}{\theta}
+      + \frac{u_{\phi}(t, \theta, \phi, h_b)}{r_0} \pd{h_b}{\phi}
+      = u_r(t, \theta, \phi, h_b).
+  \end{gather}
+
+  Now we nondimensionalize the variables.
+  Let \(R\) be the characteristic radius and \(H\) be the characteristic height of the
+  fluid.
+  We are interested in situations where the aspect ratio \(\varepsilon = H/R\) is small.
+  We will introduce the following nondimensional variables
+  \begin{gather}
+    r = R \hat{r} \qquad h = H \hat{h}.
+  \end{gather}
+  The variables \(\theta \) and \(\phi \) are already nondimensional as they are angles
+  in radians.
+  We will scale the velocities by a characteristic velocity \(U\), i.e.
+  \begin{gather}
+    u_{\theta} = U \hat{u}_{\theta} \quad u_{\phi} = U \hat{u}_{\phi}
+    \quad u_r = \varepsilon U \hat{u}_r,
+  \end{gather}
+  where the vertical velocity is smaller due to the shallowness of the flow.
+  This 
+
+
+
+\subsubsection{Mapping}
+
+\paragraph{Mapping of Mass Balance}
+
+\paragraph{Mapping of Momentum Balance}
+
+
 % Below \subsubsection
 % Sectional commands: \paragraph and \subparagraph may also be used
 
