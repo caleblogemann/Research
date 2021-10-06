@@ -1,3 +1,4 @@
+from sage.rings.number_field import number_field
 from sageresearch.utils import legendre_polynomials
 from sageresearch.discontinuousgalerkin import canonical_element
 
@@ -68,24 +69,42 @@ def get_legendre_basis_1d(space_order, inner_product_constant=one / two):
     )
 
 
-def get_legendre_basis_2d_rectangular(space_order, inner_product_constant=one / four):
-    xi = canonical_element.get_canonical_variables_1d()
-    phi = legendre_polynomials.get_legendre_polynomials(
-        space_order, inner_product_constant, xi
-    )
-    return phi
+def get_mass_matrix(phi, integration_function):
+    num_basis_cpts = len(phi)
+    mass_matrix = sa.matrix(sa.SR, num_basis_cpts, num_basis_cpts)
+    for i_basis_cpt in range(num_basis_cpts):
+        for j_basis_cpt in range(i_basis_cpt + 1):
+            f = phi[i_basis_cpt] * phi[j_basis_cpt]
+            integral = integration_function(f)
+            mass_matrix[i_basis_cpt, j_basis_cpt] = integral
+            mass_matrix[j_basis_cpt, i_basis_cpt] = integral
+    return mass_matrix
 
 
 def get_mass_matrix_1d(phi):
-    num_basis_cpts = len(phi)
-    mass_matrix = sa.matrix(sa.RR, num_basis_cpts, num_basis_cpts)
-    for i in range(num_basis_cpts):
-        for j in range(i + 1):
-            f = phi[i] * phi[j]
-            integral = canonical_element.integrate_over_canonical_element_1d(f)
-            mass_matrix[i, j] = integral
-            mass_matrix[j, i] = integral
-    return mass_matrix
+    return get_mass_matrix(phi, canonical_element.integrate_over_canonical_element_1d)
+
+
+def get_legendre_basis_2d_rectangle(space_order, inner_product_constant=one / four):
+    tuple_ = canonical_element.get_canonical_variables_2d()
+    xi = tuple_[0]
+    eta = tuple_[1]
+    phi_1d = legendre_polynomials.get_legendre_polynomials(
+        space_order, sa.sqrt(inner_product_constant), xi
+    )
+
+    phi = []
+    for i in range(space_order):
+        for j in range(space_order - 1):
+            phi.append((phi_1d[i](xi) * phi_1d[j](eta)).function(xi, eta))
+
+    return phi
+
+
+def get_mass_matrix_2d_rectangle(phi):
+    return get_mass_matrix(
+        phi, canonical_element.integrate_over_canonical_element_2d_rectangle
+    )
 
 
 def get_modal_basis_2d_triangle(space_order, inner_product_constant=one / two):
@@ -106,9 +125,7 @@ def get_modal_basis_2d_triangle(space_order, inner_product_constant=one / two):
             for eta_degree in range(degree + 1):
                 xi_degree = degree - eta_degree
                 result += (
-                    coeffs[i]
-                    * xi ** xi_degree
-                    * eta ** eta_degree
+                    coeffs[i_basis_cpt, i] * (xi ** xi_degree) * (eta ** eta_degree)
                 )
                 i += 1
         phi.append(result.function(xi, eta))
@@ -133,7 +150,7 @@ def get_modal_basis_coefficients_2d_triangle(
     sqrt15 = sa.sqrt(fifteen)
     sqrt35 = sa.sqrt(thirty_five)
 
-    coeffs = sa.matrix(sa.RR, 15, 15)
+    coeffs = sa.matrix(sa.SR, 15, 15)
     coeffs[0, 0] = one
 
     coeffs[1, 0] = sqrt2 / two
@@ -253,6 +270,68 @@ def get_modal_basis_coefficients_2d_triangle(
     coeffs[14, 13] = sqrt5 * one_hundred_five / four
     coeffs[14, 14] = sqrt5 * one_hundred_five / eight
 
-    coeffs = coeffs / sa.sqrt(two * inner_product_constant)
+    coeffs = coeffs / sa.sqrt(canonical_element.volume_2d_triangle * inner_product_constant)
     num_basis_cpts = int(space_order * (space_order + 1) / 2)
     return coeffs[:num_basis_cpts, :num_basis_cpts]
+
+
+def compute_modal_basis_coefficients_2d_triangle(space_order):
+    tuple_ = canonical_element.get_canonical_variables_2d()
+    xi = tuple_[0]
+    eta = tuple_[1]
+    R.<xi, eta> = sa.PolynomialRing(sa.SR, order='negdeglex')
+
+    def integral_over_triangle(poly):
+        print(type(poly))
+        xi_integral = poly.integral(xi)
+        print(type(xi_integral))
+        xi_definite_integral = R(xi_integral(-1, eta) - xi_integral(-eta, eta))
+        print(type(xi_definite_integral))
+        eta_integral = R(xi_definite_integral.integral(eta))
+        print(type(eta_integral))
+        eta_definite_integral = eta_integral(xi, -1) - eta_integral(xi, 1)
+        print(eta_definite_integral)
+        return eta_definite_integral
+
+    def inner_product(u, v):
+        return integral_over_triangle(u * v) / 2
+
+    def project(u, v):
+        return inner_product(u, v) * v
+
+    def gram_schmidt(v_list):
+        e_list = []
+        for v in v_list:
+            u = v
+            for e in e_list:
+                u -= project(v, e)
+            e = u / sa.sqrt(inner_product(u, u))
+            e_list.append(e)
+        return e_list
+
+    max_degree = space_order - 1
+    v_list = []
+    for degree in range(max_degree + 1):
+        for eta_degree in range(degree + 1):
+            xi_degree = degree - eta_degree
+            v_list.append(R((xi ** xi_degree) * (eta ** eta_degree)))
+    print(v_list)
+    e_list = gram_schmidt(v_list)
+
+    coefficients = []
+    for poly in e_list:
+        poly_coefficients = []
+        for degree in range(max_degree + 1):
+            for eta_degree in range(degree + 1):
+                xi_degree = degree - eta_degree
+                poly_coefficients.append(poly.coefficient({xi: xi_degree, eta: eta_degree}))
+        coefficients.append(poly_coefficients)
+
+    return coefficients
+
+
+def get_mass_matrix_2d_triangle(phi):
+    return get_mass_matrix(
+        phi, canonical_element.integrate_over_canonical_element_2d_triangle
+    )
+
