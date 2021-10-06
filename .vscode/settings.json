@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/Users/logemann/miniconda3/envs/sage/bin/python",
+    "python.pythonPath": "/Users/caleblogemann/miniconda3/envs/sage/bin/python",
     "files.exclude": {
         "Python": true,
         "ThinFilmPaper": true,
@@ -7,4 +7,10 @@
     "git.detectSubmodules": false,
     "python.dataScience.jupyterServerURI": "http://localhost:8888/?token=a0fb34d3d53e235605d187c3f64ff8a93a09fdb750f39a10",
     "python.linting.enabled": false,
+    "python.testing.pytestArgs": [
+        "sage"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true,
 }

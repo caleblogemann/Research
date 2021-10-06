@@ -1,7 +1,10 @@
 from sageresearch.utils import legendre_polynomials
+from sageresearch.discontinuousgalerkin import canonical_element
 
+import numpy.polynomial.legendre as legendre
 import sage.all as sa
 
+zero = sa.Integer(0)
 one = sa.Integer(1)
 two = sa.Integer(2)
 three = sa.Integer(3)
@@ -26,39 +29,91 @@ one_hundred_five = sa.Integer(105)
 one_thirty_five = sa.Integer(135)
 
 
-
-
 def get_nodal_basis_1d(nodes):
-    pass
+    points = [[x, 0] for x in nodes]
+    xi = canonical_element.get_canonical_variables_1d()
+    R = sa.PolynomialRing(sa.RR, xi)
+    phi = []
+    for i in range(len(nodes)):
+        points[i][1] = 1
+        phi.append((sa.SR(R.lagrange_polynomial(points))).function(xi))
+        points[i][1] = 0
+    return phi
 
 
 def get_gauss_legendre_nodal_basis_1d(space_order):
-    pass
+    num_nodes = space_order
+    phi = legendre.Legendre.basis(num_nodes)
+    nodes = [sa.RR(x) for x in phi.roots()]
+    return get_nodal_basis_1d(nodes)
 
 
 def get_gauss_lobatto_nodal_basis_1d(space_order):
-    pass
+    num_nodes = space_order
+    if num_nodes == 1:
+        nodes = [zero]
+    else:
+        phi = legendre.Legendre.basis(num_nodes - 2)
+        nodes = [sa.RR(x) for x in phi.roots()]
+        nodes.append(one)
+        nodes.insert(0, -one)
+
+    return get_nodal_basis_1d(nodes)
 
 
 def get_legendre_basis_1d(space_order, inner_product_constant=one / two):
+    xi = canonical_element.get_canonical_variables_1d()
     return legendre_polynomials.get_legendre_polynomials(
-        space_order, inner_product_constant
+        space_order, inner_product_constant, xi
     )
 
 
 def get_legendre_basis_2d_rectangular(space_order, inner_product_constant=one / four):
+    xi = canonical_element.get_canonical_variables_1d()
     phi = legendre_polynomials.get_legendre_polynomials(
-        space_order, inner_product_constant
+        space_order, inner_product_constant, xi
     )
     return phi
 
 
-def get_mass_matrix_1d(basis):
-    pass
+def get_mass_matrix_1d(phi):
+    num_basis_cpts = len(phi)
+    mass_matrix = sa.matrix(sa.RR, num_basis_cpts, num_basis_cpts)
+    for i in range(num_basis_cpts):
+        for j in range(i + 1):
+            f = phi[i] * phi[j]
+            integral = canonical_element.integrate_over_canonical_element_1d(f)
+            mass_matrix[i, j] = integral
+            mass_matrix[j, i] = integral
+    return mass_matrix
 
 
 def get_modal_basis_2d_triangle(space_order, inner_product_constant=one / two):
-    pass
+    coeffs = get_modal_basis_coefficients_2d_triangle(
+        space_order, inner_product_constant
+    )
+    num_basis_cpts = coeffs.nrows()
+
+    tuple_ = canonical_element.get_canonical_variables_2d()
+    xi = tuple_[0]
+    eta = tuple_[1]
+
+    phi = []
+    for i_basis_cpt in range(num_basis_cpts):
+        result = 0
+        i = 0
+        for degree in range(space_order):
+            for eta_degree in range(degree + 1):
+                xi_degree = degree - eta_degree
+                result += (
+                    coeffs[i]
+                    * xi ** xi_degree
+                    * eta ** eta_degree
+                )
+                i += 1
+        phi.append(result.function(xi, eta))
+
+    return phi
 
 
 def get_modal_basis_coefficients_2d_triangle(
@@ -78,7 +133,7 @@ def get_modal_basis_coefficients_2d_triangle(
     sqrt15 = sa.sqrt(fifteen)
     sqrt35 = sa.sqrt(thirty_five)
 
-    coeffs = sa.matrix(15, 15)
+    coeffs = sa.matrix(sa.RR, 15, 15)
     coeffs[0, 0] = one
 
     coeffs[1, 0] = sqrt2 / two

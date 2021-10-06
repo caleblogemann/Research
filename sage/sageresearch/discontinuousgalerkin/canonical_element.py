@@ -30,7 +30,7 @@ def integrate_over_mesh_element_1d(f, x_left, x_right):
     return sa.integrate(f, x, x_left, x_right)
 
 
-def integrate_over_canonical_element_1d(f, var):
+def integrate_over_canonical_element_1d(f):
     # f should be symbolic expression of canonical variables, xi
     xi = get_canonical_variables_1d()
     return sa.integrate(f, xi, -1, 1)
@@ -119,12 +119,14 @@ def integrate_over_mesh_element_2d_rectangle(f, x_left, x_right, y_bottom, y_top
     integral = sa.integrate(sa.integrate(f, x, x_left, x_right), y, y_bottom, y_top)
     return integral
 
+
 def integrate_over_canonical_element_2d_rectangle(f):
     tuple_ = get_canonical_variables_2d()
     xi = tuple_[0]
     eta = tuple_[1]
     integral = sa.integrate(sa.integrate(f, xi, -one, one), eta, -one, one)
     return integral
+
 
 def transform_to_canonical_2d_rectangle_vertex_list(x, vertex_list):
     # vertex_list should be in order, bottom_left, bottom_right, top_right, top_left
@@ -226,19 +228,42 @@ def integrate_over_mesh_element_2d_triangle(f, vertex_list):
     sorted_vertex_list.sort()
 
     x_left = sorted_vertex_list[0, 0]
+    y_left = sorted_vertex_list[0, 1]
     x_middle = sorted_vertex_list[1, 0]
+    y_middle = sorted_vertex_list[1, 1]
     x_right = sorted_vertex_list[2, 0]
-    # if middle vertex higher than right vertex
-    if sorted_vertex_list[1, 1] > sorted_vertex_list[2, 1]:
-        y_bottom =
-        y_top =
-    else:
+    y_right = sorted_vertex_list[2, 1]
+    slope_left_to_middle = (y_middle - y_left) / (x_middle - x_left)
+    slope_left_to_right = (y_right - y_left) / (x_right - x_left)
+    slope_middle_to_right = (y_right - y_middle) / (x_right - x_middle)
 
-    left_integral = sa.integrate(sa.integrate(f, y, ), x, x_left, x_middle)
-    right_integral = sa.integrate(sa.integrate(f, y, ), x, x_middle, x_right)
+    y_left_to_right = slope_left_to_right * (x - x_left) + y_left
+    y_left_to_middle = slope_left_to_middle * (x - x_left) + y_left
+    y_middle_to_right = slope_middle_to_right * (x - x_right) + y_right
+
+    if y_middle > y_right:
+        # if middle vertex higher than right vertex
+        y_bottom_left = y_left_to_right
+        y_top_left = y_left_to_middle
+
+        y_bottom_right = y_left_to_right
+        y_top_right = y_middle_to_right
+    else:
+        # if right vertex higher than middle vertex
+        y_bottom_left = y_left_to_middle
+        y_top_left = y_left_to_right
+        y_bottom_right = y_middle_to_right
+        y_top_right = y_left_to_right
+
+    left_integral = sa.integrate(
+        sa.integrate(f, y, y_bottom_left, y_top_left), x, x_left, x_middle
+    )
+
+    right_integral = sa.integrate(
+        sa.integrate(f, y, y_bottom_right, y_top_right), x, x_middle, x_right
+    )
 
     return left_integral + right_integral
-
 
 
 def integrate_over_canonical_element_2d_triangle(f):
