@@ -1,4 +1,3 @@
-from sage.rings.number_field import number_field
 from sageresearch.utils import legendre_polynomials
 from sageresearch.discontinuousgalerkin import canonical_element
 
@@ -275,26 +274,19 @@ def get_modal_basis_coefficients_2d_triangle(
     return coeffs[:num_basis_cpts, :num_basis_cpts]
 
 
-def compute_modal_basis_coefficients_2d_triangle(space_order):
-    tuple_ = canonical_element.get_canonical_variables_2d()
-    xi = tuple_[0]
-    eta = tuple_[1]
-    R.<xi, eta> = sa.PolynomialRing(sa.SR, order='negdeglex')
+def compute_modal_basis_coefficients_2d_triangle(space_order, inner_product_constant=one / two):
+    R = sa.PolynomialRing(sa.SR, names=('xi','eta'), order='negdeglex')
+    (xi, eta) = R._first_ngens(2)
 
     def integral_over_triangle(poly):
-        print(type(poly))
         xi_integral = poly.integral(xi)
-        print(type(xi_integral))
-        xi_definite_integral = R(xi_integral(-1, eta) - xi_integral(-eta, eta))
-        print(type(xi_definite_integral))
-        eta_integral = R(xi_definite_integral.integral(eta))
-        print(type(eta_integral))
-        eta_definite_integral = eta_integral(xi, -1) - eta_integral(xi, 1)
-        print(eta_definite_integral)
+        xi_definite_integral = xi_integral(-one, eta) - xi_integral(-eta, eta)
+        eta_integral = xi_definite_integral.integral(eta)
+        eta_definite_integral = eta_integral(xi, -one) - eta_integral(xi, one)
         return eta_definite_integral
 
     def inner_product(u, v):
-        return integral_over_triangle(u * v) / 2
+        return integral_over_triangle(u * v) / two
 
     def project(u, v):
         return inner_product(u, v) * v
@@ -315,7 +307,6 @@ def compute_modal_basis_coefficients_2d_triangle(space_order):
         for eta_degree in range(degree + 1):
             xi_degree = degree - eta_degree
             v_list.append(R((xi ** xi_degree) * (eta ** eta_degree)))
-    print(v_list)
     e_list = gram_schmidt(v_list)
 
     coefficients = []
@@ -327,7 +318,9 @@ def compute_modal_basis_coefficients_2d_triangle(space_order):
                 poly_coefficients.append(poly.coefficient({xi: xi_degree, eta: eta_degree}))
         coefficients.append(poly_coefficients)
 
-    return coefficients
+    coeffs = sa.matrix(sa.SR, coefficients)
+    coeffs = coeffs / sa.sqrt(canonical_element.volume_2d_triangle * inner_product_constant)
+    return coeffs
 
 
 def get_mass_matrix_2d_triangle(phi):
