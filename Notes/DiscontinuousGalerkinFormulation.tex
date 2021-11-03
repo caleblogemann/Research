@@ -55,6 +55,73 @@
     \dintt{\partial K_i}{}{h(x)}{s} = \sum{f \in \mcK}{}{\dintt{}{}{h(\v{b}_i(\v{r}_f(t))) \norm{\M{b}_i'(\v{r}_f(t)) \v{r}_f'(t)}}{t}}
   \]
 
+\section{Generic Formulation}
+  Consider a balance law in d-dimensions of the form
+  \[
+    \v{q}_t + \div_{\v{x}} \M{f}\p{\v{q}, \v{x}, t} = \v{s}\p{\v{q}, \v{x}, t}
+  \]
+  This is a vector equation with \(N_e\) equations.
+  \(\M{f}\) is known as the flux function with output of shape \(N_e \times d\).
+  The divergence of the flux function is the sum of the spatial derivatives of the
+  columns of \(\M{f}\), or in other words the divergence is over the last index of the
+  matrix.
+  Lastly the source term is given by \(\v{s}\p{\v{q}, \v{x}, t}\) whose range is also
+  \(\RR^{N_e}\).
+  If the source term is zero then this is known as a conservation law.
+
+  % Weak Solution to PDEs
+  % Finite Dimensional Space
+
+  \[
+    \dintt{K_i}{}{\v{q}_t \v{\phi}_i^T\p{\v{x}}}{\v{x}}
+    = \dintt{K_i}{}{\M{f}\p{\v{q}, \v{x}, t} \p{\v{\phi}_i'\p{\v{x}}}^T}{\v{x}}
+    - \dintt{\partial K_i}{}{\M{f}^* \v{n} \v{\phi}_i^T(\v{x})}{s}
+  \]
+
+  The local statements of the discontinuous galerkin method
+  \begin{equation}
+    \dintt{K_i}{}{\v{q}_t \v{\phi}_i^T(\v{x})}{\v{x}}
+    = \dintt{K_i}{}{\M{f}\p{\v{q}, \v{x}, t} \p{\v{\phi}_i'(\v{x})}^T}{\v{x}}
+    - \dintt{\partial K_i}{}{\M{f}^* \v{n} \v{\phi}_i^T(\v{x})}{s}
+    + \dintt{K_i}{}{\v{s}\p{\v{q}, \v{x}, t} \v{\phi}_i^T\p{\v{x}}}{\v{x}}
+  \end{equation}
+  On each element, \(K_i\) the discontinuous Galerkin solution can be written as an
+  expansion of the basis, that is \(\eval{\v{q}}{K_i} = \M{Q}_i \v{\phi}_i(\v{x})\).
+  Substituting this expression into the statement of the method gives,
+  \begin{equation}
+    \dintt{K_i}{}{\M{Q}_{i,t} \v{\phi}_i(\v{x}) \v{\phi}_i^T(\v{x})}{\v{x}}
+    = \dintt{K_i}{}{\M{f}\p{\M{Q}_i \v{\phi}_i(\v{x}), \v{x}, t}
+      \p{\v{\phi}_i'(\v{x})}^T}{\v{x}}
+    - \dintt{\partial K_i}{}{\M{f}^* \v{n} \v{\phi}_i^T(\v{x})}{s}
+    + \dintt{K_i}{}{\v{s}\p{\M{Q}_i \v{\phi}_i(\v{x}), \v{x}, t}
+      \v{\phi}_i^T\p{\v{x}}}{\v{x}}
+  \end{equation}
+  Ideally we would like to only work with the basis functions on the canonical element,
+  therefore using the function \(\v{b}_i(\v{\xi})\), the integrals can be transformed
+  onto the canonical element with a change of variables.
+  The integral of the numerical flux on the boundary of the element, will be left on
+  the mesh element as in each dimension this integral looks very different.
+  More details are given in future sections.
+  \begin{gather}
+    \dintt{\mcK}{}{\M{Q}_{i,t} \v{\phi}(\v{\xi}) \v{\phi}^T(\v{\xi}) m_i}{\v{\xi}}
+    = \dintt{\mcK}{}{\M{f}\p{\M{Q}_i \v{\phi}(\v{\xi}), \v{b}_i(\v{\xi}), t}
+      \p{\v{\phi}'(\v{\xi}) \v{c}_i'(\v{b}_i(\v{\xi}))}^T m_i}{\v{\xi}} \\
+    - \dintt{\partial K_i}{}{\M{f}^* \v{n} \v{\phi}_i^T(\v{x})}{s}
+    + \dintt{\mcK}{}{\v{s}\p{\M{Q}_i \v{\phi}(\v{\xi}), \v{b}_i(\v{\xi}), t}
+      \v{\phi}^T\p{\v{\xi}} m_i}{\v{\xi}}
+  \end{gather}
+  Simplifying and solving for \(\M{Q}_{i,t}\) gives
+  \begin{gather}
+    \M{Q}_{i,t}
+    = \dintt{\mcK}{}{\M{f}\p{\M{Q}_i \v{\phi}(\v{\xi}), \v{b}_i(\v{\xi}), t}
+      \p{\v{\phi}'(\v{\xi}) \v{c}_i'(\v{b}_i(\v{\xi}))}^T}{\v{\xi}} \M{M}^{-1} \\
+    - \dintt{\partial K_i}{}{\M{f}^* \v{n} \v{\phi}_i^T(\v{x})}{s} \M{M}^{-1} \frac{1}{m_i}
+    + \dintt{\mcK}{}{\v{s}\p{\M{Q}_i \v{\phi}(\v{\xi}), \v{b}_i(\v{\xi}), t}
+      \v{\phi}^T\p{\v{\xi}}}{\v{\xi}} \M{M}^{-1}
+  \end{gather}
+
+
+
 \section{One Dimension}
   Consider the one dimensional balance law given below.
   \begin{equation}
@@ -68,86 +135,128 @@
   \(b_i(\xi) = \frac{\Delta x_i}{2} \xi + x_i\).
 
 \section{Two Dimensions}
-  Consider the two dimensional balance law given by
+
+  In two dimensions the flux function is a matrix function of size \(N_e \times 2\).
+  Often it is denoted as two vector functions \(\v{f}_1\) and \(\v{f}_2\) or \(\v{f}\)
+  and \(\v{g}\), however I will denote it as the matrix function
+  \(\M{f} = \br{\v{f}_1, \v{f}_2} = \br{\v{f}, \v{g}}\).
+  Also in two dimensions the boundary integral of the numerical flux is a line integral.
+  A line integral can be expressed as a one dimensional integral through a
+  parameterization of that line.
+  Suppose we have a line \(L(\v{x}) = 0\), that can be parameterized by
+  \(\v{l}(t) = \v{x}\) for \(t \in \br{t_1, t_2}\).
+  Then the line integral can be written as
   \begin{equation}
-    \v{q}_t + \div \v{f}_j\p{\v{q}, \v{x}, t} = \v{s}\p{\v{q}, \v{x}, t}
+    \dintt{L}{}{h(\v{x})}{s} = \dintt{t_1}{t_2}{h(\v{l}(t)) \norm{\v{l}'(t)}}{t}.
   \end{equation}
-  Note that the flux function is a matrix or two index tensor, so the divergence is a
-  vector quantity.
-  It could also be written as
+
+  In two dimensions the canonical element will have a set of faces, \(\mcF = \set{f_j}\).
+  I will have a parameterization of each face of the canonical element, \(r_j(t)\), with
+  \(t \in \br{-1, 1}\).
+  Having \(t \in \br{-1, 1}\) is convenient as 1D quadrature rules won't need to be
+  transformed from their canonical intervals.
+  The actual integral is over the faces of the mesh element, so the actual
+  parameterization for the faces of the mesh element will be \(\v{b}_i(\v{r}_j(t))\).
+  In this way I will handle the transformation to the canonical element and the
+  parameterization of the line in one step.
+  Therefore the boundary integral of the numerical flux can be written as
   \begin{equation}
-    \v{q}_t + \v{f}_1\p{\v{q}, \v{x}, t}_{x_1} + \v{f}_2\p{\v{q}, \v{x}, t}_{x_2}
-    = \v{s}\p{\v{q}, \v{x}, t}
+    \dintt{\partial K_i}{}{\M{f}^* \v{n} \v{\phi}_i^T(\v{x})}{s}
+    = \sum{f_j \in \mcF}{}{\dintt{-1}{1}{\M{f}^* \v{n} \v{\phi}^T(\v{r}_j(t))
+      \norm{\v{b}_i'(\v{r}_j(t)) \v{r}_j'(t)}}{t}}
   \end{equation}
-  The local statements of the weak discontinuous Galerkin form are given by
-  \begin{equation}
-    \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
-    - \v{f}_j\p{\v{q}, \v{x}, t} \phi^k_{i,x_j}(\v{x})}{\v{x}}
-    = -\dintt{\partial K_i}{}{\v{n} \cdot \v{f}^*_j \phi_i^k(\v{x})}{s}.
-  \end{equation}
-  Note that all of the terms related to the flux function \(\v{f}\) are sums over the
-  two dimensions.
-  It could also be written as
-  \begin{equation}
-    \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
-    - \v{f}_1\p{\v{q}, \v{x}, t} \phi^k_{i, x_1}(\v{x})
-    - \v{f}_2\p{\v{q}, \v{x}, t} \phi^k_{i, x_2}(\v{x})}{\v{x}}
-    = -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \phi_i^k(\v{x})}{s}.
-  \end{equation}
-  We could also consider all of the basis components at one time, by using the test
-  function \(\v{\phi}^T_i\) instead of \(\phi^k_i\).
+
+  In two dimensions the discontinuous galerkin formulation is therefore
   \begin{gather}
-    \dintt{K_i}{}{\v{q}_t \v{\phi}^T_i(\v{x})
-    - \v{f}_1\p{\v{q}, \v{x}, t} \v{\phi}^T_{i, x_1}(\v{x})
-    - \v{f}_2\p{\v{q}, \v{x}, t} \v{\phi}^T_{i, x_2}(\v{x})}{\v{x}}
-    = -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T(\v{x})}{s}.
-    \intertext{Now using the fact that \(\eval{\v{q}}{K_i}{} = Q_i \v{\phi}_i(\v{x})\)}
-    \dintt{K_i}{}{Q_{i,t} \v{\phi}_i(\v{x}) \v{\phi}^T_i(\v{x})
-    - \v{f}_1\p{Q_i \v{\phi}_i(\v{x}), \v{x}, t} \v{\phi}^T_{i, x_1}(\v{x})
-    - \v{f}_2\p{Q_i \v{\phi}_i(\v{x}), \v{x}, t} \v{\phi}^T_{i, x_2}(\v{x})}{\v{x}}
-    = -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T(\v{x})}{s}.
-    \intertext{Rearranging to solve for \(Q_{i,t}\), and dropping explicit dependence
-      on \(\v{x}\) for \(\v{\phi}\)}
-    Q_{i,t} \dintt{K_i}{}{\v{\phi}_i \v{\phi}^T_i}{\v{x}} =
-    \dintt{K_i}{}{\v{f}_1\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_1}
-    + \v{f}_2\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_2}}{\v{x}}
-    -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T}{s}
-    \intertext{Transforming to canonical element}
-    Q_{i,t} m_i M =
-    \dintt{K_i}{}{\v{f}_1\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_1}
-    + \v{f}_2\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_2}}{\v{x}}
-    -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T}{s}.
+    \M{Q}_{i,t}
+    = \dintt{\mcK}{}{\M{f}\p{\M{Q}_i \v{\phi}(\v{\xi}), \v{b}_i(\v{\xi}), t}
+      \p{\v{\phi}'(\v{\xi}) \v{c}_i'(\v{b}_i(\v{\xi}))}^T}{\v{\xi}} \M{M}^{-1} \\
+    - \sum{f_j \in \mcF}{}{\dintt{-1}{1}{\M{f}^* \v{n} \v{\phi}^T(\v{r}_j(t))
+      \norm{\v{b}_i'(\v{r}_j(t)) \v{r}_j'(t)}}{t}} \M{M}^{-1} \frac{1}{m_i}
+    + \dintt{\mcK}{}{\v{s}\p{\M{Q}_i \v{\phi}(\v{\xi}), \v{b}_i(\v{\xi}), t}
+      \v{\phi}^T\p{\v{\xi}}}{\v{\xi}} \M{M}^{-1}
   \end{gather}
 
-  \begin{equation}
-    \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
-    - \M{f}\p{\v{q}, \v{x}, t} \phi^k_{i,x_j}(\v{x})}{\v{x}}
-    = -\dintt{\partial K_i}{}{\v{n} \cdot \M{f}^* \phi_i^k(\v{x})}{s}.
-  \end{equation}
-  We could also consider all of the basis components at one time, by using the test
-  function \(\v{\phi}^T_i\) instead of \(\phi^k_i\).
-  \begin{gather}
-    \dintt{K_i}{}{\v{q}_t \v{\phi}^T_i(\v{x})
-    - \M{f}\p{\v{q}, \v{x}, t} \M{D\phi}^T_{i}(\v{x})}{\v{x}}
-    = -\dintt{\partial K_i}{}{\v{n} \cdot \M{f}^*(\v{x}) \v{\phi}_i^T(\v{x})}{s}
-    \intertext{Now using the fact that \(\eval{\v{q}}{K_i}{} = Q_i \v{\phi}_i(\v{x})\)}
-    \dintt{K_i}{}{\M{Q}_{i,t} \v{\phi}_i(\v{x}) \v{\phi}^T_i(\v{x})
-    - \M{f}\p{\M{Q}_i \v{\phi}_i(\v{x}), \v{x}, t} \M{D\phi}^T_{i}(\v{x})}{\v{x}}
-    = -\dintt{\partial K_i}{}{\v{n} \cdot \M{f}^*(\v{x}) \v{\phi}_i^T(\v{x})}{s}
-    \intertext{Rearranging to solve for \(Q_{i,t}\), and dropping explicit dependence
-      on \(\v{x}\) for \(\v{\phi}\)}
-    \M{Q}_{i, t} \dintt{K_i}{}{\v{\phi}_i \v{\phi}^T_i}{\v{x}}
-    = \dintt{K_i}{}{\M{f}\p{\M{Q}_i \v{\phi}_i, \v{x}, t} \M{D\phi}^T_i}{\v{x}}
-    - \dintt{\partial K_i}{}{\v{n} \cdot \M{f}^*\p{\v{x}} \v{\phi}_i^T}{s}
-    \intertext{Transforming to canonical element}
-    \M{Q}_{i, t} m_i \M{M}
-    = \dintt{\mcK}{}{\M{f}\p{\M{Q}_i \v{\phi}, \v{b}_i(\v{\xi}), t} \M{D\phi}^T \M{c}_i' m_i}{\v{\xi}}
-    - \sum{f \in \mcK}{}{\dintt{}{}{\v{n} \cdot \M{f}^*\p{b_i(r_f(t))} \v{\phi}^T(r_f(t)) \norm{b_i'(r_f(t)) r_f'(t)}}{t}}
-    \intertext{Then the set of ODEs are}
-    \M{Q}_{i, t}
-    = \dintt{\mcK}{}{\M{f}\p{\M{Q}_i \v{\phi}, \v{b}_i(\v{\xi}), t} \M{D\phi}^T \M{c}_i'}{\v{\xi}} \M{M}^{-1}
-    - \sum{f \in \mcK}{}{\dintt{}{}{\v{n} \cdot \M{f}^*\p{b_i(r_f(t))} \v{\phi}^T(r_f(t)) \norm{b_i'(r_f(t)) r_f'(t)}}{t} \frac{1}{m_i} M^{-1}}
-  \end{gather}
+  % Consider the two dimensional balance law given by
+  % \begin{equation}
+  %   \v{q}_t + \div \v{f}_j\p{\v{q}, \v{x}, t} = \v{s}\p{\v{q}, \v{x}, t}
+  % \end{equation}
+  % Note that the flux function is a matrix or two index tensor, so the divergence is a
+  % vector quantity.
+  % It could also be written as
+  % \begin{equation}
+  %   \v{q}_t + \v{f}_1\p{\v{q}, \v{x}, t}_{x_1} + \v{f}_2\p{\v{q}, \v{x}, t}_{x_2}
+  %   = \v{s}\p{\v{q}, \v{x}, t}
+  % \end{equation}
+  % The local statements of the weak discontinuous Galerkin form are given by
+  % \begin{equation}
+  %   \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
+  %   - \v{f}_j\p{\v{q}, \v{x}, t} \phi^k_{i,x_j}(\v{x})}{\v{x}}
+  %   = -\dintt{\partial K_i}{}{\v{n} \cdot \v{f}^*_j \phi_i^k(\v{x})}{s}.
+  % \end{equation}
+  % Note that all of the terms related to the flux function \(\v{f}\) are sums over the
+  % two dimensions.
+  % It could also be written as
+  % \begin{equation}
+  %   \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
+  %   - \v{f}_1\p{\v{q}, \v{x}, t} \phi^k_{i, x_1}(\v{x})
+  %   - \v{f}_2\p{\v{q}, \v{x}, t} \phi^k_{i, x_2}(\v{x})}{\v{x}}
+  %   = -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \phi_i^k(\v{x})}{s}.
+  % \end{equation}
+  % We could also consider all of the basis components at one time, by using the test
+  % function \(\v{\phi}^T_i\) instead of \(\phi^k_i\).
+  % \begin{gather}
+  %   \dintt{K_i}{}{\v{q}_t \v{\phi}^T_i(\v{x})
+  %   - \v{f}_1\p{\v{q}, \v{x}, t} \v{\phi}^T_{i, x_1}(\v{x})
+  %   - \v{f}_2\p{\v{q}, \v{x}, t} \v{\phi}^T_{i, x_2}(\v{x})}{\v{x}}
+  %   = -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T(\v{x})}{s}.
+  %   \intertext{Now using the fact that \(\eval{\v{q}}{K_i}{} = Q_i \v{\phi}_i(\v{x})\)}
+  %   \dintt{K_i}{}{Q_{i,t} \v{\phi}_i(\v{x}) \v{\phi}^T_i(\v{x})
+  %   - \v{f}_1\p{Q_i \v{\phi}_i(\v{x}), \v{x}, t} \v{\phi}^T_{i, x_1}(\v{x})
+  %   - \v{f}_2\p{Q_i \v{\phi}_i(\v{x}), \v{x}, t} \v{\phi}^T_{i, x_2}(\v{x})}{\v{x}}
+  %   = -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T(\v{x})}{s}.
+  %   \intertext{Rearranging to solve for \(Q_{i,t}\), and dropping explicit dependence
+  %     on \(\v{x}\) for \(\v{\phi}\)}
+  %   Q_{i,t} \dintt{K_i}{}{\v{\phi}_i \v{\phi}^T_i}{\v{x}} =
+  %   \dintt{K_i}{}{\v{f}_1\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_1}
+  %   + \v{f}_2\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_2}}{\v{x}}
+  %   -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T}{s}
+  %   \intertext{Transforming to canonical element}
+  %   Q_{i,t} m_i M =
+  %   \dintt{K_i}{}{\v{f}_1\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_1}
+  %   + \v{f}_2\p{Q_i \v{\phi}_i, \v{x}, t} \v{\phi}^T_{i, x_2}}{\v{x}}
+  %   -\dintt{\partial K_i}{}{\p{n_1 \v{f}^*_1 + n_2 \v{f}^*_2} \v{\phi}_i^T}{s}.
+  % \end{gather}
+
+  % \begin{equation}
+  %   \dintt{K_i}{}{\v{q}_t \phi_i^k(\v{x})
+  %   - \M{f}\p{\v{q}, \v{x}, t} \phi^k_{i,x_j}(\v{x})}{\v{x}}
+  %   = -\dintt{\partial K_i}{}{\v{n} \cdot \M{f}^* \phi_i^k(\v{x})}{s}.
+  % \end{equation}
+  % We could also consider all of the basis components at one time, by using the test
+  % function \(\v{\phi}^T_i\) instead of \(\phi^k_i\).
+  % \begin{gather}
+  %   \dintt{K_i}{}{\v{q}_t \v{\phi}^T_i(\v{x})
+  %   - \M{f}\p{\v{q}, \v{x}, t} \M{D\phi}^T_{i}(\v{x})}{\v{x}}
+  %   = -\dintt{\partial K_i}{}{\v{n} \cdot \M{f}^*(\v{x}) \v{\phi}_i^T(\v{x})}{s}
+  %   \intertext{Now using the fact that \(\eval{\v{q}}{K_i}{} = Q_i \v{\phi}_i(\v{x})\)}
+  %   \dintt{K_i}{}{\M{Q}_{i,t} \v{\phi}_i(\v{x}) \v{\phi}^T_i(\v{x})
+  %   - \M{f}\p{\M{Q}_i \v{\phi}_i(\v{x}), \v{x}, t} \M{D\phi}^T_{i}(\v{x})}{\v{x}}
+  %   = -\dintt{\partial K_i}{}{\v{n} \cdot \M{f}^*(\v{x}) \v{\phi}_i^T(\v{x})}{s}
+  %   \intertext{Rearranging to solve for \(Q_{i,t}\), and dropping explicit dependence
+  %     on \(\v{x}\) for \(\v{\phi}\)}
+  %   \M{Q}_{i, t} \dintt{K_i}{}{\v{\phi}_i \v{\phi}^T_i}{\v{x}}
+  %   = \dintt{K_i}{}{\M{f}\p{\M{Q}_i \v{\phi}_i, \v{x}, t} \M{D\phi}^T_i}{\v{x}}
+  %   - \dintt{\partial K_i}{}{\v{n} \cdot \M{f}^*\p{\v{x}} \v{\phi}_i^T}{s}
+  %   \intertext{Transforming to canonical element}
+  %   \M{Q}_{i, t} m_i \M{M}
+  %   = \dintt{\mcK}{}{\M{f}\p{\M{Q}_i \v{\phi}, \v{b}_i(\v{\xi}), t} \M{D\phi}^T \M{c}_i' m_i}{\v{\xi}}
+  %   - \sum{f \in \mcK}{}{\dintt{}{}{\v{n} \cdot \M{f}^*\p{b_i(r_f(t))} \v{\phi}^T(r_f(t)) \norm{b_i'(r_f(t)) r_f'(t)}}{t}}
+  %   \intertext{Then the set of ODEs are}
+  %   \M{Q}_{i, t}
+  %   = \dintt{\mcK}{}{\M{f}\p{\M{Q}_i \v{\phi}, \v{b}_i(\v{\xi}), t} \M{D\phi}^T \M{c}_i'}{\v{\xi}} \M{M}^{-1}
+  %   - \sum{f \in \mcK}{}{\dintt{}{}{\v{n} \cdot \M{f}^*\p{b_i(r_f(t))} \v{\phi}^T(r_f(t)) \norm{b_i'(r_f(t)) r_f'(t)}}{t} \frac{1}{m_i} M^{-1}}
+  % \end{gather}
 
 \subsection{Rectangular Elements}
   Consider if the mesh contain rectangular elements, then
@@ -218,6 +327,86 @@
   \end{gather}
 
 \subsection{Triangular Elements}
-  
+  Consider a mesh with triangular elements.
+  That is each mesh element is given by three vertices in \(\RR^2\),
+  \(\set{\v{v}_1, \v{v}_2, \v{v}_3}\).
+  The coordinates of each vertex are given by \(\v{v}_i = \br{x_i, y_i}\).
+  The canonical element that I will use is a right triangle with vertices,
+  \(\br{-1, 1}\), \(\br{-1, -1}\), \(\br{1, -1}\).
+  The linear transformations between mesh elements and the canonical element are
+  given by
+  \begin{gather}
+    \v{b}_i(\v{\xi}) = \br{b_{00} \xi + b_{01} \eta + b_{02}, b_{10} \xi + b_{11} \eta + b_{12}} \\
+    \v{c}_i(\v{x}) = \br{c_{00} x + c_{01} y + c_{02}, c_{10} x + c_{11} y + c_{12}}
+  \end{gather}
+  where the coefficients are
+  \begin{gather}
+    b_{00} = \frac{1}{2} \p{x_3 - x_2} \\
+    b_{01} = \frac{1}{2} \p{x_1 - x_2} \\
+    b_{02} = \frac{1}{2} \p{x_1 + x_3} \\
+    b_{10} = \frac{1}{2} \p{y_3 - y_2} \\
+    b_{11} = \frac{1}{2} \p{y_1 - y_2} \\
+    b_{12} = \frac{1}{2} \p{y_1 + y_3} \\
+    c_{00} = \frac{-2(y_1 - y_2)}{y_1 (x_2 - x_3) - x_1 (y_2 - y_3) + y_2 x_3 - x_2 y_3} \\
+    c_{01} = \frac{2(x_1 - x_2)}{y_1 (x_2 - x_3) - x_1 (y_2 - y_3) + y_2 x_3 - x_2 y_3} \\
+    c_{02} = \frac{y_1 (x_2 + x_3) - x_1 (y_2 + y_3) - y_2 x_3 + x_2 y_3}{y_1 (x_2 -
+      x_3) - x_1 (y_2 - y_3) + y_2 x_3 - x_2 y_3} \\
+    c_{10} = \frac{-2(y_2 - y_3)}{y_1 (x_2 - x_3) - x_1 (y_2 - y_3) + y_2 x_3 - x_2 y_3} \\
+    c_{11} = \frac{2(x_2 - x_3)}{y_1 (x_2 - x_3) - x_1 (y_2 - y_3) + y_2 x_3 - x_2 y_3} \\
+    c_{12} = \frac{x_1 (y_2 - y_3) - y_1 (x_2 - x_3) + y_2 x_3 - x_2 y_3}{y_1 (x_2 -
+      x_3) - x_1 (y_2 - y_3) + y_2 x_3 - x_2 y_3} \\
+  \end{gather}
+  These coefficients were found by doing a linear solve such that the vertices of the
+  mesh element would be transformed to the vertices of the canonical element.
+
+  The jacobians of the linear transformations are
+  \begin{gather}
+    \v{b}_i'(\v{\xi}) =
+    \begin{pmatrix}
+      b_{00} & b_{01} \\
+      b_{10} & b_{11}
+    \end{pmatrix} \\
+    \v{c}_i'(\v{x}) =
+    \begin{pmatrix}
+      c_{00} & c_{01} \\
+      c_{10} & c_{11}
+    \end{pmatrix}
+  \end{gather}
+  The metric of the element will be
+  \(m_i = \det{\v{b}_i'} = b_{00}b_{11} - b_{10}b_{01}\).
+
+  Also we can parameterize the left, bottom and hypotenuse faces of the canonical
+  element as
+  \begin{gather}
+    r_l(t) = \br{-1, t} \\
+    r_b(t) = \br{t, -1} \\
+    r_h(t) = \br{t, -t} \\
+  \end{gather}
+  for \(t \in \br{-1, 1}\).
+  We can easily compute \(\norm{\v{b}_i'(\v{r}_f(t)) \v{r}_f'(t)}\) for each face as
+  well
+  \begin{gather}
+    \norm{\v{b}_i'(\v{r}_l(t)) \v{r}_l'(t)} = \sqrt{b_{01}^2 + b_{11}^2} \\
+    \norm{\v{b}_i'(\v{r}_b(t)) \v{r}_b'(t)} = \sqrt{b_{00}^2 + b_{10}^2} \\
+    \norm{\v{b}_i'(\v{r}_h(t)) \v{r}_h'(t)} =
+      \sqrt{\p{b_{00} - b_{01}}^2 + \p{b_{10} - b_{11}}^2}
+  \end{gather}
+
+  \begin{gather}
+    \M{Q}_{i,t}
+    = \dintt{\mcK}{}{\M{f}\p{\M{Q}_i \v{\phi}(\v{\xi}), \v{b}_i(\v{\xi}), t}
+      \p{\v{\phi}'(\v{\xi}) \v{c}_i'(\v{b}_i(\v{\xi}))}^T}{\v{\xi}} \M{M}^{-1} \\
+    - \sum{f_j \in \mcF}{}{\dintt{-1}{1}{\M{f}^* \v{n} \v{\phi}^T(\v{r}_j(t))
+      \norm{\v{b}_i'(\v{r}_j(t)) \v{r}_j'(t)}}{t}} \M{M}^{-1} \frac{1}{m_i}
+    + \dintt{\mcK}{}{\v{s}\p{\M{Q}_i \v{\phi}(\v{\xi}), \v{b}_i(\v{\xi}), t}
+      \v{\phi}^T\p{\v{\xi}}}{\v{\xi}} \M{M}^{-1}
+  \end{gather}
+
+  For the case of an orthonormal modal basis with orthogonality condition,
+  \begin{gather}
+    \frac{1}{2} \dintt{\mcK}{}{\phi^i(\v{\xi}) \phi^j(\v{\xi})}{\v{\xi}} = \delta_{ij}
+  \end{gather}
+  then the mass matrix and it's inverse will be \(\M{M} = 2I\) and
+  \(\M{M}^{-1} = \frac{1}{2} I\).
 
 \end{document}

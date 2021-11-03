@@ -31,7 +31,7 @@ one_thirty_five = sa.Integer(135)
 
 def get_nodal_basis_1d(nodes):
     points = [[x, 0] for x in nodes]
-    xi = canonical_element.get_canonical_variables_1d()
+    xi = canonical_element.Interval.get_canonical_variables()
     R = sa.PolynomialRing(sa.RR, xi)
     phi = []
     for i in range(len(nodes)):
@@ -62,7 +62,7 @@ def get_gauss_lobatto_nodal_basis_1d(space_order):
 
 
 def get_legendre_basis_1d(space_order, inner_product_constant=one / two):
-    xi = canonical_element.get_canonical_variables_1d()
+    xi = canonical_element.Interval.get_canonical_variables()
     return legendre_polynomials.get_legendre_polynomials(
         space_order, inner_product_constant, xi
     )
@@ -81,11 +81,11 @@ def get_mass_matrix(phi, integration_function):
 
 
 def get_mass_matrix_1d(phi):
-    return get_mass_matrix(phi, canonical_element.integrate_over_canonical_element_1d)
+    return get_mass_matrix(phi, canonical_element.Interval.integrate_over_canonical_element)
 
 
 def get_legendre_basis_2d_rectangle(space_order, inner_product_constant=one / four):
-    tuple_ = canonical_element.get_canonical_variables_2d()
+    tuple_ = canonical_element.Square.get_canonical_variables()
     xi = tuple_[0]
     eta = tuple_[1]
     phi_1d = legendre_polynomials.get_legendre_polynomials(
@@ -102,7 +102,7 @@ def get_legendre_basis_2d_rectangle(space_order, inner_product_constant=one / fo
 
 def get_mass_matrix_2d_rectangle(phi):
     return get_mass_matrix(
-        phi, canonical_element.integrate_over_canonical_element_2d_rectangle
+        phi, canonical_element.Square.integrate_over_canonical_element
     )
 
 
@@ -112,7 +112,7 @@ def get_modal_basis_2d_triangle(space_order, inner_product_constant=one / two):
     )
     num_basis_cpts = coeffs.nrows()
 
-    tuple_ = canonical_element.get_canonical_variables_2d()
+    tuple_ = canonical_element.Triangle.get_canonical_variables()
     xi = tuple_[0]
     eta = tuple_[1]
 
@@ -325,6 +325,6 @@ def compute_modal_basis_coefficients_2d_triangle(space_order, inner_product_cons
 
 def get_mass_matrix_2d_triangle(phi):
     return get_mass_matrix(
-        phi, canonical_element.integrate_over_canonical_element_2d_triangle
+        phi, canonical_element.Triangle.integrate_over_canonical_element
     )
 
