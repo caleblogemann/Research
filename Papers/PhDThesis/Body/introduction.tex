@@ -1,0 +1,80 @@
+% Chapter 1 of the Thesis Template File
+\chapter{Introduction}
+
+In this thesis, I present discontinuous Galerkin methods for shallow water moment
+models.
+The shallow water moment equations (SWME) were first introduced by Kowalski and
+Torrilhon\cite{kowalski2017moment} in 2017.
+One of the main drawbacks of the standard shallow water equations is the lack of
+vertical resolution in the velocity.
+In other words the velocity of the fluid is identical at the top and bottom of the
+fluid.
+This may not always be a reasonable physical assumption.
+In particular when the model includes some drag along the bottom topography, the
+constant velocity restriction allows the drag to have a disproportionate effect on the
+height of the fluid.
+However users would like to avoid these issues without needing to go to the
+computational expense of a fully vertically resolved model.
+The shallow water moment equations propose a solution to this problem, by adding
+moments to the velocity profile.
+This allows for a more complicated description of the velocity, while still retaining
+relatively few equations in a lower dimensional problem.
+
+One shortcoming of SWME model is that when there is more than one moment, the system
+is no longer globally hyperbolic.
+A modified model introduced by Koellermeier and
+Pimentel-Garcia\cite{koellermeier2020steady} in 2020, resolves this issue.
+This model is known as the shallow water linearized moment equations (SWLME), and
+is provable hyperbolic.
+This model is derived by removing some terms from the SWME, while still retaining
+many of it's desirable features.
+In this work I expand on this model slightly by proving that it is hyperbolic in
+two dimensions as well as in one dimension.
+
+I chose to numerically solve these systems using the discontinuous Galerkin method.
+The discontinuous Galerkin method was first introduced by Reed and
+Hill\cite{techreport:Reed1973} in their 1973 report on neutron transport.
+The method was later formalized and popularized by a series of papers by Cockburn and
+Shu\cite{article:Cockburn1989II,article:Cockburn1991I,article:Cockburn1989III,article:Cockburn1990IV,article:Cockburn1998V}
+in the 1990s.
+The discontinuous Galerkin method is a finite element method where the solution space
+and test space are discontinuous over the mesh element faces.
+% TODO: add more details about DG method
+
+The main numerical challenge in discretizing the SWME or the SWLME, is that they both
+contain nonconservative products.
+In other words they can't be written conservative or divergence form.
+The traditional theory of weak solutions using distributions does not apply to
+nonconservative equations.
+Instead this thesis relies on the theory laid out by Dal Maso, LeFloch, and
+Murat\cite{dal1995definition} in their 1995 paper.
+The main idea of this theory is to include a regularization path at any possible
+discontinuities.
+This regularization path smooths out any discontinuities and then value of the solution
+is examined as the limit approaches the discontinuity.
+Through this limiting process Dal Maso et. al. are able to define a path integral as
+a measure which represents the nonconservative product at discontinuities.
+
+Rhebergen et al.\cite{rhebergen2008discontinuous} were the first to translate the
+nonconservative product theory of Dal Maso, LeFloch, and Murat, to the discontinuous
+Galerkin method.
+
+
+
+
+
+
+
+%\chapterbib
+%\bibliographystyle{apa}
+%\bibliography{Reference/mybib}
+
+
+%\renewcommand{\bibname}{\centerline{BIBLIOGRAPHY}}
+%\bibliographystyle{apa}
+%\newpage
+%\phantomsection
+%\addtocontents{toc}{\def\protect\@chapapp{}}
+%\addcontentsline{toc}{chapter}{BIBLIOGRAPHY}
+%\addtocontents{toc}{\def\protect\@chapapp{CHAPTER\ }}
+%\bibliography{mybib}
