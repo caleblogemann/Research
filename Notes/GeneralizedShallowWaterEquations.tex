@@ -91,18 +91,18 @@
     where the number of components depends on the number of moments in the velocity
     profiles.
 
-    The wavespeed of this system is given by the the eigenvalues of the matrix 
+    The wavespeed of this system is given by the the eigenvalues of the matrix
     when the system is in quasilinear form.
-    For this system we need to look at the eigenvalues of the matrix 
+    For this system we need to look at the eigenvalues of the matrix
     \(f'(\v{q}) - g(\v{q})\).
-    If all of the eigenvalues are real, then this system is considered 
+    If all of the eigenvalues are real, then this system is considered
     hyperbolic.
-    Also if the gradient of the eigenvalue with respect to the conserved 
+    Also if the gradient of the eigenvalue with respect to the conserved
     variables dotted with the corresponding eigenvector is always positive
     or always negative, then we say that the system is convex.
     That is if
     \[
-      \grad \lambda_i . \v{v}_i < 0 \quad \text{ or } \quad 
+      \grad \lambda_i . \v{v}_i < 0 \quad \text{ or } \quad
       \grad \lambda_i . \v{v}_i > 0,
     \]
     then the system is convex.
@@ -123,13 +123,13 @@
           -{(e_{z} \frac{\partial}{\partial x}h_{b} - e_{x})} g h - \frac{\nu u}{\lambda} \\
         \end{pmatrix}
         \intertext{Flux Jacobian}
-        \v{f}'(\v{q}) = 
+        \v{f}'(\v{q}) =
         \begin{pmatrix}
           0 & 1 \\
           e_{z} g h - u^{2} & 2u
         \end{pmatrix}
         \intertext{Quasilinear Matrix}
-        A = 
+        A =
         \begin{pmatrix}
           0 & 1 \\
           e_{z} g h - u^{2} & 2u
@@ -294,12 +294,12 @@
     where the number of components depends on the number of moments in the velocity
     profiles.
 
-    The wavespeeds of the two dimensional system in the direction 
+    The wavespeeds of the two dimensional system in the direction
     \(\v{n} = \br{n_1, n_2}\), are given by the eigenvalues of the matrix
     \[
       n_1 \p{\v{f}_1'(\v{q}) - g_1(\v{q})} + n_2 \p{\v{f}_2'(\v{q}) - g_2(\v{q})}.
     \]
-    If this matrix is diaganalizable with real eigenvalues for all directions
+    If this matrix is diagonalizable with real eigenvalues for all directions
     \(\v{n}\), then this system is considered hyperbolic.
 
     \subsection{Zeroth Order}

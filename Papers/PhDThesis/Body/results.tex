@@ -1,0 +1,265 @@
+% Chapter 4 from the standard thesis template
+%   that contains an adv. example table and figure.
+ %\addtocontents{toc}{\protect\newpage}
+\chapter{Results}
+
+\section{One Dimensional Results}
+\subsection{}
+% \includegraphics[scale=0.29]{Figures/height_torillhon.pdf}
+% \includegraphics[scale=0.29]{Figures/mean_velocity_torrilhon.pdf}
+% \includegraphics[scale=0.29]{Figures/alpha_1_torrilhon.pdf}
+% \includegraphics[scale=0.29]{Figures/velocity_profile_-025_torrilhon.pdf}
+% \includegraphics[scale=0.3]{Figures/velocity_profile_025_torrilhon.pdf}
+
+% \includegraphics[scale=0.29]{Figures/height_dam.pdf}
+% \includegraphics[scale=0.29]{Figures/mean_velocity_dam.pdf}
+% \includegraphics[scale=0.29]{Figures/alpha_1_dam.pdf}
+% \includegraphics[scale=0.29]{Figures/velocity_profile_-1_dam.pdf}
+\subsection{Manufactured Solution}
+  I also ran a manufactured solution example to verify the order of convergence of the
+  method.
+  \begin{gather}
+    q_i(x, t) = 0.1 \sin{2 \pi \p{x - t - 0.1 i}}
+  \end{gather}
+  
+  \begin{table}
+    \small
+    \begin{tabular}{r*{10}l}
+      \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order& \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+      \midrule
+      20    & \( 0.226 \) & ---  & \( 8.57 \times 10^{-3} \) & ---   & \( 1.67 \times 10^{-4} \) & ---  & \( 3.17 \times 10^{-6}  \) & ---  & \( 7.61 \times 10^{-8}  \) & 0.00  \\
+      40    & \( 0.117 \) & 0.96 & \( 2.17 \times 10^{-3} \) & 1.98  & \( 2.07 \times 10^{-5} \) & 3.02 & \( 1.98 \times 10^{-7}  \) & 4.00 & \( 2.38 \times 10^{-9}  \) & 5.00  \\
+      80    & \( 0.058 \) & 1.00 & \( 5.40 \times 10^{-4} \) & 2.01  & \( 2.57 \times 10^{-6} \) & 3.01 & \( 1.24 \times 10^{-8}  \) & 4.00 & \( 7.71 \times 10^{-11} \) & 4.95  \\
+      160   & \( 0.028 \) & 1.06 & \( 1.35 \times 10^{-4} \) & 2.00  & \( 3.21 \times 10^{-7} \) & 3.00 & \( 7.76 \times 10^{-10} \) & 4.00 & \( 4.04 \times 10^{-11} \) & 0.93  \\
+      320   & \( 0.014 \) & 0.99 & \( 3.37 \times 10^{-5} \) & 2.00  & \( 4.01 \times 10^{-8} \) & 3.00 & \( 4.85 \times 10^{-11} \) & 4.00 & \( 8.09 \times 10^{-11} \) & -1.00 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Convergence Table for standard shallow water equations or shallow water moment equations with zero moments.}\label{tab:convergence_1d_0m}
+  \end{table}
+  \begin{table}
+    \small
+    \begin{tabular}{r*{10}l}
+      \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order\\
+      \midrule
+      20    & \( 2.53 \times 10^{-1} \) & ---  & \( 9.97 \times 10^{-3} \) & ---  & \( 1.71 \times 10^{-3} \) & ---  & \( 1.14 \times 10^{-4} \) & ---  & \( 2.68 \times 10^{ -5} \) & ---  \\
+      40    & \( 1.30 \times 10^{-1} \) & 0.96 & \( 2.52 \times 10^{-3} \) & 1.98 & \( 3.85 \times 10^{-4} \) & 2.15 & \( 1.74 \times 10^{-5} \) & 2.72 & \( 8.01 \times 10^{ -7} \) & 5.06 \\
+      80    & \( 6.47 \times 10^{-2} \) & 1.00 & \( 6.28 \times 10^{-4} \) & 2.00 & \( 6.13 \times 10^{-5} \) & 2.65 & \( 7.50 \times 10^{-7} \) & 4.53 & \( 1.53 \times 10^{ -8} \) & 5.71 \\
+      160   & \( 3.13 \times 10^{-2} \) & 1.05 & \( 1.57 \times 10^{-4} \) & 2.00 & \( 9.09 \times 10^{-6} \) & 2.75 & \( 1.25 \times 10^{-7} \) & 2.59 & \( 4.04 \times 10^{-10} \) & 5.25 \\
+      320   & \( 1.58 \times 10^{-2} \) & 0.99 & \( 3.92 \times 10^{-5} \) & 2.00 & \( 1.73 \times 10^{-6} \) & 2.39 & \( 8.79 \times 10^{-9} \) & 3.83 & \( 8.40 \times 10^{-11} \) & 2.27 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Convergence table for shallow water moment equations with one moment.}\label{tab:convergence_1d_1m}
+  \end{table}
+  \begin{table}
+    \small
+    \centering
+    \begin{tabular}{r*{10}l}
+      \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order}\\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order\\
+      \midrule
+      20    & \( 2.78 \times 10^{-1} \) & ---  & \( 1.14 \times 10^{-2} \) & ---  & \( 5.35 \times 10^{-3} \) & ---  & \( 3.69 \times 10^{ -4} \) & ---  & \( 5.19 \times 10^{ -5} \) & ---  \\
+      40    & \( 1.42 \times 10^{-1} \) & 0.96 & \( 2.88 \times 10^{-3} \) & 1.98 & \( 6.47 \times 10^{-4} \) & 3.05 & \( 2.46 \times 10^{ -5} \) & 3.91 & \( 1.12 \times 10^{ -6} \) & 5.53 \\
+      80    & \( 7.12 \times 10^{-2} \) & 1.00 & \( 7.19 \times 10^{-4} \) & 2.00 & \( 7.83 \times 10^{-5} \) & 3.04 & \( 1.40 \times 10^{ -6} \) & 4.13 & \( 1.93 \times 10^{ -8} \) & 5.86 \\
+      160   & \( 3.45 \times 10^{-2} \) & 1.04 & \( 1.80 \times 10^{-4} \) & 2.00 & \( 1.27 \times 10^{-5} \) & 2.63 & \( 1.14 \times 10^{ -7} \) & 3.62 & \( 5.86 \times 10^{-10} \) & 5.04 \\
+      320   & \( 1.74 \times 10^{-2} \) & 0.99 & \( 4.49 \times 10^{-5} \) & 2.00 & \( 2.55 \times 10^{-6} \) & 2.32 & \( 1.09 \times 10^{ -8} \) & 3.39 & \( 8.79 \times 10^{-11} \) & 2.74 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Convergence table for shallow water moments equations with two moments}\label{tab:convergence_1d_2m}
+  \end{table}
+  \begin{table}
+    \small
+    \centering
+    \begin{tabular}{r*{10}l}
+      \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+      \midrule
+      20    & \( 3.02 \times 10^{-1} \) & ---  & \( 1.30 \times 10^{-2} \) & ---  & \( 7.02 \times 10^{-3} \) & ---  & \( 3.17 \times 10^{ -4} \) & ---  & \( 5.57 \times 10^{ -5} \) & ---  \\
+      40    & \( 1.56 \times 10^{-1} \) & 0.96 & \( 3.28 \times 10^{-3} \) & 1.99 & \( 6.99 \times 10^{-4} \) & 3.33 & \( 2.38 \times 10^{ -5} \) & 3.73 & \( 1.10 \times 10^{ -6} \) & 5.66 \\
+      80    & \( 7.81 \times 10^{-2} \) & 0.99 & \( 8.19 \times 10^{-4} \) & 2.00 & \( 1.18 \times 10^{-4} \) & 2.56 & \( 2.51 \times 10^{ -6} \) & 3.25 & \( 2.64 \times 10^{ -8} \) & 5.38 \\
+      160   & \( 3.80 \times 10^{-2} \) & 1.04 & \( 2.05 \times 10^{-4} \) & 2.00 & \( 2.55 \times 10^{-5} \) & 2.22 & \( 3.17 \times 10^{ -7} \) & 2.99 & \( 1.37 \times 10^{ -9} \) & 4.27 \\
+      320   & \( 1.92 \times 10^{-2} \) & 0.99 & \( 5.12 \times 10^{-5} \) & 2.00 & \( 5.11 \times 10^{-6} \) & 2.32 & \( 4.68 \times 10^{ -8} \) & 2.76 & \( 1.17 \times 10^{-10} \) & 3.55 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Convergence table for shallow water moment equations with three moments or a cubic velocity profile}\label{tab:convergence_1d_3m}
+  \end{table}
+
+\section{Two Dimensional Cartesian Results}
+  \begin{table}
+    \small
+    \centering
+    \begin{tabular}{r*{10}l}
+      \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+      \midrule
+      5     & \( 9.26 \times 10^{-1} \) & ---  & \( 9.42 \times 10^{-2} \) & ---  & \( 1.24 \times 10^{-2} \) & ---  & \( 2.25 \times 10^{-3} \) & ---  & \( 4.62 \times 10^{-4} \) & ---  \\
+      10    & \( 5.02 \times 10^{-1} \) & 0.88 & \( 2.12 \times 10^{-2} \) & 2.16 & \( 2.77 \times 10^{-3} \) & 2.17 & \( 2.79 \times 10^{-4} \) & 3.02 & \( 4.12 \times 10^{-5} \) & 3.49 \\
+      20    & \( 2.79 \times 10^{-1} \) & 0.85 & \( 5.09 \times 10^{-3} \) & 2.06 & \( 7.16 \times 10^{-4} \) & 1.95 & \( 3.43 \times 10^{-5} \) & 3.02 & \( 2.40 \times 10^{-6} \) & 4.10 \\
+      40    & \( 1.43 \times 10^{-1} \) & 0.96 & \( 1.26 \times 10^{-3} \) & 2.02 & \( 1.60 \times 10^{-4} \) & 2.16 & \( 3.08 \times 10^{-6} \) & 3.48 & \( 1.23 \times 10^{-7} \) & 4.28 \\
+      80    & \( 7.36 \times 10^{-2} \) & 0.96 & \( 3.13 \times 10^{-4} \) & 2.00 & \( 3.37 \times 10^{-5} \) & 2.25 & \( 2.76 \times 10^{-7} \) & 3.48 & \( 6.09 \times 10^{-9} \) & 4.34 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Convergence table for standard shallow water equations or shallow water moment equations with zero moments}\label{tab:convergence_2dr_0m}
+  \end{table}
+
+  \begin{table}
+    \small
+    \centering
+    \begin{tabular}{r*{10}l}
+      \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+      \midrule
+      5     & \( 1.20 \)                 & ---  & \( 1.16 \times 10^{-1 } \) & ---  & \( 2.07 \times 10^{-2 } \) & ---  & \( 8.11 \times 10^{-3} \) & ---  & \( 1.52 \times 10^{-3} \) & ---  \\
+      10    & \( 6.69 \times 10^{-1 } \) & 0.84 & \( 2.46 \times 10^{-2 } \) & 2.24 & \( 7.20 \times 10^{-3 } \) & 1.53 & \( 8.54 \times 10^{-4} \) & 3.25 & \( 1.44 \times 10^{-4} \) & 3.40 \\
+      20    & \( 3.81 \times 10^{-1 } \) & 0.81 & \( 5.86 \times 10^{-3 } \) & 2.07 & \( 2.10 \times 10^{-3 } \) & 1.78 & \( 1.14 \times 10^{-4} \) & 2.90 & \( 9.01 \times 10^{-6} \) & 4.00 \\
+      40    & \( 2.00 \times 10^{-1 } \) & 0.93 & \( 1.45 \times 10^{-3 } \) & 2.02 & \( 4.78 \times 10^{-4 } \) & 2.13 & \( 1.18 \times 10^{-5} \) & 3.28 & \( 4.62 \times 10^{-7} \) & 4.28 \\
+      80    & \( 1.03 \times 10^{-1 } \) & 0.95 & \( 3.61 \times 10^{-4 } \) & 2.00 & \( 1.01 \times 10^{-4 } \) & 2.25 & \( 1.07 \times 10^{-6} \) & 3.47 & \( 2.14 \times 10^{-8} \) & 4.43 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Convergence table for shallow water moment equations with one moment.}\label{tab:convergence_2dr_1m}
+  \end{table}
+
+  \begin{table}
+    \small
+    \centering
+    \begin{tabular}{r*{10}l}
+      \toprule
+            & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+      \midrule
+      \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+      \midrule
+      5     & \( 1.42 \)                & ---  & \( 1.40 \times 10^{-1} \) & ---  & \( 2.77 \times 10^{-2} \) & ---  & \( 1.08 \times 10^{-2} \) & ---  & \( 2.24 \times 10^{-3} \) & ---  \\
+      10    & \( 8.01 \times 10^{-1} \) & 0.83 & \( 2.95 \times 10^{-2} \) & 2.24 & \( 1.04 \times 10^{-2} \) & 1.41 & \( 1.22 \times 10^{-3} \) & 3.15 & \( 2.08 \times 10^{-4} \) & 3.43 \\
+      20    & \( 4.62 \times 10^{-1} \) & 0.80 & \( 7.01 \times 10^{-3} \) & 2.07 & \( 2.98 \times 10^{-3} \) & 1.81 & \( 1.62 \times 10^{-4} \) & 2.91 & \( 1.22 \times 10^{-5} \) & 4.09 \\
+      40    & \( 2.44 \times 10^{-1} \) & 0.92 & \( 1.73 \times 10^{-3} \) & 2.02 & \( 6.60 \times 10^{-4} \) & 2.18 & \( 1.57 \times 10^{-5} \) & 3.37 & \( 6.11 \times 10^{-7} \) & 4.32 \\
+      80    & \( 1.26 \times 10^{-1} \) & 0.95 & \( 4.33 \times 10^{-4} \) & 2.00 & \( 1.37 \times 10^{-4} \) & 2.27 & \( 1.42 \times 10^{-6} \) & 3.47 & \( 2.86 \times 10^{-8} \) & 4.42 \\
+      \bottomrule
+    \end{tabular}
+    \caption{Convergence table for shallow water moment equations with two moments}\label{tab:convergence_2dr_2m}
+  \end{table}
+
+\section{Two Dimensional Unstructured Results}
+%\chapterbib
+
+%\bibliographystyle{apa}
+%\bibliography{Reference/mybib}
+
+% OLD TABLES
+  % \begin{table}
+  %   \small
+  %   \centering
+  %   \begin{tabular}{r*{10}l}
+  %     \toprule
+  %           & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+  %     \midrule
+  %     \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+  %     \midrule
+  %     20    & \( 3.024 \times 10^{-1} \) & ---  & \( 1.300 \times 10^{-2} \) & ---  & \( 7.015 \times 10^{-3} \) & ---  & \( 3.167 \times 10^{ -4} \) & ---  & \( 5.571 \times 10^{ -5} \) & ---  \\
+  %     40    & \( 1.556 \times 10^{-1} \) & 0.96 & \( 3.283 \times 10^{-3} \) & 1.99 & \( 6.992 \times 10^{-4} \) & 3.33 & \( 2.384 \times 10^{ -5} \) & 3.73 & \( 1.099 \times 10^{ -6} \) & 5.66 \\
+  %     80    & \( 7.808 \times 10^{-2} \) & 0.99 & \( 8.188 \times 10^{-4} \) & 2.00 & \( 1.183 \times 10^{-4} \) & 2.56 & \( 2.509 \times 10^{ -6} \) & 3.25 & \( 2.639 \times 10^{ -8} \) & 5.38 \\
+  %     160   & \( 3.802 \times 10^{-2} \) & 1.04 & \( 2.046 \times 10^{-4} \) & 2.00 & \( 2.545 \times 10^{-5} \) & 2.22 & \( 3.168 \times 10^{ -7} \) & 2.99 & \( 1.371 \times 10^{ -9} \) & 4.27 \\
+  %     320   & \( 1.916 \times 10^{-2} \) & 0.99 & \( 5.117 \times 10^{-5} \) & 2.00 & \( 5.110 \times 10^{-6} \) & 2.32 & \( 4.675 \times 10^{ -8} \) & 2.76 & \( 1.171 \times 10^{-10} \) & 3.55 \\
+  %     \bottomrule
+  %   \end{tabular}
+  %   \caption{Convergence table for shallow water moment equations with three moments or a cubic velocity profile}\label{tab:convergence_1d_3m}
+  % \end{table}
+
+  % \begin{table}
+  %   \centering
+  %   \begin{tabular}{r*{10}l}
+  %     \toprule
+  %           & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order}\\
+  %     \midrule
+  %     \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order\\
+  %     \midrule
+  %     20    & \( 2.778 \times 10^{-1} \) & ---  & \( 1.141 \times 10^{-2} \) & ---  & \( 5.350 \times 10^{-3} \) & ---  & \( 3.688 \times 10^{ -4} \) & ---  & \( 5.194 \times 10^{ -5} \) & ---  \\
+  %     40    & \( 1.424 \times 10^{-1} \) & 0.96 & \( 2.884 \times 10^{-3} \) & 1.98 & \( 6.466 \times 10^{-4} \) & 3.05 & \( 2.461 \times 10^{ -5} \) & 3.91 & \( 1.121 \times 10^{ -6} \) & 5.53 \\
+  %     80    & \( 7.121 \times 10^{-2} \) & 1.00 & \( 7.191 \times 10^{-4} \) & 2.00 & \( 7.836 \times 10^{-5} \) & 3.04 & \( 1.403 \times 10^{ -6} \) & 4.13 & \( 1.934 \times 10^{ -8} \) & 5.86 \\
+  %     160   & \( 3.454 \times 10^{-2} \) & 1.04 & \( 1.797 \times 10^{-4} \) & 2.00 & \( 1.270 \times 10^{-5} \) & 2.63 & \( 1.144 \times 10^{ -7} \) & 3.62 & \( 5.859 \times 10^{-10} \) & 5.04 \\
+  %     320   & \( 1.740 \times 10^{-2} \) & 0.99 & \( 4.493 \times 10^{-5} \) & 2.00 & \( 2.546 \times 10^{-6} \) & 2.32 & \( 1.092 \times 10^{ -8} \) & 3.39 & \( 8.791 \times 10^{-11} \) & 2.74 \\
+  %     \bottomrule
+  %   \end{tabular}
+  %   \caption{Convergence table for shallow water moments equations with two moments}\label{tab:convergence_1d_2m}
+  % \end{table}
+  % \begin{table}
+  %   \begin{tabular}{r*{10}l}
+  %     \toprule
+  %           & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+  %     \midrule
+  %     \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order& \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+  %     \midrule
+  %     20    & \( 0.226 \) & ---  & \( 8.57 \times 10^{-3} \) & ---   & \( 1.67 \times 10^{-4} \) & ---  & \( 3.172 \times 10^{-6}  \) & ---  & \( 7.606 \times 10^{-8}  \) & 0.00  \\
+  %     40    & \( 0.117 \) & 0.96 & \( 2.17 \times 10^{-3} \) & 1.98  & \( 2.07 \times 10^{-5} \) & 3.02 & \( 1.982 \times 10^{-7}  \) & 4.00 & \( 2.380 \times 10^{-9}  \) & 5.00  \\
+  %     80    & \( 0.058 \) & 1.00 & \( 5.40 \times 10^{-4} \) & 2.01  & \( 2.57 \times 10^{-6} \) & 3.01 & \( 1.240 \times 10^{-8}  \) & 4.00 & \( 7.713 \times 10^{-11} \) & 4.95  \\
+  %     160   & \( 0.028 \) & 1.06 & \( 1.35 \times 10^{-4} \) & 2.00  & \( 3.21 \times 10^{-7} \) & 3.00 & \( 7.755 \times 10^{-10} \) & 4.00 & \( 4.035 \times 10^{-11} \) & 0.93  \\
+  %     320   & \( 0.014 \) & 0.99 & \( 3.37 \times 10^{-5} \) & 2.00  & \( 4.01 \times 10^{-8} \) & 3.00 & \( 4.849 \times 10^{-11} \) & 4.00 & \( 8.085 \times 10^{-11} \) & -1.00 \\
+  %     \bottomrule
+  %   \end{tabular}
+  %   \caption{Convergence Table for standard shallow water equations or shallow water moment equations with zero moments.}\label{tab:convergence_1d_0m}
+  % \end{table}
+  % \begin{table}
+  %   \centering
+  %   \begin{tabular}{r*{10}l}
+  %     \toprule
+  %           & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+  %     \midrule
+  %     \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+  %     \midrule
+  %     5     & \( 9.259 \times 10^{-1} \) & ---  & \( 9.423 \times 10^{-2} \) & ---  & \( 1.243 \times 10^{-2} \) & ---  & \( 2.254\times 10^{-3} \) & ---  & \( 4.623\times 10^{-4} \) & ---  \\
+  %     10    & \( 5.016 \times 10^{-1} \) & 0.88 & \( 2.115 \times 10^{-2} \) & 2.16 & \( 2.769 \times 10^{-3} \) & 2.17 & \( 2.787\times 10^{-4} \) & 3.02 & \( 4.121\times 10^{-5} \) & 3.49 \\
+  %     20    & \( 2.786 \times 10^{-1} \) & 0.85 & \( 5.089 \times 10^{-3} \) & 2.06 & \( 7.163 \times 10^{-4} \) & 1.95 & \( 3.434\times 10^{-5} \) & 3.02 & \( 2.395\times 10^{-6} \) & 4.10 \\
+  %     40    & \( 1.434 \times 10^{-1} \) & 0.96 & \( 1.257 \times 10^{-3} \) & 2.02 & \( 1.600 \times 10^{-4} \) & 2.16 & \( 3.075\times 10^{-6} \) & 3.48 & \( 1.234\times 10^{-7} \) & 4.28 \\
+  %     80    & \( 7.355 \times 10^{-2} \) & 0.96 & \( 3.133 \times 10^{-4} \) & 2.00 & \( 3.367 \times 10^{-5} \) & 2.25 & \( 2.762\times 10^{-7} \) & 3.48 & \( 6.087\times 10^{-9} \) & 4.34 \\
+  %     \bottomrule
+  %   \end{tabular}
+  %   \caption{Convergence table for standard shallow water equations or shallow water moment equations with zero moments}\label{tab:convergence_2dr_0m}
+  % \end{table}
+
+  % \begin{table}
+  %   \centering
+  %   \begin{tabular}{r*{10}l}
+  %     \toprule
+  %           & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+  %     \midrule
+  %     \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+  %     \midrule
+  %     5     & \( 1.199 \)                 & ---  & \( 1.159 \times 10^{-1 } \) & ---  & \( 2.073 \times 10^{-2 } \) & ---  & \( 8.114 \times 10^{-3} \) & ---  & \( 1.520 \times 10^{-3} \) & ---  \\
+  %     10    & \( 6.686 \times 10^{-1 } \) & 0.84 & \( 2.459 \times 10^{-2 } \) & 2.24 & \( 7.202 \times 10^{-3 } \) & 1.53 & \( 8.542 \times 10^{-4} \) & 3.25 & \( 1.437 \times 10^{-4} \) & 3.40 \\
+  %     20    & \( 3.813 \times 10^{-1 } \) & 0.81 & \( 5.857 \times 10^{-3 } \) & 2.07 & \( 2.096 \times 10^{-3 } \) & 1.78 & \( 1.143 \times 10^{-4} \) & 2.90 & \( 9.013 \times 10^{-6} \) & 4.00 \\
+  %     40    & \( 1.995 \times 10^{-1 } \) & 0.93 & \( 1.448 \times 10^{-3 } \) & 2.02 & \( 4.777 \times 10^{-4 } \) & 2.13 & \( 1.180 \times 10^{-5} \) & 3.28 & \( 4.625 \times 10^{-7} \) & 4.28 \\
+  %     80    & \( 1.033 \times 10^{-1 } \) & 0.95 & \( 3.614 \times 10^{-4 } \) & 2.00 & \( 1.005 \times 10^{-4 } \) & 2.25 & \( 1.068 \times 10^{-6} \) & 3.47 & \( 2.143 \times 10^{-8} \) & 4.43 \\
+  %     \bottomrule
+  %   \end{tabular}
+  %   \caption{Convergence table for shallow water moment equations with one moment.}\label{tab:convergence_2dr_1m}
+  % \end{table}
+
+  % \begin{table}
+  %   \centering
+  %   \begin{tabular}{r*{10}l}
+  %     \toprule
+  %           & \multicolumn{2}{c}{1st Order} & \multicolumn{2}{c}{2nd Order} & \multicolumn{2}{c}{3rd Order} & \multicolumn{2}{c}{4th Order} & \multicolumn{2}{c}{5th Order} \\
+  %     \midrule
+  %     \(n\) & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order & \multicolumn{1}{c}{error} & order \\
+  %     \midrule
+  %     5     & \( 1.420 \)                & ---  & \( 1.399 \times 10^{-1} \) & ---  & \( 2.770 \times 10^{-2} \) & ---  & \( 1.076 \times 10^{-2} \) & ---  & \( 2.236 \times 10^{-3} \) & ---  \\
+  %     10    & \( 8.013 \times 10^{-1} \) & 0.83 & \( 2.951 \times 10^{-2} \) & 2.24 & \( 1.043 \times 10^{-2} \) & 1.41 & \( 1.216 \times 10^{-3} \) & 3.15 & \( 2.078 \times 10^{-4} \) & 3.43 \\
+  %     20    & \( 4.615 \times 10^{-1} \) & 0.80 & \( 7.011 \times 10^{-3} \) & 2.07 & \( 2.982 \times 10^{-3} \) & 1.81 & \( 1.618 \times 10^{-4} \) & 2.91 & \( 1.224 \times 10^{-5} \) & 4.09 \\
+  %     40    & \( 2.436 \times 10^{-1} \) & 0.92 & \( 1.733 \times 10^{-3} \) & 2.02 & \( 6.596 \times 10^{-4} \) & 2.18 & \( 1.566 \times 10^{-5} \) & 3.37 & \( 6.114 \times 10^{-7} \) & 4.32 \\
+  %     80    & \( 1.264 \times 10^{-1} \) & 0.95 & \( 4.327 \times 10^{-4} \) & 2.00 & \( 1.365 \times 10^{-4} \) & 2.27 & \( 1.418 \times 10^{-6} \) & 3.47 & \( 2.859 \times 10^{-8} \) & 4.42 \\
+  %     \bottomrule
+  %   \end{tabular}
+  %   \caption{Convergence table for shallow water moment equations with two moments}\label{tab:convergence_2dr_2m}
+  % \end{table}
