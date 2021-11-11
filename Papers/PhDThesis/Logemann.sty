@@ -1,0 +1,201 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{Logemann}[2014/09/08 Logemann Package]
+
+% set up language and font encoding
+\RequirePackage[english]{babel}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+
+% needed for \DeclarePairedDelimiter
+\RequirePackage{mathtools}
+% common packages used in almost all documents
+\RequirePackage{amsthm}
+\RequirePackage{amssymb}
+\RequirePackage{amsmath}
+\RequirePackage{booktabs}
+
+% sign
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\sgn}{sgn}
+% inline fraction
+\newcommand{\ifrac}[2]{#1/#2}
+
+% absolute value function
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+% Swap the definition of \abs* , so that \abs
+% resizes the size of the brackets, and the
+% starred version does not.
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+
+% Norm - length of a vector
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+\let\oldnorm\norm
+\renewcommand{\norm}[2][]{\oldnorm*{#2}_{#1}}
+%\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+
+% Floor function
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\let\oldfloor\floor
+\def\floor{\@ifstar{\oldfloor}{\oldfloor*}}
+
+% Ceiling function
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\let\oldceil\ceil
+\def\ceil{\@ifstar{\oldceil}{\oldceil*}}
+
+% Parenthesis
+\DeclarePairedDelimiter{\paren}{(}{)}
+\let\oldparen\paren
+\def\paren{\@ifstar{\oldparen}{\oldparen*}}
+\def\p{\@ifstar{\oldparen}{\oldparen*}}
+
+% Curly Brackets
+\DeclarePairedDelimiter{\set}{\{}{\}}
+\let\oldset\set
+\def\set{\@ifstar{\oldset}{\oldset*}}
+
+% Square Brackets
+\DeclarePairedDelimiter{\bracket}{[}{]}
+\let\oldbracket\bracket
+\def\bracket{\@ifstar{\oldbracket}{\oldbracket*}}
+\newcommand{\br}[2][]{\bracket{#2}_{#1}}
+
+% Angle Brackets
+\DeclarePairedDelimiter{\anglebr}{\langle}{\rangle}
+\let\oldanglebr\anglebr
+\def\anglebr{\@ifstar{\oldanglebr}{\oldanglebr*}}
+% alias for \anglebr
+\newcommand{\abr}[2][]{\anglebr{#2}_{#1}}
+
+% use \cos default to include parenthesis
+% \cos* will not have parenthesis
+% applies to all future commands
+\let\oldcos\cos
+\newcommand{\cosa}[2][]{\oldcos^{#1}\paren{#2}}
+\newcommand{\cosna}[1][]{\oldcos^{#1}}
+\def\cos{\@ifstar{\cosna}{\cosa}}
+
+\let\oldsin\sin
+\newcommand{\sinna}[1][]{\oldsin^{#1}}
+\newcommand{\sina}[2][]{\oldsin^{#1}\paren{#2}}
+\def\sin{\@ifstar{\sinna}{\sina}}
+
+\let\oldarcsin\arcsin
+\newcommand{\arcsina}[1]{\oldarcsin\paren{#1}}
+\def\arcsin{\@ifstar{\oldarcsin}{\arcsina}}
+
+\let\oldarccos\arccos
+\newcommand{\arccosa}[1]{\oldarccos\paren{#1}}
+\def\arccos{\@ifstar{\oldarccos}{\arccosa}}
+
+\let\oldarctan\arctan
+\newcommand{\arctana}[1]{\oldarctan\paren{#1}}
+\def\arctan{\@ifstar{\oldarctan}{\arctana}}
+
+\let\oldtan\tan
+\newcommand{\tana}[2][]{\oldtan^{#1}\paren{#2}}
+\newcommand{\tanna}[1][]{\oldtan^{#1}}
+\def\tan{\@ifstar{\tanna}{\tana}}
+
+\let\oldcsc\csc
+\newcommand{\csca}[2][]{\oldcsc^{#1}\paren{#2}}
+\newcommand{\cscna}[1][]{\oldcsc^{#1}}
+\def\csc{\@ifstar{\cscna}{\csca}}
+
+\let\oldsec\sec
+\newcommand{\seca}[2][]{\oldsec^{#1}\paren{#2}}
+\newcommand{\secna}[1][]{\oldsec^{#1}}
+\def\sec{\@ifstar{\secna}{\seca}}
+
+\let\oldcot\cot
+\newcommand{\cota}[2][]{\oldcot^{#1}\paren{#2}}
+\newcommand{\cotna}[1][]{\oldcot^{#1}}
+\def\cot{\@ifstar{\cotna}{\cota}}
+
+\let\oldcosh\cosh
+\newcommand{\cosha}[2][]{\oldcosh^{#1}\paren{#2}}
+\newcommand{\coshna}[1][]{\oldcosh^{#1}}
+\def\cosh{\@ifstar{\coshna}{\cosha}}
+
+\newcommand{\arccosha}[1]{\oldcosh^{-1}\paren{#1}}
+\newcommand{\oldarccosha}{\oldcosh^{-1}}
+\def\arccosh{\@ifstar{\oldarccosh}{\arccosha}}
+
+\let\oldsinh\sinh
+\newcommand{\sinha}[2][]{\oldsinh^{#1}\paren{#2}}
+\newcommand{\sinhna}[1][]{\oldsinh^{#1}}
+\def\sinh{\@ifstar{\sinhna}{\sinha}}
+
+\let\oldarcsinh\arcsinh
+\newcommand{\arcsinha}[1]{\oldsinh^{-1}\paren{#1}}
+\newcommand{\oldarcsinha}{\oldsinh^{-1}}
+\def\arcsinh{\@ifstar{\oldarcsinh}{\arcsinha}}
+
+\let\oldtanh\tanh
+\newcommand{\tanha}[2][]{\oldtanh^{#1}\paren{#2}}
+\newcommand{\tanhna}[1][]{\oldtanh^{#1}}
+\def\tanh{\@ifstar{\tanhna}{\tanha}}
+
+\newcommand{\arctanha}[1]{\oldtanh^{-1}\paren{#1}}
+\newcommand{\oldarctanha}{\oldtanh^{-1}}
+\def\arctanh{\@ifstar{\oldarctanh}{\arctanha}}
+
+\let\oldln\ln
+\newcommand{\lna}[1]{\oldln\paren{#1}}
+\def\ln{\@ifstar{\oldln}{\lna}}
+
+\let\oldlog\log
+\newcommand{\loga}[2][]{\oldlog_{#1}\paren{#2}}
+\newcommand{\logna}[1][]{\oldlog_{#1}}
+\def\log{\@ifstar{\logna}{\loga}}
+
+\let\oldlim\lim
+\newcommand{\limna}[1][]{\oldlim_{#1}}
+\newcommand{\lima}[2][]{\oldlim_{#1}\paren{#2}}
+\def\lim{\@ifstar{\limna}{\lima}}
+
+\let\oldmin\min
+\newcommand{\mina}[2][]{\oldmin_{#1}\set{#2}}
+\newcommand{\minna}[1][]{\oldmin_{#1}}
+\def\min{\@ifstar{\minna}{\mina}}
+
+\DeclareMathOperator{\oldargmin}{argmin}
+\newcommand{\argmina}[2][]{\oldargmin_{#1}\set{#2}}
+\newcommand{\argminna}[1][]{\oldargmin_{#1}}
+\def\argmin{\@ifstar{\argminna}{\argmina}}
+
+\let\oldmax\max
+\newcommand{\maxa}[2][]{\oldmax_{#1}\set{#2}}
+\newcommand{\maxna}[1][]{\oldmax_{#1}}
+\def\max{\@ifstar{\maxna}{\maxa}}
+
+\DeclareMathOperator{\oldargmax}{argmax}
+\newcommand{\argmaxa}[2][]{\oldargmax_{#1}\set{#2}}
+\newcommand{\argmaxna}[1][]{\oldargmax_{#1}}
+\def\argmax{\@ifstar{\argmaxna}{\argmaxa}}
+
+\DeclareMathOperator{\oldminmod}{minmod}
+\newcommand{\minmoda}[1]{\oldminmod\p{#1}}
+\newcommand{\minmodna}{\oldminmod}
+\def\minmod{\@ifstar{\minmodna}{\minmoda}}
+
+\let\oldsup\sup
+\newcommand{\supna}[1][]{\oldsup_{#1}}
+\newcommand{\supa}[2][]{\oldsup_{#1}\paren{#2}}
+\def\sup{\@ifstar{\supna}{\supa}}
+
+\let\oldinf\inf
+\newcommand{\infna}[1][]{\oldinf_{#1}}
+\newcommand{\infa}[2][]{\oldinf_{#1}\paren{#2}}
+\def\inf{\@ifstar{\infna}{\infa}}
+
+\let\oldlimsup\limsup
+\newcommand{\limsupna}[1][]{\oldlimsup_{#1}}
+\newcommand{\limsupa}[2][]{\oldlimsup_{#1}\paren{#2}}
+\def\limsup{\@ifstar{\limsupna}{\limsupa}}
+
+\let\oldliminf\liminf
+\newcommand{\liminfna}[1][]{\oldliminf_{#1}}
+\newcommand{\liminfa}[2][]{\oldliminf_{#1}\paren{#2}}
+\def\liminf{\@ifstar{\liminfna}{\liminfa}}

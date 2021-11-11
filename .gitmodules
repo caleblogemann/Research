@@ -7,3 +7,6 @@
 [submodule "presentations/PhDDefense"]
 	path = presentations/PhDDefense
 	url = github.com:caleblogemann/PhDDefense
+[submodule "papers/PhDThesis"]
+	path = papers/PhDThesis
+	url = github.com:caleblogemann/PhDThesis

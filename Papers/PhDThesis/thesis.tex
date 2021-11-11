@@ -76,11 +76,11 @@
 % dedication, nomenclature, acknowledgement, abstract and all chapters
 % Re-position the two lines below will change all the section
 % being compiled after those two lines
-\raggedright
+% \raggedright
 \parindent 0.25 in % set all paragraphs in the document to have indent
 
 % Optional thesis dedication
-%\include{Preface/dedication}
+\include{Preface/dedication}
 % Table of Contents, List of Tables and List of Figures
 \pdfbookmark[1]{TABLE OF CONTENTS}{table}
 \tableofcontents
@@ -106,12 +106,12 @@
 
 
 %Optional Acknowledgements
-%\cleardoublepage \phantomsection
-%\include{Preface/acknowl}
+\cleardoublepage \phantomsection
+\include{Preface/acknowl}
 %Optional thesis abstract
 \cleardoublepage \phantomsection
 \include{Preface/abstract}
-%\cleardoublepage \phantomsection
+% \cleardoublepage \phantomsection
 
 \newpage
 \pagenumbering{arabic}
@@ -126,9 +126,9 @@
 %\include{Reference/biblio}
 \include{Reference/bibtex}
 
-\include{Appendix/appendix1}
+% \include{Appendix/appendix1}
 % Instruction for single appendix check instruction in Appendix/appendix1.tex on top of the file
-\include{Appendix/appendix2}
+% \include{Appendix/appendix2}
 
 \end{document}
 

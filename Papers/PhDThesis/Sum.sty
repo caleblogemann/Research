@@ -1,0 +1,17 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{Sum}[2015/02/22 Sum Package]
+% provides macros for writing summations
+
+\RequirePackage{Logemann}
+
+% store old summation command
+\let\oldsum\sum
+% define new summation command with parentheses
+\newcommand{\sump}[3]{\oldsum_{#1}^{#2}{\paren{#3}}}
+% define new summation command without parentheses
+\newcommand{\sumnp}[3]{\oldsum_{#1}^{#2}{#3}}
+% redefine \sum command - default to use parentheses
+% \sum* no parentheses.
+\def\sum{\@ifstar{\sumnp}{\sump}}
+
+

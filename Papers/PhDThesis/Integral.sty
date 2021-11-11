@@ -1,0 +1,51 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{Integral}[2015/09/10 Integral Package]
+
+\RequirePackage{Logemann}
+
+% redefine integral commands with inputs
+% indefinite integral without dx
+\let\oldint\int
+\newcommand{\inta}[1]{\oldint\!\paren{#1}}
+\newcommand{\intna}[1]{\oldint\!{#1}}
+\def\int{\@ifstar{\inta}{\intna}}
+
+% indefinite integral with dx
+\newcommand{\intta}[2]{\oldint\!\paren{#1}\,\mathrm{d}{#2}}
+\newcommand{\inttna}[2]{\oldint\!{#1}\,\mathrm{d}{#2}}
+\def\intt{\@ifstar{\intta}{\inttna}}
+
+% definite integral with bounds but no dx
+\newcommand{\dintna}[3]{\oldint_{#1}^{#2}\!{#3}}
+\newcommand{\dinta}[3]{\oldint_{#1}^{#2}\!\paren{#3}}
+\def\dint{\@ifstar{\dinta}{\dintna}}
+
+% definite integral
+\newcommand{\dinttna}[4]{\oldint_{#1}^{#2}\!{#3}\,\mathrm{d}{#4}}
+\newcommand{\dintta}[4]{\oldint_{#1}^{#2}\!\paren{#3}\,\mathrm{d}{#4}}
+\def\dintt{\@ifstar{\dintta}{\dinttna}}
+
+\let\oldiint\iint
+\newcommand{\iinta}[1]{\oldiint\!\paren{#1}}
+\newcommand{\iintna}[1]{\oldiint\!{#1}}
+\def\iint{\@ifstar{\iinta}{\iintna}}
+
+% indefinite integral with dx
+\newcommand{\iintta}[2]{\oldiint\!\paren{#1}\,\mathrm{d}{#2}}
+\newcommand{\iinttna}[2]{\oldiint\!{#1}\,\mathrm{d}{#2}}
+\def\iintt{\@ifstar{\iintta}{\iinttna}}
+
+% definite integral with bounds but no dx
+\newcommand{\diintna}[3]{\oldiint_{#1}^{#2}\!{#3}}
+\newcommand{\diinta}[3]{\oldiint_{#1}^{#2}\!\paren{#3}}
+\def\diint{\@ifstar{\diinta}{\diintna}}
+
+% definite integral
+\newcommand{\diinttna}[4]{\oldiint_{#1}^{#2}\!{#3}\,\mathrm{d}{#4}}
+\newcommand{\diintta}[4]{\oldiint_{#1}^{#2}\!\paren{#3}\,\mathrm{d}{#4}}
+\def\diintt{\@ifstar{\diintta}{\diinttna}}
+
+% define macro for bounds
+\newcommand{\evalb}[3]{\left. #1 \right\rvert_{#2}^{#3}}
+\newcommand{\evall}[2]{\left. #1 \right\rvert_{#2}}
+\def\eval{\@ifstar{\evalb}{\evall}}
