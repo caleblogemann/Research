@@ -4,3 +4,6 @@
 [submodule "Papers/ThinFilmPaper"]
 	path = Papers/ThinFilmPaper
 	url = git@bitbucket.org:imsejae/thin-film-logemann.git
+[submodule "presentations/PhDDefense"]
+	path = presentations/PhDDefense
+	url = github.com:caleblogemann/PhDDefense
