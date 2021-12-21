@@ -1,2 +1,6 @@
-ForcingFunction/manufactured solution
+Dogpack Shallow Water 0 Moments convergence 3 and 4 order
+
+PyDogpack Shallow Water 1 Moment convergence 2 order
+PyDogpack periodic boundary conditions
+
 
